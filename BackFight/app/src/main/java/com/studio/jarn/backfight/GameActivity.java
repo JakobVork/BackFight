@@ -1,9 +1,9 @@
-package com.example.banders.de;
+package com.studio.jarn.backfight;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class GameBoardActivity extends Activity
+public class GameActivity extends Activity
 {
     static public final int GridSizeWidthAndHeight = 15;
     static public final int SquaresViewedAtStartup = 3;
@@ -17,11 +17,11 @@ public class GameBoardActivity extends Activity
 
         setupMyGrid (GridSizeWidthAndHeight);
 
-        GameBoardView gv = (GameBoardView) findViewById (R.id.boardview);
+        GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
 
-           gv.setGridSize(GridSizeWidthAndHeight); ;
-           gv.setViewSizeAtStartup(SquaresViewedAtStartup);
+            gv.setGridSize(GridSizeWidthAndHeight);
+            gv.setViewSizeAtStartup(SquaresViewedAtStartup);
            gv.updateGrid (pGrid);
         }
     }

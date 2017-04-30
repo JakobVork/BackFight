@@ -1,4 +1,4 @@
-package com.example.banders.de;
+package com.studio.jarn.backfight;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,50 +11,36 @@ import android.view.View;
 
 
 /**
- * This view supports both zooming and panning.
- * What gets shown in the view depends on the onDraw method provided by subclasses.
- * The default onDraw method defined here comes from R.drawable.zoom_view_sample.
- *
- * <p> Subclasses can change behavior by overriding methods
- * supportsZoom, supportsPan, supportsScaleAroundFocusPoint, drawOnCanvas.
- */
-
-/**
  * PanZoomView
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
+ * This view supports both zooming and panning.
+ * What gets shown in the view depends on the onDraw method provided by subclasses.
  */
 
 public class PanZoomView extends View {
 
 
+    protected static final int INVALID_POINTER_ID = -1;
+    static private final float SCROLL_THRESHOLD = 20; // Used to define if a touch is scroll or click
 protected Drawable mSampleImage;
 protected Context mContext;
 protected float mPosX;
 protected float mPosY;
 protected float mPosX0 = 0;     // initial displacement values
-protected float mPosY0 = 0;;
-
-protected float mLastTouchX;
+    protected float mPosY0 = 0;
+    protected float mLastTouchX;
 protected float mLastTouchY;
 protected float mInitialTouchX;
 protected float mInitialTouchY;
-
-
-protected static final int INVALID_POINTER_ID = -1;
-
 // The ‘active pointer’ is the one currently moving our object.
 protected int mActivePointerId = INVALID_POINTER_ID;
-
 protected ScaleGestureDetector mScaleDetector;
 protected float mScaleFactor = 1.f;
-protected float mMinScaleFactor = 0.1f;
-protected float mMaxScaleFactor = 5.0f;
-
+    protected float mMinScaleFactor = 0.2f;
+    protected float mMaxScaleFactor = 2.0f;
 protected boolean mSupportsPan = true;
 protected boolean mSupportsZoom = true;
 protected boolean mIsMove;
-
-static private final float SCROLL_THRESHOLD = 20; // Used to define if a touch is scroll or click
 
 
 public PanZoomView (Context context) {
@@ -145,9 +131,8 @@ case MotionEvent.ACTION_MOVE: {
 }
 
 case MotionEvent.ACTION_UP: {
-    if (mIsMove) {
-    } else {
-      mActivePointerId = INVALID_POINTER_ID;
+    if (!mIsMove) {
+        mActivePointerId = INVALID_POINTER_ID;
     }
     break;
 }
@@ -212,7 +197,7 @@ public boolean supportsZoom () {
  * This method is taken from the android training: https://developer.android.com/training/gestures/scale.html
  */
 
-protected class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
         if (!mSupportsZoom) return true;

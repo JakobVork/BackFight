@@ -1,4 +1,4 @@
-package com.example.banders.de;
+package com.studio.jarn.backfight;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,9 +16,11 @@ import android.util.AttributeSet;
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
 
-public class GameBoardView extends PanZoomView
+public class GameView extends PanZoomView
 {
 
+    protected float mFocusX;
+    protected float mFocusY;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -29,49 +31,54 @@ public class GameBoardView extends PanZoomView
     private float mOriginOffsetY = 320;
     private float mSquareWidth = 64;         // use float for more accurate placement
     private float mSquareHeight = 64;
-
-    protected float mFocusX;
-    protected float mFocusY;
-
     private Rect  mDestRect;
     private RectF mDestRectF;
 
     private int [] [] mGrid;
+    private int mGridSizeWidthAndHeight;
+    private int mSquaresViewedAtStartup;
 
-
-public GameBoardView (Context context) {
+    public GameView(Context context) {
     super (context);
 }
- 
-public GameBoardView (Context context, AttributeSet attrs) {
+
+
+    public GameView(Context context, AttributeSet attrs) {
     super (context, attrs);
 }
- 
-public GameBoardView (Context context, AttributeSet attrs, int defStyle) {
+
+    public GameView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
 }
 
+    // Inspiration found here: http://stackoverflow.com/questions/10616777/how-to-merge-to-two-bitmap-one-over-another
+    public static Bitmap addPlayerToBitmap(Bitmap bmp1, Bitmap bmp2, Bitmap bmp3) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, 0, 0, null);
+        canvas.drawBitmap(bmp3, 0, bmp1.getHeight() / 2, null);
+        return bmOverlay;
+    }
 
-private int mGridSizeWidthAndHeight;
 public void setGridSize(int newValue)
 {
    mGridSizeWidthAndHeight = newValue;
 }
 
-private int mSquaresViewedAtStartup;
 public void setViewSizeAtStartup(int newValue)
 {
    mSquaresViewedAtStartup = newValue;
 }
-
 
 //Todo: remove hardcoded players
 public void drawOnCanvas (Canvas canvas) {
 
     Paint paint = new Paint();
 
-    Bitmap b1 = BitmapFactory.decodeResource (mContext.getResources(), R.drawable.no_marker_default);
-    Bitmap b2 = BitmapFactory.decodeResource (mContext.getResources(), R.drawable.cart);
+    Bitmap wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
+    Bitmap b1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
+    Bitmap b2 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.player32);
     Bitmap b3 = BitmapFactory.decodeResource (mContext.getResources(), R.drawable.point);
     Bitmap b4 = addPlayerToBitmap(b1,b2, b3);
 
@@ -79,13 +86,19 @@ public void drawOnCanvas (Canvas canvas) {
     // Draw squares to fill the grid.
     //
     RectF dest1 = mDestRectF;
-    float dx = 0, dy = 0;
+    float dx, dy = 0;
     for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
        dx = 0;
        for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
         dest1.offsetTo (dx, dy);
 
         canvas.drawBitmap (b1, null, dest1, paint);
+           if (j == 4) {
+               canvas.drawBitmap(wall, null, dest1, paint);
+           }
+           if (j == 6) {
+               canvas.drawBitmap(wall, null, dest1, paint);
+           }
         if(j == 5 && i == 6)
             canvas.drawBitmap (b4, null, dest1, paint);
 
@@ -94,17 +107,6 @@ public void drawOnCanvas (Canvas canvas) {
        dy = dy + mSquareHeight;
     }
 }
-
-// Inspiration found here: http://stackoverflow.com/questions/10616777/how-to-merge-to-two-bitmap-one-over-another
-public static Bitmap addPlayerToBitmap(Bitmap bmp1, Bitmap bmp2, Bitmap bmp3) {
-    Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-    Canvas canvas = new Canvas(bmOverlay);
-    canvas.drawBitmap(bmp1, new Matrix(), null);
-    canvas.drawBitmap(bmp2, 0, 0, null);
-    canvas.drawBitmap(bmp3, 0, bmp1.getHeight()/2, null);
-    return bmOverlay;
-}
-
 
 /**
  * onDrawPz
@@ -123,8 +125,8 @@ public void onDrawPz(Canvas canvas) {
     float shortestWidth = isLandscape ? viewH : viewW;
  
     // Set width and height to be used for the squares.
-    mSquareWidth  = (float) shortestWidth / (float) mSquaresViewedAtStartup;
-    mSquareHeight = (float) shortestWidth / (float) mSquaresViewedAtStartup;
+    mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
+    mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
 
     float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
     float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
@@ -150,7 +152,7 @@ public void onDrawPz(Canvas canvas) {
     // scrolled and the standard amount to move the origin
     // of the canvas up and left so the region is centered
     // in the view. (Note: mPosX and mPosY are defined in PanZoomView.)
-    float x = 0, y = 0;
+    float x, y;
     mPosX0 = mOriginOffsetX;
     mPosY0 = mOriginOffsetY;
     mPosY0 = mOriginOffsetY;
