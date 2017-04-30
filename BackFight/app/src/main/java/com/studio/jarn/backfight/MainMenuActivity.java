@@ -19,6 +19,7 @@ public class MainMenuActivity extends AppCompatActivity {
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
+    
     private static final boolean AUTO_HIDE = true;
 
     /**
