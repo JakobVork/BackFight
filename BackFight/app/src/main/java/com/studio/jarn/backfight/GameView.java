@@ -9,6 +9,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
+
+import java.util.List;
 
 
 /**
@@ -34,7 +37,7 @@ public class GameView extends PanZoomView
     private Rect  mDestRect;
     private RectF mDestRectF;
 
-    private int [] [] mGrid;
+    private Tile[][] mGrid;
     private int mGridSizeWidthAndHeight;
     private int mSquaresViewedAtStartup;
 
@@ -52,12 +55,31 @@ public class GameView extends PanZoomView
 }
 
     // Inspiration found here: http://stackoverflow.com/questions/10616777/how-to-merge-to-two-bitmap-one-over-another
-    public static Bitmap addPlayerToBitmap(Bitmap bmp1, Bitmap bmp2, Bitmap bmp3) {
+    private Bitmap addPlayerToBitmap(Bitmap bmp1, List<Player> players) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(bmp1, new Matrix(), null);
-        canvas.drawBitmap(bmp2, 0, 0, null);
-        canvas.drawBitmap(bmp3, 0, bmp1.getHeight() / 2, null);
+
+        float column = 0;
+        float row = 0;
+        for (Player p : players) {
+
+            canvas.drawBitmap(p.Icon, bmp1.getWidth() * (row / 4), bmp1.getHeight() * (column / 4), null);
+
+            // logic to distribute players over the tile, so each tile can hold 16 players
+            if (column < 4)
+                row++;
+            else {
+                Log.d("Error", "More than 16 players added");
+                break;
+            }
+            if (row == 4) {
+                column++;
+                row = 0;
+            }
+
+        }
+
         return bmOverlay;
     }
 
@@ -71,16 +93,13 @@ public void setViewSizeAtStartup(int newValue)
    mSquaresViewedAtStartup = newValue;
 }
 
-//Todo: remove hardcoded players
+    //Todo: remove hardcoded Players
 public void drawOnCanvas (Canvas canvas) {
 
     Paint paint = new Paint();
 
-    Bitmap wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
-    Bitmap b1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
-    Bitmap b2 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.player32);
-    Bitmap b3 = BitmapFactory.decodeResource (mContext.getResources(), R.drawable.point);
-    Bitmap b4 = addPlayerToBitmap(b1,b2, b3);
+    Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
+    Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
 
     //
     // Draw squares to fill the grid.
@@ -92,16 +111,22 @@ public void drawOnCanvas (Canvas canvas) {
        for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
         dest1.offsetTo (dx, dy);
 
-        canvas.drawBitmap (b1, null, dest1, paint);
-           if (j == 4) {
-               canvas.drawBitmap(wall, null, dest1, paint);
+           switch (mGrid[j][i].Type) {
+               case Wall: {
+                   if (mGrid[j][i].Players != null) {
+                       canvas.drawBitmap(addPlayerToBitmap(bm_wall, mGrid[j][i].Players), null, dest1, paint);
+                   } else
+                       canvas.drawBitmap(bm_wall, null, dest1, paint);
+                   break;
+               }
+               case WoodenFloor: {
+                   if (mGrid[j][i].Players != null) {
+                       canvas.drawBitmap(addPlayerToBitmap(bm_floor, mGrid[j][i].Players), null, dest1, paint);
+                   } else
+                       canvas.drawBitmap(bm_floor, null, dest1, paint);
+                   break;
+               }
            }
-           if (j == 6) {
-               canvas.drawBitmap(wall, null, dest1, paint);
-           }
-        if(j == 5 && i == 6)
-            canvas.drawBitmap (b4, null, dest1, paint);
-
         dx = dx + mSquareWidth;
        }
        dy = dy + mSquareHeight;
@@ -169,7 +194,7 @@ public void onDrawPz(Canvas canvas) {
 
     // Set up the grid  and grid selection variables.
     if (mGrid == null)
-       mGrid = new int [mGridSizeWidthAndHeight] [mGridSizeWidthAndHeight];
+        mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
 
     // Set up the rectangles we use for drawing, if not done already.
     // Set width and height to be used for the rectangle to be drawn.
@@ -201,9 +226,9 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
 }
 
 
-public void updateGrid (int grid [][]){
+    public void updateGrid(Tile grid[][]) {
    // Set up the grid  and grid selection variables.
-   if (mGrid == null) mGrid = new int [mGridSizeWidthAndHeight] [mGridSizeWidthAndHeight];
+        if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
 
     mGrid = grid.clone();
 }

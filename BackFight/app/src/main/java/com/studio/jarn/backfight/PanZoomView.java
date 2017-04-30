@@ -87,60 +87,60 @@ mScaleDetector.onTouchEvent(e);
 
 // for a description for the use of MotionEvent.ACTION_MASK: http://stackoverflow.com/questions/16464187/the-difference-of-using-motionevent-getaction-method
 switch (e.getAction() & MotionEvent.ACTION_MASK) {
-case MotionEvent.ACTION_DOWN: {
-    final float x = e.getX();
-    final float y = e.getY();
+    case MotionEvent.ACTION_DOWN: {
+        final float x = e.getX();
+        final float y = e.getY();
 
-    mIsMove = false;            // Assume action is a click until the scroll threshold is met.
+        mIsMove = false;            // Assume action is a click until the scroll threshold is met.
 
-    mLastTouchX = x;
-    mLastTouchY = y;
-    mActivePointerId = e.getPointerId(0);
-    break;
-}
+        mLastTouchX = x;
+        mLastTouchY = y;
+        mActivePointerId = e.getPointerId(0);
+        break;
+    }
 
-case MotionEvent.ACTION_MOVE: {
-    final int pointerIndex = e.findPointerIndex(mActivePointerId);
-    final float x = e.getX(pointerIndex);
-    final float y = e.getY(pointerIndex);
+    case MotionEvent.ACTION_MOVE: {
+        final int pointerIndex = e.findPointerIndex(mActivePointerId);
+        final float x = e.getX(pointerIndex);
+        final float y = e.getY(pointerIndex);
 
-    if (!mIsMove && (Math.abs(mInitialTouchX - x) > SCROLL_THRESHOLD
-                     || Math.abs (mInitialTouchY - y) > SCROLL_THRESHOLD)) {
+        if (!mIsMove && (Math.abs(mInitialTouchX - x) > SCROLL_THRESHOLD
+                || Math.abs(mInitialTouchY - y) > SCROLL_THRESHOLD)) {
             mIsMove = true;
+        }
+
+        // Only move if the view supports panning and
+        // ScaleGestureDetector isn't processing a gesture.
+        boolean scalingInProgress = mScaleDetector.isInProgress();
+        if (mSupportsPan && !scalingInProgress) {
+            if (mIsMove) {
+                final float dx = x - mLastTouchX;
+                final float dy = y - mLastTouchY;
+
+                mPosX += dx;
+                mPosY += dy;
+
+                invalidate();
+            }
+        }
+
+        mLastTouchX = x;
+        mLastTouchY = y;
+
+        break;
     }
 
-    // Only move if the view supports panning and
-    // ScaleGestureDetector isn't processing a gesture.
-    boolean scalingInProgress = mScaleDetector.isInProgress ();
-    if (mSupportsPan && !scalingInProgress) {
-       if (mIsMove) {
-          final float dx = x - mLastTouchX;
-          final float dy = y - mLastTouchY;
-
-          mPosX += dx;
-          mPosY += dy;
-
-          invalidate();
-       }
+    case MotionEvent.ACTION_UP: {
+        if (!mIsMove) {
+            mActivePointerId = INVALID_POINTER_ID;
+        }
+        break;
     }
 
-    mLastTouchX = x;
-    mLastTouchY = y;
-
-    break;
-}
-
-case MotionEvent.ACTION_UP: {
-    if (!mIsMove) {
+    case MotionEvent.ACTION_CANCEL: {
         mActivePointerId = INVALID_POINTER_ID;
+        break;
     }
-    break;
-}
-
-case MotionEvent.ACTION_CANCEL: {
-    mActivePointerId = INVALID_POINTER_ID;
-    break;
-}
 
     case MotionEvent.ACTION_POINTER_UP: {
         final int pointerIndex = (e.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
