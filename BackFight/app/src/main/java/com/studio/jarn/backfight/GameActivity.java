@@ -6,10 +6,11 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameActivity extends Activity
 {
-    static public final int GridSizeWidthAndHeight = 5;
+    static public final int GridSizeWidthAndHeight = 16;
     static public final int SquaresViewedAtStartup = 3;
 
     private Tile[][] mGrid;
@@ -32,7 +33,6 @@ public class GameActivity extends Activity
 
     public void setupMyGrid (int n)
     {
-        /*mGrid = new Tile [n] [n];*/
         List<Player> players = new ArrayList<>();
         players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
         players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
@@ -40,9 +40,22 @@ public class GameActivity extends Activity
         players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Pernille"));
         players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
 
-        Tile[] arrayWithPlayers = new Tile[]{new Tile(Tile.Types.Wall, null), new Tile(Tile.Types.WoodenFloor, null), new Tile(Tile.Types.WoodenFloor, null), new Tile(Tile.Types.Wall, null), new Tile(Tile.Types.Wall, players)};
-        Tile[] array = new Tile[]{new Tile(Tile.Types.Wall, null), new Tile(Tile.Types.WoodenFloor, null), new Tile(Tile.Types.WoodenFloor, null), new Tile(Tile.Types.Wall, null), new Tile(Tile.Types.Wall, null)};
 
-        mGrid = new Tile[][]{array, array, array, array, arrayWithPlayers};
+        Tile wallTile = new Tile(Tile.Types.Wall, null);
+        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
+        Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players);
+
+        Random random = new Random();
+        mGrid = new Tile[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                if (random.nextInt(9) > 3)
+                    mGrid[i][j] = floorTile;
+                else
+                    mGrid[i][j] = wallTile;
+            }
+        }
+        mGrid[n / 2][n / 2] = floorTileWithPlayers;
     }
 }
