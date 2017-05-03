@@ -3,7 +3,6 @@ package com.studio.jarn.backfight;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,23 +12,22 @@ import java.util.Random;
 
 public class GameActivity extends Activity
 {
-    static public final int GridSizeWidthAndHeight = 16;
-    static public final int SquaresViewedAtStartup = 3;
-    Tile wallTile = new Tile(Tile.Types.Wall, null, 0);
-    Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
+    private static final int GridSizeWidthAndHeight = 16;
+    private static final int SquaresViewedAtStartup = 3;
+    private final Tile wallTile = new Tile(Tile.Types.Wall, null, 0);
+    private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
+    private final List<Integer> checkedList = new ArrayList<>();
     private Tile[][] mGrid;
     private int visitCounter = 0;
-    private List<Integer> checkedList = new ArrayList<>();
-    private int counter = 0;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
 
-        GridType gridType = GridType.Maze;
+        GridType gridType = GridType.DefaultGrid;
         /*GridType gridType = GridType.Maze;*/
-        setupMyGrid(GridSizeWidthAndHeight, gridType);
+        setupMyGrid(gridType);
 
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
@@ -40,9 +38,24 @@ public class GameActivity extends Activity
         }
     }
 
-    public void setupMyGrid(int n, GridType gridType)
+    //ToDO Needs implementation
+    public void addPlayers() {
+        List<Player> players = new ArrayList<>();
+        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
+        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
+        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.cart)), "Pernille"));
+        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Pernille"));
+        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
+
+
+        Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players, 0);
+    }
+
+    private void setupMyGrid(GridType gridType)
     {
-/*        switch (gridType) {
+        mGrid = new Tile[GridSizeWidthAndHeight][GridSizeWidthAndHeight]; //initialize grid
+
+        switch (gridType) {
             case DefaultGrid: {
                 generateDefaultGrid();
                 break;
@@ -51,172 +64,74 @@ public class GameActivity extends Activity
                 generateMazeGrid();
                 break;
             }
-        }*/
-
-
-        if (mGrid == null) {
-            List<Player> players = new ArrayList<>();
-            players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
-            players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
-            players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.cart)), "Pernille"));
-            players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Pernille"));
-            players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
-
-
-            Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players, 0);
-
-            Random random = new Random();
-            mGrid = new Tile[n][n];
-
-            //generate board
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-
-                    if (random.nextInt(9) > 4) //70% chance of placing a floorTile
-                        mGrid[i][j] = floorTile;
-                    else
-                        mGrid[i][j] = wallTile;
-                }
-            }
-
-            //find connectivity
-            while (findConnectivity() > 1) {
-
-                for (int i = 0; i < n; i++) {
-                    for (int j = 0; j < n; j++) {
-
-                        if (mGrid[i][j].Type == Tile.Types.WoodenFloor && checkIfVisited(mGrid[i][j].Visit)) {
-                            if (i == 0) {
-                                for (int counter = 0; counter < GridSizeWidthAndHeight; counter++) {
-                                    if (mGrid[i + counter][j].Type == Tile.Types.Wall) {
-                                        mGrid[i + counter][j] = floorTile;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                //ToDo: Error around here somewhere
-                                outerLoop:
-                                for (int counter = 0; counter <= i; counter++) {
-                                    if (mGrid[i - counter][j].Type == Tile.Types.Wall) {
-                                        mGrid[i - counter][j] = floorTile;
-                                        break;
-                                    }
-                                    if (counter == i) {
-                                        for (int counter2 = 0; counter2 <= GridSizeWidthAndHeight - 1 - i; counter2++) {
-                                            if (mGrid[i + counter2][j].Type == Tile.Types.Wall) {
-                                                mGrid[i + counter2][j] = floorTile;
-                                                break outerLoop;
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-                mGrid[1][1].Visit = 0;
-                visitCounter = 0;
-                checkedList.clear();
-            }
-
-            Log.d("", "");
-
-
-            //MAZE
-/*            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    mGrid[i][j] = wallTile;
-                }
-            }
-            Random rand = new Random();
-            // r for row、c for column
-            // Generate random r
-            int r = rand.nextInt(GridSizeWidthAndHeight);
-            while (r % 2 == 0) {
-                r = rand.nextInt(GridSizeWidthAndHeight);
-            }
-            // Generate random c
-            int c = rand.nextInt(GridSizeWidthAndHeight);
-            while (c % 2 == 0) {
-                c = rand.nextInt(GridSizeWidthAndHeight);
-            }
-            // Starting cell
-            mGrid[r][c] = floorTile;
-
-            //　Allocate the maze with recursive method
-            recursionMaze(r, c);
-
-
-            //place starting players
-            mGrid[n / 2][n / 2] = floorTileWithPlayers;*/
-
-            //generate board
-
-
-
-
-
-
-
-
-
-            /*for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-
-                    if (mGrid[i][j] == floorTile) //see if tile is a floor
-                    {
-
-                        //HACVHASHJFJHASFJHASHJF
-                        //AJKSJKSADJKASJKDJKASD
-                        // Corner cases
-                        if (i == 0 && j == 0) {
-                            if (mGrid[i][j + 1] != floorTile && mGrid[i + 1][j] != floorTile) // check only for 2 spaces
-                                mGrid[i + 1][j] = floorTile;
-                        } else if (i == 0 && j == n - 1) {
-                            if (mGrid[i][j - 1] != floorTile && mGrid[i + 1][j] != floorTile) // check only for 2 spaces
-                                mGrid[i + 1][j] = floorTile;
-                        } else if (i == n - 1 && j == n - 1) {
-                            if (mGrid[i][j - 1] != floorTile && mGrid[i - 1][j] != floorTile) // check only for 2 spaces
-                                mGrid[i][j - 1] = floorTile;
-                        } else if (i == n - 1 && j == 0) {
-                            if (mGrid[i][j + 1] != floorTile && mGrid[i - 1][j] != floorTile) // check only for 2 spaces
-                                mGrid[i][j + 1] = floorTile;
-                        }
-
-                        // edge cases
-                        else if (i == 0) {
-                            if (mGrid[i][j + 1] != floorTile && mGrid[i][j - 1] != floorTile && mGrid[i + 1][j] != floorTile) // check all neighbours
-                                mGrid[i + 1][j] = floorTile;
-                        } else if (i == n - 1) {
-                            if (mGrid[i][j + 1] != floorTile && mGrid[i][j - 1] != floorTile && mGrid[i - 1][j] != floorTile) // check all neighbours
-                                mGrid[i][j + 1] = floorTile;
-                        } else if (j == 0) {
-                            if (mGrid[i][j + 1] != floorTile && mGrid[i + 1][j] != floorTile && mGrid[i - 1][j] != floorTile) // check all neighbours
-                                mGrid[i][j + 1] = floorTile;
-                        } else if (j == n - 1) {
-                            if (mGrid[i][j - 1] != floorTile && mGrid[i + 1][j] != floorTile && mGrid[i - 1][j] != floorTile) // check all neighbours
-                                mGrid[i + 1][j] = floorTile;
-                        }
-
-                        //middle case
-                        else {
-                            if (mGrid[i][j + 1] != floorTile *//*&& mGrid[i][j - 1] != floorTile*//* && mGrid[i + 1][j] != floorTile && mGrid[i - 1][j] != floorTile) { // check all neighbours
-                                mGrid[i + 1][j] = floorTile;
-                                mGrid[i][j + 1] = floorTile;
-                                mGrid[i - 1][j] = floorTile;
-                                mGrid[i][j - 1] = floorTile;
-                            }
-                        }
-                    }
-                }
-            }*/
-
-
         }
     }
 
-    public boolean checkIfVisited(int visit) {
+    private void generateDefaultGrid() {
+        Random random = new Random();
+
+        //generate random board with 50% walls and floor
+        for (int i = 0; i < GridSizeWidthAndHeight; i++) {
+            for (int j = 0; j < GridSizeWidthAndHeight; j++) {
+
+                if (random.nextInt(9) > 4) //50% chance of placing a floorTile
+                    mGrid[i][j] = floorTile;
+                else
+                    mGrid[i][j] = wallTile;
+            }
+        }
+        connectAllFloorSpacesInMap();
+    }
+
+    private void connectAllFloorSpacesInMap() {
+        //Do this until all floor spaces is connected together
+        while (checkConnectivity() > 1) {
+
+            for (int r = 0; r < GridSizeWidthAndHeight; r++) {
+                for (int c = 0; c < GridSizeWidthAndHeight; c++) {
+
+                    //check if tile is floor and if it has already been visited
+                    if (mGrid[r][c].Type == Tile.Types.WoodenFloor && checkIfVisited(mGrid[r][c].Visit)) {
+                        changeWallToFloor(r, c);
+                    }
+                }
+            }
+            mGrid[1][1].Visit = 0;
+            visitCounter = 0;
+            checkedList.clear();
+        }
+    }
+
+    private void changeWallToFloor(int r, int c) {
+        //check if it is first row and then change the first wall it meets going to the right to a floor
+        if (r == 0) {
+            for (int counter = 0; counter < GridSizeWidthAndHeight; counter++) {
+                if (mGrid[r + counter][c].Type == Tile.Types.Wall) {
+                    mGrid[r + counter][c] = floorTile;
+                    break;
+                }
+            }
+        } else {
+            outerLoop:
+            for (int counter = 0; counter <= r; counter++) {
+                if (mGrid[r - counter][c].Type == Tile.Types.Wall) { //Try to change wall tile to floor, to the left side
+                    mGrid[r - counter][c] = floorTile;
+                    break;
+                }
+                if (counter == r) { //if there is no wall tiles to the left all the way to the edge, try to change to the right
+                    for (int counter2 = 0; counter2 <= GridSizeWidthAndHeight - 1 - r; counter2++) {
+                        if (mGrid[r + counter2][c].Type == Tile.Types.Wall) {
+                            mGrid[r + counter2][c] = floorTile;
+                            break outerLoop;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Check if the tile group has already been visited (part of the checkedList)
+    private boolean checkIfVisited(int visit) {
 
         for (Integer checkedInts : checkedList) {
             if (checkedInts == visit) {
@@ -227,127 +142,70 @@ public class GameActivity extends Activity
         return true;
     }
 
-    public int findConnectivity() {
+    private int checkConnectivity() {
+        //reset the visit count for all spaces in the Grid
         for (int i = 0; i < GridSizeWidthAndHeight; i++) {
             for (int j = 0; j < GridSizeWidthAndHeight; j++) {
                 mGrid[i][j].Visit = 0;
             }
         }
 
-
+        //for each floor tile go and visit all their neighbors, when no more neighbors count
+        // visitCounter one up and find the next floor tile that has not been visited.
         for (int i = 0; i < GridSizeWidthAndHeight; i++) {
             for (int j = 0; j < GridSizeWidthAndHeight; j++) {
                 if (mGrid[i][j].Type == Tile.Types.WoodenFloor && mGrid[i][j].Visit == 0) {
-                    visitN(++visitCounter, i, j);
+                    visitAllConnectedNeighbors(++visitCounter, i, j);
                 }
-
             }
         }
         return visitCounter;
     }
 
-    public void visitN(int visitCounter, int i, int j) {
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, visitCounter);
+    //recursive logic to take a floor tile and visit all the connecting neighbors
+    private void visitAllConnectedNeighbors(int visitCollectionNr, int i, int j) {
+        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, visitCollectionNr);
         mGrid[i][j] = floorTile;
-        if (i > 0 && mGrid[i - 1][j].Type == Tile.Types.WoodenFloor && mGrid[i - 1][j].Visit != visitCounter)
-            visitN(visitCounter, i - 1, j);
-        if (i < GridSizeWidthAndHeight - 1 && mGrid[i + 1][j].Type == Tile.Types.WoodenFloor && mGrid[i + 1][j].Visit != visitCounter)
-            visitN(visitCounter, i + 1, j);
-        if (j > 0 && mGrid[i][j - 1].Type == Tile.Types.WoodenFloor && mGrid[i][j - 1].Visit != visitCounter)
-            visitN(visitCounter, i, j - 1);
-        if (j < GridSizeWidthAndHeight - 1 && mGrid[i][j + 1].Type == Tile.Types.WoodenFloor && mGrid[i][j + 1].Visit != visitCounter)
-            visitN(visitCounter, i, j + 1);
-    }
-
-    private void recurse(int i, int j) {
-        Tile wallTile = new Tile(Tile.Types.Wall, null, 0);
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
-        Random random = new Random();
-
-        if (counter++ == GridSizeWidthAndHeight * GridSizeWidthAndHeight / 2) {
-            counter = 0;
-            recurse2(GridSizeWidthAndHeight - 2, 1);
-            return;
-        }
-
-
-        if (j == 0)
-            /*j = GridSizeWidthAndHeight/2;*/
-            j += 1;
-        if (j == GridSizeWidthAndHeight - 1)
-            j -= 1;
-        if (i == 0 || i == GridSizeWidthAndHeight - 1)
-            i = GridSizeWidthAndHeight / 2;
-
-        switch (random.nextInt(3)) {
-            case 0: {
-                mGrid[i][j + 1] = floorTile;
-                recurse(i, j + 1);
-                break;
-            }
-            case 1: {
-                mGrid[i + 1][j] = floorTile;
-                recurse(i + 1, j);
-                break;
-            }
-            case 2: {
-                mGrid[i][j - 1] = floorTile;
-                recurse(i, j - 1);
-                break;
-            }
-            case 3: {
-                mGrid[i - 1][j] = floorTile;
-                recurse(i, j + 1);
-                break;
-            }
-
-        }
-    }
-
-    private void recurse2(int i, int j) {
-        Tile wallTile = new Tile(Tile.Types.Wall, null, 0);
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
-        Random random = new Random();
-
-        if (counter++ == GridSizeWidthAndHeight * GridSizeWidthAndHeight / 3)
-            return;
-
-        if (j == 0)
-            /*j = GridSizeWidthAndHeight/2;*/
-            j += 1;
-        if (j == GridSizeWidthAndHeight - 1)
-            j -= 1;
-        if (i == 0 || i == GridSizeWidthAndHeight - 1)
-            i = GridSizeWidthAndHeight / 2;
-
-        switch (random.nextInt(3)) {
-            case 0: {
-                mGrid[i][j + 1] = floorTile;
-                recurse2(i, j + 1);
-                break;
-            }
-            case 1: {
-                mGrid[i + 1][j] = floorTile;
-                recurse2(i + 1, j);
-                break;
-            }
-            case 2: {
-                mGrid[i][j - 1] = floorTile;
-                recurse2(i, j - 1);
-                break;
-            }
-            case 3: {
-                mGrid[i - 1][j] = floorTile;
-                recurse2(i, j + 1);
-                break;
-            }
-
-        }
+        if (i > 0 && mGrid[i - 1][j].Type == Tile.Types.WoodenFloor && mGrid[i - 1][j].Visit != visitCollectionNr)
+            visitAllConnectedNeighbors(visitCollectionNr, i - 1, j);
+        if (i < GridSizeWidthAndHeight - 1 && mGrid[i + 1][j].Type == Tile.Types.WoodenFloor && mGrid[i + 1][j].Visit != visitCollectionNr)
+            visitAllConnectedNeighbors(visitCollectionNr, i + 1, j);
+        if (j > 0 && mGrid[i][j - 1].Type == Tile.Types.WoodenFloor && mGrid[i][j - 1].Visit != visitCollectionNr)
+            visitAllConnectedNeighbors(visitCollectionNr, i, j - 1);
+        if (j < GridSizeWidthAndHeight - 1 && mGrid[i][j + 1].Type == Tile.Types.WoodenFloor && mGrid[i][j + 1].Visit != visitCollectionNr)
+            visitAllConnectedNeighbors(visitCollectionNr, i, j + 1);
     }
 
 
-    //http://www.migapro.com/depth-first-search/
-    public void recursionMaze(int r, int c) {
+    private void generateMazeGrid() {
+        for (int i = 0; i < GridSizeWidthAndHeight; i++) {
+            for (int j = 0; j < GridSizeWidthAndHeight; j++) {
+                mGrid[i][j] = wallTile;
+            }
+        }
+        Random rand = new Random();
+        // r for row、c for column
+        // Generate random r
+        int r = rand.nextInt(GridSizeWidthAndHeight);
+        while (r % 2 == 0) {
+            r = rand.nextInt(GridSizeWidthAndHeight);
+        }
+        // Generate random c
+        int c = rand.nextInt(GridSizeWidthAndHeight);
+        while (c % 2 == 0) {
+            c = rand.nextInt(GridSizeWidthAndHeight);
+        }
+        // Starting cell
+        mGrid[r][c] = floorTile;
+
+        //　Allocate the maze with recursive method
+        recursionMaze(r, c);
+
+    }
+
+    //inspiration for the maze function have been taken from http://www.migapro.com/depth-first-search/
+    //There is used depth first search to generate the maze
+    private void recursionMaze(int r, int c) {
         // 4 random directions
         int[] randDirs = generateRandomDirections();
         Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
@@ -400,12 +258,7 @@ public class GameActivity extends Activity
 
     }
 
-    /**
-     * http://www.migapro.com/depth-first-search/
-     * Generate an array with random directions 1-4
-     *
-     * @return Array containing 4 directions in random order
-     */
+    //inspiration for the maze function have been taken from http://www.migapro.com/depth-first-search/
     private int[] generateRandomDirections() {
         ArrayList<Integer> randoms = new ArrayList<>();
         for (int i = 0; i < 4; i++)
