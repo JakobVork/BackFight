@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+
 public class GameActivity extends Activity
 {
     static public final int GridSizeWidthAndHeight = 16;
@@ -17,7 +18,7 @@ public class GameActivity extends Activity
     Tile wallTile = new Tile(Tile.Types.Wall, null, 0);
     Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
     private Tile[][] mGrid;
-    private int visitCounter = 1;
+    private int visitCounter = 0;
     private List<Integer> checkedList = new ArrayList<>();
     private int counter = 0;
 
@@ -25,7 +26,10 @@ public class GameActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
-        setupMyGrid (GridSizeWidthAndHeight);
+
+        GridType gridType = GridType.Maze;
+        /*GridType gridType = GridType.Maze;*/
+        setupMyGrid(GridSizeWidthAndHeight, gridType);
 
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
@@ -36,8 +40,20 @@ public class GameActivity extends Activity
         }
     }
 
-    public void setupMyGrid (int n)
+    public void setupMyGrid(int n, GridType gridType)
     {
+/*        switch (gridType) {
+            case DefaultGrid: {
+                generateDefaultGrid();
+                break;
+            }
+            case Maze: {
+                generateMazeGrid();
+                break;
+            }
+        }*/
+
+
         if (mGrid == null) {
             List<Player> players = new ArrayList<>();
             players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
@@ -62,6 +78,7 @@ public class GameActivity extends Activity
                         mGrid[i][j] = wallTile;
                 }
             }
+
             //find connectivity
             while (findConnectivity() > 1) {
 
@@ -70,7 +87,6 @@ public class GameActivity extends Activity
 
                         if (mGrid[i][j].Type == Tile.Types.WoodenFloor && checkIfVisited(mGrid[i][j].Visit)) {
                             if (i == 0) {
-                                counter = 0;
                                 for (int counter = 0; counter < GridSizeWidthAndHeight; counter++) {
                                     if (mGrid[i + counter][j].Type == Tile.Types.Wall) {
                                         mGrid[i + counter][j] = floorTile;
@@ -78,11 +94,20 @@ public class GameActivity extends Activity
                                     }
                                 }
                             } else {
-                                counter = 0;
-                                for (int counter = 0; counter < i; counter++) {
+                                //ToDo: Error around here somewhere
+                                outerLoop:
+                                for (int counter = 0; counter <= i; counter++) {
                                     if (mGrid[i - counter][j].Type == Tile.Types.Wall) {
                                         mGrid[i - counter][j] = floorTile;
                                         break;
+                                    }
+                                    if (counter == i) {
+                                        for (int counter2 = 0; counter2 <= GridSizeWidthAndHeight - 1 - i; counter2++) {
+                                            if (mGrid[i + counter2][j].Type == Tile.Types.Wall) {
+                                                mGrid[i + counter2][j] = floorTile;
+                                                break outerLoop;
+                                            }
+                                        }
                                     }
                                 }
 
@@ -91,7 +116,7 @@ public class GameActivity extends Activity
                     }
                 }
                 mGrid[1][1].Visit = 0;
-                visitCounter = 1;
+                visitCounter = 0;
                 checkedList.clear();
             }
 
@@ -120,11 +145,11 @@ public class GameActivity extends Activity
             mGrid[r][c] = floorTile;
 
             //　Allocate the maze with recursive method
-            recursionMaze(r, c);*/
+            recursionMaze(r, c);
 
 
             //place starting players
-/*            mGrid[n / 2][n / 2] = floorTileWithPlayers;*/
+            mGrid[n / 2][n / 2] = floorTileWithPlayers;*/
 
             //generate board
 
@@ -205,8 +230,15 @@ public class GameActivity extends Activity
     public int findConnectivity() {
         for (int i = 0; i < GridSizeWidthAndHeight; i++) {
             for (int j = 0; j < GridSizeWidthAndHeight; j++) {
-                if (mGrid[i][j] == floorTile && mGrid[i][j].Visit == 0) {
-                    visitN(visitCounter++, i, j);
+                mGrid[i][j].Visit = 0;
+            }
+        }
+
+
+        for (int i = 0; i < GridSizeWidthAndHeight; i++) {
+            for (int j = 0; j < GridSizeWidthAndHeight; j++) {
+                if (mGrid[i][j].Type == Tile.Types.WoodenFloor && mGrid[i][j].Visit == 0) {
+                    visitN(++visitCounter, i, j);
                 }
 
             }
@@ -320,9 +352,9 @@ public class GameActivity extends Activity
         int[] randDirs = generateRandomDirections();
         Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, 0);
         // Examine each direction
-        for (int i = 0; i < randDirs.length; i++) {
+        for (int randDir : randDirs) {
 
-            switch (randDirs[i]) {
+            switch (randDir) {
                 case 1: // Up
                     //　Whether 2 cells up is out or not
                     if (r - 2 <= 0)
