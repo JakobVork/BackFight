@@ -26,11 +26,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnNewGame = (Button) findViewById(R.id.btnNewGameMainMenu);
-        mbtnLoadGame = (Button) findViewById(R.id.btnLoadGameMainMenu);
-        mbtnSettings = (Button) findViewById(R.id.btnSettingsMainMenu);
-        mbtnRules = (Button) findViewById(R.id.btnRulesMainMenu);
-        mbtnExit = (Button) findViewById(R.id.btnExitMainMenu);
+        mbtnNewGame = (Button) findViewById(R.id.activity_mainMenu_btn_newGame);
+        mbtnLoadGame = (Button) findViewById(R.id.activity_mainMenu_btn_loadGame);
+        mbtnSettings = (Button) findViewById(R.id.activity_mainMenu_btn_settings);
+        mbtnRules = (Button) findViewById(R.id.activity_mainMenu_btn_rules);
+        mbtnExit = (Button) findViewById(R.id.activity_mainMenu_btn_exit);
 
         setOnClickListener();
 

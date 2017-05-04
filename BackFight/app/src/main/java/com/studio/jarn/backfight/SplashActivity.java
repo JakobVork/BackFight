@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void StartAnimation() {
-        TextView mBackFight = (TextView) findViewById(R.id.tvwBackfight);
+        TextView mBackFight = (TextView) findViewById(R.id.activity_splash_tv_title);
         Animation StartAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         mBackFight.startAnimation(StartAnimation);
     }

@@ -21,8 +21,8 @@ public class LoadGameActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.btnBackLoadGame);
-        mbtnLoad = (Button) findViewById(R.id.btnLoadLoadGame);
+        mbtnBack = (Button) findViewById(R.id.activity_loadGame_btn_back);
+        mbtnLoad = (Button) findViewById(R.id.activity_loadGame_btn_loadGame);
 
         setOnClickListener();
     }

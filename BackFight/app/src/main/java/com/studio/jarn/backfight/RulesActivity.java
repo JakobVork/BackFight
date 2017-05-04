@@ -22,7 +22,7 @@ public class RulesActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.btnBackRules);
+        mbtnBack = (Button) findViewById(R.id.activity_rules_btn_back);
 
         setOnClickListener();
     }

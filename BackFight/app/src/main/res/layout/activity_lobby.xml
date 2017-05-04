@@ -8,7 +8,7 @@
     tools:context="com.studio.jarn.backfight.LobbyActivity">
 
     <Button
-        android:id="@+id/btnBackLobby"
+        android:id="@+id/activity_lobby_btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -20,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
-        android:id="@+id/btnStartLobby"
+        android:id="@+id/activity_lobby_btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -32,7 +32,7 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-        android:id="@+id/tvwLobby"
+        android:id="@+id/activity_lobby_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"

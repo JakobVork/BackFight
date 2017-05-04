@@ -21,8 +21,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.btnBackSettings);
-        mbtnSave = (Button) findViewById(R.id.btnSaveSettings);
+        mbtnBack = (Button) findViewById(R.id.activity_settings_btn_back);
+        mbtnSave = (Button) findViewById(R.id.activity_settings_btn_save);
 
         setOnClickListener();
     }

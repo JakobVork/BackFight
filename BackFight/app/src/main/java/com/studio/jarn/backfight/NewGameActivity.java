@@ -23,9 +23,9 @@ public class NewGameActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.btnBackNewGame);
-        mbtnCreate = (Button) findViewById(R.id.btnCreateNewGame);
-        mbtnJoin = (Button) findViewById(R.id.btnJoinNewGame);
+        mbtnBack = (Button) findViewById(R.id.activity_newGame_btn_back);
+        mbtnCreate = (Button) findViewById(R.id.activity_newGame_btn_create);
+        mbtnJoin = (Button) findViewById(R.id.activity_newGame_btn_join);
 
         setOnClickListener();
     }

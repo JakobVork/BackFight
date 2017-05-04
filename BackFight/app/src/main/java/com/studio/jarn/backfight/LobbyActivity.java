@@ -22,8 +22,8 @@ public class LobbyActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.btnBackLobby);
-        mbtnStart = (Button) findViewById(R.id.btnStartLobby);
+        mbtnBack = (Button) findViewById(R.id.activity_lobby_btn_back);
+        mbtnStart = (Button) findViewById(R.id.activity_lobby_btn_start);
 
         setOnClickListener();
     }
