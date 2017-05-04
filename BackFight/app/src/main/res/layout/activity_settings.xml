@@ -12,11 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/Back"
         android:background="@color/btn_BackgroundColor"
+        android:text="@string/all_back"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -26,10 +26,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/Save"
+        android:layout_marginRight="8dp"
         android:background="@color/btn_BackgroundColor"
+        android:text="@string/settings_save"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -42,7 +42,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/Settings"
+        android:text="@string/mainMenu_settings"
         android:textColor="@color/btn_TextColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/activity_mainMenu_gl_horizotalTitle"
@@ -51,9 +51,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/activity_mainMenu_gl_horizotalTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/activity_mainMenu_gl_horizotalTitle"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1511254" />
 </android.support.constraint.ConstraintLayout>

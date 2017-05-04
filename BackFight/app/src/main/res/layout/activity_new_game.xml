@@ -8,9 +8,9 @@
     tools:context="com.studio.jarn.backfight.NewGameActivity">
 
     <android.support.constraint.Guideline
+        android:id="@+id/activity_mainMenu_gl_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/activity_mainMenu_gl_vertical"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
@@ -18,19 +18,19 @@
         android:id="@+id/activity_newGame_btn_create"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/Create"
         android:background="@color/btn_BackgroundColor"
+        android:text="@string/newGame_create"
         android:textColor="@color/btn_TextColor"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/activity_mainMenu_gl_horizontal"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/activity_mainMenu_gl_vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/activity_mainMenu_gl_horizontal"
         app:layout_constraintVertical_bias="0.0" />
 
     <android.support.constraint.Guideline
@@ -48,16 +48,16 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/Join"
         android:background="@color/btn_BackgroundColor"
+        android:text="@string/newGame_join"
         android:textColor="@color/btn_TextColor"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/activity_mainMenu_gl_horizontal"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/activity_mainMenu_gl_vertical"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintBottom_toTopOf="@+id/activity_mainMenu_gl_horizontal" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/activity_newGame_btn_back"
@@ -68,7 +68,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/Back"
+        android:text="@string/all_back"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

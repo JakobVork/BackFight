@@ -58,7 +58,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/New_Game"
+        android:text="@string/mainMenu_newGame"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -74,15 +74,15 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/Load_Game"
+        android:text="@string/mainMenu_loadGame"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/activity_mainMenu_gl_55Procent"
         app:layout_constraintRight_toLeftOf="@+id/activity_mainMenu_gl_95Procent"
         app:layout_constraintTop_toTopOf="@+id/activity_mainMenu_gl_25ProcentHorizontal"
-        android:layout_marginTop="8dp"
         app:layout_constraintVertical_bias="0.100000024" />
 
     <Button
@@ -93,7 +93,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/Settings"
+        android:text="@string/mainMenu_settings"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/activity_mainMenu_gl_5Procent"
         app:layout_constraintRight_toLeftOf="@+id/activity_mainMenu_gl_45Procent"
@@ -107,7 +107,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/Rules"
+        android:text="@string/mainMenu_rules"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/activity_mainMenu_gl_55Procent"
         app:layout_constraintRight_toLeftOf="@+id/activity_mainMenu_gl_95Procent"
@@ -121,7 +121,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/Exit"
+        android:text="@string/mainMenu_exit"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/activity_mainMenu_gl_25Procent"
         app:layout_constraintRight_toLeftOf="@+id/activity_mainMenu_gl_75Procent"
@@ -145,9 +145,9 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/activity_mainMenu_gl_25ProcentHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/activity_mainMenu_gl_25ProcentHorizontal"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.25" />
 </android.support.constraint.ConstraintLayout>
