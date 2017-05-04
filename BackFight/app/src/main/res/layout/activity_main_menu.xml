@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grid_background"
     tools:context="com.studio.jarn.backfight.MainMenuActivity">
 
     <android.support.constraint.Guideline
@@ -56,13 +57,15 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/btn_BackgroundColor"
         android:text="@string/New_Game"
+        android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline5"
         app:layout_constraintRight_toLeftOf="@+id/guideline45"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.39999998" />
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintVertical_bias="0.100000024" />
 
     <Button
         android:id="@+id/btnLoadGameMainMenu"
@@ -71,14 +74,16 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:background="@color/btn_BackgroundColor"
         android:text="@string/Load_Game"
+        android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline55"
         app:layout_constraintRight_toLeftOf="@+id/guideline95"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.39999998" />
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        android:layout_marginTop="8dp"
+        app:layout_constraintVertical_bias="0.100000024" />
 
     <Button
         android:id="@+id/btnSettingsMainMenu"
@@ -87,7 +92,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/btn_BackgroundColor"
         android:text="@string/Settings"
+        android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/guideline5"
         app:layout_constraintRight_toLeftOf="@+id/guideline45"
         app:layout_constraintTop_toBottomOf="@+id/btnNewGameMainMenu" />
@@ -99,7 +106,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/btn_BackgroundColor"
         android:text="@string/Rules"
+        android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/guideline55"
         app:layout_constraintRight_toLeftOf="@+id/guideline95"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadGameMainMenu" />
@@ -111,8 +120,34 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/btn_BackgroundColor"
         android:text="@string/Exit"
+        android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/guideline25"
         app:layout_constraintRight_toLeftOf="@+id/guideline75"
         app:layout_constraintTop_toBottomOf="@+id/btnRulesMainMenu" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/app_name"
+        android:textColor="@color/start_TextColor"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline5"
+        app:layout_constraintRight_toLeftOf="@+id/guideline95"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.27" />
 </android.support.constraint.ConstraintLayout>

@@ -10,6 +10,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="userLandscape"
+            android:theme="@style/FullscreenMenuTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -20,13 +31,8 @@
             android:name=".MainMenuActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
-            android:theme="@style/FullscreenMenuTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/FullscreenMenuTheme"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -47,12 +53,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
-
         <activity
             android:name=".LobbyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
+
     </application>
 
 </manifest>
