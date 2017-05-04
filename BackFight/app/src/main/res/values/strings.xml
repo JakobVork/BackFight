@@ -4,4 +4,7 @@
     <string name="dummy_button">Dummy Button2</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="instructions">Zoom and move the board. Touch a square to select. Do a long touch to change the square color.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

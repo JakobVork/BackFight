@@ -1,19 +1,28 @@
 package com.studio.jarn.backfight;
 
-import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.View;
+
+import com.studio.jarn.backfight.Items.gameItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameActivity extends Activity
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
     static public final int GridSizeWidthAndHeight = 5;
     static public final int SquaresViewedAtStartup = 3;
 
+    private static boolean isHidden = true;
+
     private Tile[][] mGrid;
 
+    Fragment itemsAndStatsFragment;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +36,38 @@ public class GameActivity extends Activity
             gv.setGridSize(GridSizeWidthAndHeight);
             gv.setViewSizeAtStartup(SquaresViewedAtStartup);
             gv.updateGrid(mGrid);
+        }
+    }
+
+    public void switchItemListFragment(View view) {
+        if(isHidden) {
+            showItemListFragment();
+            isHidden = false;
+        } else {
+            hideItemListFragment();
+            isHidden = true;
+        }
+    }
+
+    private void showItemListFragment() {
+        // Add ItemsAndStats fragment
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if(itemsAndStatsFragment == null) {
+            itemsAndStatsFragment = new ItemsAndStatsFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+            ft.commit();
+        }
+    }
+
+    private void hideItemListFragment() {
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if (itemsAndStatsFragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.remove(itemsAndStatsFragment);
+            ft.commit();
         }
     }
 
@@ -44,5 +85,10 @@ public class GameActivity extends Activity
         Tile[] array = new Tile[]{new Tile(Tile.Types.Wall, null), new Tile(Tile.Types.WoodenFloor, null), new Tile(Tile.Types.WoodenFloor, null), new Tile(Tile.Types.Wall, null), new Tile(Tile.Types.Wall, null)};
 
         mGrid = new Tile[][]{array, array, array, array, arrayWithPlayers};
+    }
+
+    @Override
+    public void onItemSelected(gameItem item) {
+        Log.d("Item", "onItemSelected: Clicked!");
     }
 }
