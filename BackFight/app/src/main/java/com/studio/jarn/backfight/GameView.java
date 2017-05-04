@@ -19,11 +19,12 @@ import java.util.List;
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
 
-public class GameView extends PanZoomView
+public class GameView extends PanZoomView implements GameBoardTouchListener
 {
 
     protected float mFocusX;
     protected float mFocusY;
+    protected GameBoardTouchListener mTouchListener;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -36,23 +37,30 @@ public class GameView extends PanZoomView
     private float mSquareHeight = 64;
     private Rect  mDestRect;
     private RectF mDestRectF;
-
     private Tile[][] mGrid;
     private int mGridSizeWidthAndHeight;
     private int mSquaresViewedAtStartup;
-
     public GameView(Context context) {
-    super (context);
-}
-
-
+        super(context);
+        setTouchListener(this);
+    }
     public GameView(Context context, AttributeSet attrs) {
-    super (context, attrs);
-}
+        super(context, attrs);
+        setTouchListener(this);
+    }
 
     public GameView(Context context, AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
-}
+        super(context, attrs, defStyle);
+        setTouchListener(this);
+    }
+
+    public GameBoardTouchListener getTouchListener() {
+        return mTouchListener;
+    }
+
+    public void setTouchListener(GameBoardTouchListener newListener) {
+        mTouchListener = newListener;
+    }
 
     // Inspiration found here: http://stackoverflow.com/questions/10616777/how-to-merge-to-two-bitmap-one-over-another
     private Bitmap addPlayerToBitmap(Bitmap bmp1, List<Player> players) {
@@ -64,7 +72,8 @@ public class GameView extends PanZoomView
         float row = 0;
         for (Player p : players) {
 
-            canvas.drawBitmap(p.Icon, bmp1.getWidth() * (row / 4), bmp1.getHeight() * (column / 4), null);
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
+                    p.Icon), bmp1.getWidth() * (row / 4), bmp1.getHeight() * (column / 4), null);
 
             // logic to distribute players over the tile, so each tile can hold 16 players
             if (column < 4)
@@ -233,5 +242,129 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
     mGrid = grid.clone();
 }
 
+    public void onTouchDown(float downX, float downY) {
+        GameBoardTouchListener listener = getTouchListener();
+        if (listener == null) return;
+        listener.onTouchDown();
+    }
+
+    public void onTouchUp(float downX, float downY, float upX, float upY) {
+        // Convert view coordinates to canvas coordinates and, eventually,
+        // to index values for the cells being displayed.
+
+        // If the scale is 1, it is easy. When the scale is one, we know that exactly
+        // pNumSquaresAlongSide are on the screen. The rest are off the screen.
+        // Since that has already been accounted for, in the origin offset values,
+        // simply add the x or y arg values to the origin offsets and divide
+        // by the square width to get index values.
+        float fx = (mOriginOffsetX + upX - mPosX) / mSquareWidth;
+        float fy = (mOriginOffsetY + upY - mPosY) / mSquareHeight;
+        float dfx = (mOriginOffsetX * mScaleFactor + downX - mPosX) / mSquareWidth;
+        float dfy = (mOriginOffsetY * mScaleFactor + downY - mPosY) / mSquareHeight;
+        float fx2 = fx, dfx2 = dfx;
+        float fy2 = fy, dfy2 = dfy;
+
+        /*if (mScaleFactor == 1.0f) {
+            // Use the four float values already computed. Convert them to int values. See below.
+        } else {*/
+            // If scaling is on, we have to adjust the up and down points by the scale factor and
+            // we have to account for the points that do not show up in the visible view.
+
+            // 1. Figure out how many squares are showing on the screen. We need that to convert view
+            // coordinates to index numbers.
+            float scaledSqWidth = (mScaleFactor * mSquareWidth);
+            float scaledSqHeight = (mScaleFactor * mSquareHeight);
+
+            // 2 (new method)
+            // We zoom around the center point of the canvas.
+            // First we need to figure out where the point is, in view coordinates. Look at the unzoomed values we have saved.
+            // The focus point never changes as we zoom. Use its x and y values to determine how many squares are showing on the screen.
+            // If you know the number of squares visible left and above the focus point, you can figure out how many squares are
+            // offscreen. (Remember we know the focus point is half of the canvas width and height.)
+            float vFocusX = mFocusX - mOriginOffsetX;
+            float vFocusY = mFocusY - mOriginOffsetY;
+            float numSquaresToLeft = vFocusX / scaledSqWidth;
+            float numSquaresAbove = vFocusY / scaledSqHeight;
+            float numSquaresToCenter = mMaxCanvasWidth / mSquareWidth / 2f;
+            float numSquaresOffscreenLeft = numSquaresToCenter - numSquaresToLeft;
+            float numSquaresOffscreenAbove = numSquaresToCenter - numSquaresAbove;
+            float vsqX = (upX - mPosX) / scaledSqWidth;
+            float vsqY = (upY - mPosY) / scaledSqHeight;
+            fx2 = vsqX + numSquaresOffscreenLeft;
+            fy2 = vsqY + numSquaresOffscreenAbove;
+            dfx2 = (downX - mPosX) / scaledSqWidth + numSquaresOffscreenLeft;
+            dfy2 = (downY - mPosY) / scaledSqHeight + numSquaresOffscreenAbove;
+
+        //}
+
+        float x2 = 0, y2 = 0;
+        /*x2 = mPosX - mPosX0;
+        y2 = mPosY - mPosY0;*/
+        /*if (AppConfig.DEBUG) {
+            Log.d (Constants.LOG_UI, "GameBoardView x2-y2: " + x2 + " - " + y2
+                    + " mPosX: " + mPosX + " mPosX0: " + mPosX0);
+        }*/
+
+
+        // We want integer index values to call the listener.
+        // Use floor to round down. Do not need to add one since origin offset includes whole square.
+        //
+        int sUpX = (int) Math.floor(fx2) + 1;
+        int sUpY = (int) Math.floor(fy2) + 1;
+        int sDownX = (int) Math.floor(dfx2) + 1;
+        int sDownY = (int) Math.floor(dfy2) + 1;
+        //int sUpX2 = (int) Math.floor (fx) + 1;
+        //int sUpY2 = (int) Math.floor (fy) + 1;
+
+        /*if (AppConfig.DEBUG) {
+            Log.d (Constants.LOG_UI, "ScanView.onTouchUp(1) s.x: " + sUpX + " s.y: " + sUpY
+                    + " down s.x " + sDownX + " down s.y: " + sDownY);
+            //Log.d (Constants.LOG_UI, "ScanView.onTouchUp(1) OLD s.x: " + sUpX2 + " s.y: " + sUpY2);
+
+        }*/
+        // The sUp and sDown values are index values relative to the canvas origin.
+        /*if (AppConfig.DEBUG)
+            Log.d (Constants.LOG_UI, "ScanView.onTouchUp(2) s.x: " + sUpX + " s.y: " + sUpY
+                    + " down s.x " + sDownX + " down s.y: " + sDownY);*/
+
+        // Next check to see if there is a listener for these events.
+        // If there is not, there is nothing else to do.
+        GameBoardTouchListener listener = getTouchListener();
+        if (listener == null) return;
+
+        // Tell the listener about the Up event. Again note: sector x is really y on screen
+        //if (isLongPress) listener.onLongTouchUp (sDownX, sDownY, sUpX, sUpY);
+        /*else*/
+        listener.onTouchUp(sDownX, sDownY, sUpX, sUpY);
+    }
+
+
+    @Override
+    public void onTouchDown() {
+
+    }
+
+    @Override
+    public void onTouchUp(int downX, int downY, int upX, int upY) {
+        //Check that click is on board
+        if (upX > (mMaxCanvasWidth / mSquareWidth) || upY > (mMaxCanvasHeight / mSquareHeight))
+            return;
+        if (upX < 0 || upY < 0) return;
+
+        Tile selectedTile = mGrid[upX - 1][upY - 1];
+        if (selectedTile.Players == null) return;
+        if (selectedTile.Players.size() > 0) {
+            //TODO Missing check on what figure it is and swap with correct figure
+            selectedTile.Players.get(0).Icon = R.drawable.player32selected;
+            invalidate(); //This method renders the map
+            //TODO call function for showing items
+        }
+
+    }
+
+    @Override
+    public void onLongTouchUp(int downX, int downY, int upX, int upY) {
+
+    }
 } // end class
   

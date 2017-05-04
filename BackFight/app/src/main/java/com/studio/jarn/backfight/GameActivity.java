@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 import android.graphics.BitmapFactory;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -86,11 +87,11 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     //ToDO Needs implementation
     public void addPlayers() {
         List<Player> players = new ArrayList<>();
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.cart)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
+        players.add(new Player(R.drawable.point, "Anders"));
+        players.add(new Player(R.drawable.player32, "Pernille"));
+        players.add(new Player(R.drawable.cart, "Pernille"));
+        players.add(new Player(R.drawable.point, "Pernille"));
+        players.add(new Player(R.drawable.player32, "Pernille"));
 
 
         Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players);
