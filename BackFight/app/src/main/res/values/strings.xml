@@ -4,4 +4,16 @@
     <string name="dummy_button">Dummy Button2</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="instructions">Zoom and move the board. Touch a square to select. Do a long touch to change the square color.</string>
+    <string name="New_Game">New Game</string>
+    <string name="Load_Game">Load Game</string>
+    <string name="Rules">Rules</string>
+    <string name="Settings">Settings</string>
+    <string name="Exit">Exit</string>
+    <string name="Back">Back</string>
+    <string name="Save">Save</string>
+    <string name="Load">Load</string>
+    <string name="Create">Create</string>
+    <string name="Join">Join</string>
+    <string name="StartGame">Start Game</string>
+    <string name="Lobby">Lobby</string>
 </resources>
