@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">BackFight</string>
 
-    <string name="dummy_button">Dummy Button2</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="instructions">Zoom and move the board. Touch a square to select. Do a long touch to change the square color.</string>
+    <string name="mainMenu_newGame">New Game</string>
+    <string name="mainMenu_loadGame">Load Game</string>
+    <string name="mainMenu_rules">Rules</string>
+    <string name="mainMenu_settings">Settings</string>
+    <string name="mainMenu_exit">Exit</string>
+    <string name="all_back">Back</string>
+    <string name="settings_save">Save</string>
+    <string name="newGame_load">Load</string>
+    <string name="newGame_create">Create</string>
+    <string name="newGame_join">Join</string>
+    <string name="lobby_startGame">Start Game</string>
+    <string name="lobby_title">Lobby</string>
 </resources>
