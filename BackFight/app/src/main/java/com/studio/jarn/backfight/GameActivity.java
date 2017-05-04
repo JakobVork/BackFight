@@ -1,7 +1,6 @@
 package com.studio.jarn.backfight;
 
 import android.app.Activity;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -41,11 +40,11 @@ public class GameActivity extends Activity
     //ToDO Needs implementation
     public void addPlayers() {
         List<Player> players = new ArrayList<>();
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.cart)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
+        players.add(new Player(R.drawable.point, "Anders"));
+        players.add(new Player(R.drawable.player32, "Pernille"));
+        players.add(new Player(R.drawable.cart, "Pernille"));
+        players.add(new Player(R.drawable.point, "Pernille"));
+        players.add(new Player(R.drawable.player32, "Pernille"));
 
 
         Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players);

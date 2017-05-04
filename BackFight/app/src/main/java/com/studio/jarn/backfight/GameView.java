@@ -264,9 +264,9 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         float fx2 = fx, dfx2 = dfx;
         float fy2 = fy, dfy2 = dfy;
 
-        if (mScaleFactor == 1.0f) {
+        /*if (mScaleFactor == 1.0f) {
             // Use the four float values already computed. Convert them to int values. See below.
-        } else {
+        } else {*/
             // If scaling is on, we have to adjust the up and down points by the scale factor and
             // we have to account for the points that do not show up in the visible view.
 
@@ -295,11 +295,11 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
             dfx2 = (downX - mPosX) / scaledSqWidth + numSquaresOffscreenLeft;
             dfy2 = (downY - mPosY) / scaledSqHeight + numSquaresOffscreenAbove;
 
-        }
+        //}
 
         float x2 = 0, y2 = 0;
-        x2 = mPosX - mPosX0;
-        y2 = mPosY - mPosY0;
+        /*x2 = mPosX - mPosX0;
+        y2 = mPosY - mPosY0;*/
         /*if (AppConfig.DEBUG) {
             Log.d (Constants.LOG_UI, "GameBoardView x2-y2: " + x2 + " - " + y2
                     + " mPosX: " + mPosX + " mPosX0: " + mPosX0);
@@ -352,6 +352,7 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         if (upX < 0 || upY < 0) return;
 
         Tile selectedTile = mGrid[upX - 1][upY - 1];
+        if (selectedTile.Players == null) return;
         if (selectedTile.Players.size() > 0) {
             //TODO Missing check on what figure it is and swap with correct figure
             selectedTile.Players.get(0).Icon = R.drawable.player32selected;
