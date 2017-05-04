@@ -24,11 +24,11 @@ public class SettingsActivity extends AppCompatActivity {
         mbtnBack = (Button) findViewById(R.id.activity_settings_btn_back);
         mbtnSave = (Button) findViewById(R.id.activity_settings_btn_save);
 
-        setOnClickListener();
+        setOnClickListeners();
     }
 
     // Make OnClickListener to the buttons
-    private void setOnClickListener() {
+    private void setOnClickListeners() {
         mbtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -24,10 +24,10 @@ public class RulesActivity extends AppCompatActivity {
     private void initButtons() {
         mbtnBack = (Button) findViewById(R.id.activity_rules_btn_back);
 
-        setOnClickListener();
+        setOnClickListeners();
     }
 
-    private void setOnClickListener() {
+    private void setOnClickListeners() {
         mbtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

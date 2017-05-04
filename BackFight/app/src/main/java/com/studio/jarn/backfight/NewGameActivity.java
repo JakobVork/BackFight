@@ -27,10 +27,10 @@ public class NewGameActivity extends AppCompatActivity {
         mbtnCreate = (Button) findViewById(R.id.activity_newGame_btn_create);
         mbtnJoin = (Button) findViewById(R.id.activity_newGame_btn_join);
 
-        setOnClickListener();
+        setOnClickListeners();
     }
 
-    private void setOnClickListener() {
+    private void setOnClickListeners() {
         mbtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

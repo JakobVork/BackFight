@@ -32,12 +32,12 @@ public class MainMenuActivity extends AppCompatActivity {
         mbtnRules = (Button) findViewById(R.id.activity_mainMenu_btn_rules);
         mbtnExit = (Button) findViewById(R.id.activity_mainMenu_btn_exit);
 
-        setOnClickListener();
+        setOnClickListeners();
 
     }
 
     // Make OnClickListener to the buttons
-    private void setOnClickListener() {
+    private void setOnClickListeners() {
         mbtnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -25,10 +25,10 @@ public class LobbyActivity extends AppCompatActivity {
         mbtnBack = (Button) findViewById(R.id.activity_lobby_btn_back);
         mbtnStart = (Button) findViewById(R.id.activity_lobby_btn_start);
 
-        setOnClickListener();
+        setOnClickListeners();
     }
 
-    private void setOnClickListener() {
+    private void setOnClickListeners() {
         mbtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -24,10 +24,10 @@ public class LoadGameActivity extends AppCompatActivity {
         mbtnBack = (Button) findViewById(R.id.activity_loadGame_btn_back);
         mbtnLoad = (Button) findViewById(R.id.activity_loadGame_btn_loadGame);
 
-        setOnClickListener();
+        setOnClickListeners();
     }
 
-    private void setOnClickListener() {
+    private void setOnClickListeners() {
         mbtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
