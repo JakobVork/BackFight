@@ -9,9 +9,9 @@ import android.widget.Button;
 
 public class NewGameActivity extends AppCompatActivity {
 
-    Button mbtnBack;
-    Button mbtnCreate;
-    Button mbtnJoin;
+    Button mBtnBack;
+    Button mBtnCreate;
+    Button mBtnJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,29 +23,29 @@ public class NewGameActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.activity_newGame_btn_back);
-        mbtnCreate = (Button) findViewById(R.id.activity_newGame_btn_create);
-        mbtnJoin = (Button) findViewById(R.id.activity_newGame_btn_join);
+        mBtnBack = (Button) findViewById(R.id.activity_newGame_btn_back);
+        mBtnCreate = (Button) findViewById(R.id.activity_newGame_btn_create);
+        mBtnJoin = (Button) findViewById(R.id.activity_newGame_btn_join);
 
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-        mbtnBack.setOnClickListener(new View.OnClickListener() {
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 backToMainMenu();
             }
         });
 
-        mbtnCreate.setOnClickListener(new View.OnClickListener() {
+        mBtnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createLobby();
             }
         });
 
-        mbtnJoin.setOnClickListener(new View.OnClickListener() {
+        mBtnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 joinLobby();
@@ -53,7 +53,7 @@ public class NewGameActivity extends AppCompatActivity {
         });
     }
 
-    // Join lobby, maybe make a dialog to write id/password
+    // Join lobby, maybe make a dialog to write Id/password
     private void joinLobby() {
     }
 

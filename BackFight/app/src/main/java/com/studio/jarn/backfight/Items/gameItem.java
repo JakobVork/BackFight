@@ -4,13 +4,13 @@ public class gameItem {
 
     public String Title;
     public String Description;
-    public int image;
-    public int id;
+    public int Image;
+    public int Id;
 
     public gameItem(String title, String description, int img) {
-        this.id = 1;
+        this.Id = 1; //TODO: Generate random ID, or delegate this to childs, when they are created?
         this.Title = title;
         this.Description = description;
-        this.image = img;
+        this.Image = img;
     }
 }
