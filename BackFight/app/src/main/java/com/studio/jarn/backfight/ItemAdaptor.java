@@ -47,8 +47,8 @@ class ItemAdaptor extends BaseAdapter{
 
         mItem = mItems.get(position);
         if(mItem != null) {
-            TextView txtTitle = (TextView) convertView.findViewById(R.id.fragment_list_item_txt_title);
-            txtTitle.setText(mItem.Title);
+            TextView tvTitle = (TextView) convertView.findViewById(R.id.fragment_list_item_txt_title);
+            tvTitle.setText(mItem.Title);
 
             ImageView imgView = (ImageView) convertView.findViewById(R.id.fragment_list_item_img);
             imgView.setImageResource(mItem.Image);

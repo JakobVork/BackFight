@@ -8,8 +8,8 @@ import android.widget.Button;
 
 public class LoadGameActivity extends AppCompatActivity {
 
-    Button mbtnBack;
-    Button mbtnLoad;
+    Button mBtnBack;
+    Button mBtnLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,21 +21,21 @@ public class LoadGameActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.activity_loadGame_btn_back);
-        mbtnLoad = (Button) findViewById(R.id.activity_loadGame_btn_loadGame);
+        mBtnBack = (Button) findViewById(R.id.activity_loadGame_btn_back);
+        mBtnLoad = (Button) findViewById(R.id.activity_loadGame_btn_loadGame);
 
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-        mbtnBack.setOnClickListener(new View.OnClickListener() {
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 backToMainMenu();
             }
         });
 
-        mbtnLoad.setOnClickListener(new View.OnClickListener() {
+        mBtnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadGame();

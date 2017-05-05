@@ -9,8 +9,8 @@ import android.widget.Button;
 
 public class LobbyActivity extends AppCompatActivity {
 
-    Button mbtnBack;
-    Button mbtnStart;
+    Button mBtnBack;
+    Button mBtnStart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,21 +22,21 @@ public class LobbyActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.activity_lobby_btn_back);
-        mbtnStart = (Button) findViewById(R.id.activity_lobby_btn_start);
+        mBtnBack = (Button) findViewById(R.id.activity_lobby_btn_back);
+        mBtnStart = (Button) findViewById(R.id.activity_lobby_btn_start);
 
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-        mbtnBack.setOnClickListener(new View.OnClickListener() {
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 backToNewGame();
             }
         });
 
-        mbtnStart.setOnClickListener(new View.OnClickListener() {
+        mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startGame();
