@@ -9,11 +9,11 @@ import android.widget.Button;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    Button mbtnNewGame;
-    Button mbtnLoadGame;
-    Button mbtnRules;
-    Button mbtnSettings;
-    Button mbtnExit;
+    Button mBtnNewGame;
+    Button mBtnLoadGame;
+    Button mBtnRules;
+    Button mBtnSettings;
+    Button mBtnExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +26,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnNewGame = (Button) findViewById(R.id.activity_mainMenu_btn_newGame);
-        mbtnLoadGame = (Button) findViewById(R.id.activity_mainMenu_btn_loadGame);
-        mbtnSettings = (Button) findViewById(R.id.activity_mainMenu_btn_settings);
-        mbtnRules = (Button) findViewById(R.id.activity_mainMenu_btn_rules);
-        mbtnExit = (Button) findViewById(R.id.activity_mainMenu_btn_exit);
+        mBtnNewGame = (Button) findViewById(R.id.activity_mainMenu_btn_newGame);
+        mBtnLoadGame = (Button) findViewById(R.id.activity_mainMenu_btn_loadGame);
+        mBtnSettings = (Button) findViewById(R.id.activity_mainMenu_btn_settings);
+        mBtnRules = (Button) findViewById(R.id.activity_mainMenu_btn_rules);
+        mBtnExit = (Button) findViewById(R.id.activity_mainMenu_btn_exit);
 
         setOnClickListeners();
 
@@ -38,35 +38,35 @@ public class MainMenuActivity extends AppCompatActivity {
 
     // Make OnClickListener to the buttons
     private void setOnClickListeners() {
-        mbtnNewGame.setOnClickListener(new View.OnClickListener() {
+        mBtnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openNewGameActivity();
             }
         });
         
-        mbtnLoadGame.setOnClickListener(new View.OnClickListener() {
+        mBtnLoadGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openLoadGameActivity();
             }
         });
         
-        mbtnSettings.setOnClickListener(new View.OnClickListener() {
+        mBtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openSettingsActivity();
             }
         });
         
-        mbtnRules.setOnClickListener(new View.OnClickListener() {
+        mBtnRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRulesActivity();
             }
         });
         
-        mbtnExit.setOnClickListener(new View.OnClickListener() {
+        mBtnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeApp();

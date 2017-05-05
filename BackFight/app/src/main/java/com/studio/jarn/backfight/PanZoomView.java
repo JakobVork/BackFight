@@ -22,26 +22,35 @@ public class PanZoomView extends View {
 
     protected static final int INVALID_POINTER_ID = -1;
     static private final float SCROLL_THRESHOLD = 20; // Used to define if a touch is scroll or click
-protected Drawable mSampleImage;
-protected Context mContext;
-protected float mPosX;
-protected float mPosY;
-protected float mPosX0 = 0;     // initial displacement values
+    protected Drawable mSampleImage;
+    protected Context mContext;
+    protected float mPosX;
+    protected float mPosY;
+    protected float mPosX0 = 0;     // initial displacement values
     protected float mPosY0 = 0;
     protected float mLastTouchX;
-protected float mLastTouchY;
-protected float mInitialTouchX;
-protected float mInitialTouchY;
-// The ‘active pointer’ is the one currently moving our object.
-protected int mActivePointerId = INVALID_POINTER_ID;
-protected ScaleGestureDetector mScaleDetector;
-protected float mScaleFactor = 1.f;
+    protected float mLastTouchY;
+    protected float mInitialTouchX;
+    protected float mInitialTouchY;
+    protected boolean mDoTouchUp = false;
+    protected boolean mHandlingTouchUp = false;
+
+    // The ‘active pointer’ is the one currently moving our object.
+    protected int mActivePointerId = INVALID_POINTER_ID;
+    protected ScaleGestureDetector mScaleDetector;
+    protected float mScaleFactor = 1.f;
     protected float mMinScaleFactor = 0.2f;
     protected float mMaxScaleFactor = 2.0f;
-protected boolean mSupportsPan = true;
-protected boolean mSupportsZoom = true;
-protected boolean mIsMove;
+    protected boolean mSupportsPan = true;
+    protected boolean mSupportsZoom = true;
+    protected boolean mIsMove;
 
+    //Click handling
+    protected boolean mSupportsOnTouchDown = true;
+    protected boolean mSupportsOnTouchUp = true;
+
+    //Long press detection
+    protected long mDownTime;
 
 public PanZoomView (Context context) {
     this(context, null, 0);
@@ -96,6 +105,14 @@ switch (e.getAction() & MotionEvent.ACTION_MASK) {
         mLastTouchX = x;
         mLastTouchY = y;
         mActivePointerId = e.getPointerId(0);
+        if (mSupportsOnTouchDown) {
+            onTouchDown(x, y);
+        }
+        if (mSupportsOnTouchUp) {
+            mInitialTouchX = x;
+            mInitialTouchY = y;
+            mDoTouchUp = true;
+        }
         break;
     }
 
@@ -131,8 +148,22 @@ switch (e.getAction() & MotionEvent.ACTION_MASK) {
     }
 
     case MotionEvent.ACTION_UP: {
-        if (!mIsMove) {
+        if (mIsMove) {
+            mHandlingTouchUp = false;
+            mDoTouchUp = false;
+        } else {
             mActivePointerId = INVALID_POINTER_ID;
+            if (mSupportsOnTouchUp && mDoTouchUp) {
+                final float x = e.getX();
+                final float y = e.getY();
+                try {
+                    mHandlingTouchUp = true;
+                    onTouchUp(mInitialTouchX, mInitialTouchY, x, y);
+                } finally {
+                    mHandlingTouchUp = false;
+                }
+                mDoTouchUp = false;
+            }
         }
         break;
     }
@@ -169,6 +200,13 @@ public boolean performClick() {
    return true;
 }
 
+    public void onTouchDown(float x, float y) {
+        mDownTime = System.nanoTime();
+    }
+
+    public void onTouchUp(float downX, float downY, float upX, float upY) {
+        //Gets overwrited by GameActivity which implements GameBoardTouchListener interface.
+    }
 
 protected void setupScaleDetector (Context context, AttributeSet attrs, int defStyle) {
     // Create our ScaleGestureDetector

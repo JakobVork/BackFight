@@ -1,8 +1,15 @@
 package com.studio.jarn.backfight;
 
-import android.app.Activity;
 import android.graphics.BitmapFactory;
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.View;
+
+import com.studio.jarn.backfight.Items.gameItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,14 +17,21 @@ import java.util.List;
 import java.util.Random;
 
 
-public class GameActivity extends Activity
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
+    static public final int GridSizeWidthAndHeight = 5;
+    static public final int SquaresViewedAtStartup = 3;
+
+    private static boolean isHidden = true;
+
     private static final int sGridSize = 16;
     private static final int sSquaresViewedAtStartup = 3;
     private final Tile wallTile = new Tile(Tile.Types.Wall, null);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
     private final List<Integer> checkedList = new ArrayList<>();
     private Tile[][] mGrid;
+
+    Fragment itemsAndStatsFragment;
     private int TileConnectivityCollectionNrCounter = 0;
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +43,8 @@ public class GameActivity extends Activity
         /*GridType gridType = GridType.Maze;*/
         setupMyGrid(gridType);
 
+        addPlayers();
+
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
 
@@ -38,17 +54,44 @@ public class GameActivity extends Activity
         }
     }
 
+    public void switchItemListFragment(View view) {
+        if(isHidden) {
+            showItemListFragment();
+            isHidden = false;
+        } else {
+            hideItemListFragment();
+            isHidden = true;
+        }
+    }
+
+    private void showItemListFragment() {
+        // Add ItemsAndStats fragment
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if(itemsAndStatsFragment == null) {
+            itemsAndStatsFragment = new ItemsAndStatsFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+            ft.commit();
+        }
+    }
+
+    private void hideItemListFragment() {
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if (itemsAndStatsFragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.remove(itemsAndStatsFragment);
+            ft.commit();
+        }
+    }
+
     //ToDO Needs implementation
     public void addPlayers() {
         List<Player> players = new ArrayList<>();
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Anders"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.cart)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.point)), "Pernille"));
-        players.add(new Player((BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.player32)), "Pernille"));
+        players.add(new Player(R.drawable.player32, "Pernille"));
 
-
-        Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players);
+        mGrid[5][5].Players = players;
     }
 
     private void setupMyGrid(GridType gridType)
@@ -268,5 +311,10 @@ public class GameActivity extends Activity
             intArray[i] = randoms.get(i);
 
         return intArray;
+    }
+
+    @Override
+    public void onItemSelected(gameItem item) {
+        Log.d("Item", "onItemSelected: Clicked!");
     }
 }
