@@ -21,6 +21,9 @@ class Tile {
         canBePassedSwitch(type);
     }
 
+    Tile() {
+    }
+
     Tile(Types type, List<Player> players) {
         this(type, players, 0);
     }

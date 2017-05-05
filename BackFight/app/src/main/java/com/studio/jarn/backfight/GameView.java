@@ -11,6 +11,14 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -236,11 +244,58 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
 
 
     public void updateGrid(Tile grid[][]) {
-   // Set up the grid  and grid selection variables.
+        // Set up the grid  and grid selection variables.
         if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
 
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("123");
+
     mGrid = grid.clone();
+
+
+        List<List<Tile>> list = new ArrayList<>();
+        for (Tile[] aMGrid : mGrid) {
+            list.add(Arrays.asList(aMGrid));
+        }
+
+        myRef.setValue(list);
+
+        //http://stackoverflow.com/questions/30933328/how-to-convert-firebase-data-to-java-object
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                int i = -1;
+                int j = -1;
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    i++;
+                    for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
+                        j++;
+                        mGrid[i][j] = postSnapshot1.getValue(Tile.class);
+                    }
+                    j = -1;
+                }
+                invalidate();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", error.toException());
+            }
+        });
 }
+
+
+    public void updateGridFromDatabase(Tile grid[][]) {
+        // Set up the grid  and grid selection variables.
+        if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
+
+        mGrid = grid.clone();
+    }
 
     public void onTouchDown(float downX, float downY) {
         GameBoardTouchListener listener = getTouchListener();
