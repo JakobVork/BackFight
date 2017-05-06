@@ -1,8 +1,11 @@
 package com.studio.jarn.backfight;
 
-/**
- * Created by Nicklas on 05-May-17.
- */
+public class Tuple<X, Y> {
+    public final X x;
+    public final Y y;
 
-public class Tuple {
+    public Tuple(X x, Y y){
+        this.x = x;
+        this.y = y;
+    }
 }

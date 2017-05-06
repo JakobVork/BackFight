@@ -13,8 +13,8 @@ public class GameActivity extends Activity
 {
     private static final int sGridSize = 16;
     private static final int sSquaresViewedAtStartup = 3;
-    private final Tile wallTile = new Tile(Tile.Types.Wall, null);
-    private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
+    private final Tile wallTile = new Tile(Tile.Types.Wall);
+    private final Tile floorTile = new Tile(Tile.Types.WoodenFloor);
     private final List<Integer> checkedList = new ArrayList<>();
     private Tile[][] mGrid;
     private int TileConnectivityCollectionNrCounter = 0;
@@ -34,26 +34,23 @@ public class GameActivity extends Activity
             gv.setGridSize(sGridSize);
             gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
             gv.updateGrid(mGrid);
+            gv.addGameObjects(addPlayers());
         }
     }
 
     //ToDO Needs implementation
-    public void addPlayers() {
-        List<Player> players = new ArrayList<>();
-        players.add(new Player(R.drawable.point, "Anders"));
-        players.add(new Player(R.drawable.player32, "Pernille"));
-        players.add(new Player(R.drawable.cart, "Pernille"));
-        players.add(new Player(R.drawable.point, "Pernille"));
-        players.add(new Player(R.drawable.player32, "Pernille"));
+    //TODO Player should be GameObject
+    public ArrayList<Tuple<Player, Coordinates>> addPlayers() {
+        ArrayList<Tuple<Player, Coordinates>> gameObjects = new ArrayList<>();
+        gameObjects.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0)));
+        gameObjects.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0)));
 
-
-        Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players);
+        return gameObjects;
     }
 
     private void setupMyGrid(GridType gridType)
     {
         mGrid = new Tile[sGridSize][sGridSize]; //initialize grid
-
         switch (gridType) {
             case DefaultGrid: {
                 generateDefaultGrid();
@@ -163,7 +160,7 @@ public class GameActivity extends Activity
 
     //recursive logic to take a floor tile and visit all the connecting neighbors
     private void visitAllConnectedNeighbors(int tileConnectivityCollectionNr, int row, int column) {
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, tileConnectivityCollectionNr);
+        Tile floorTile = new Tile(Tile.Types.WoodenFloor, tileConnectivityCollectionNr);
         mGrid[row][column] = floorTile;
         if (row > 0 && mGrid[row - 1][column].CanBePassed && mGrid[row - 1][column].TileConnectivityCollectionNr != tileConnectivityCollectionNr)
             visitAllConnectedNeighbors(tileConnectivityCollectionNr, row - 1, column);
@@ -206,7 +203,7 @@ public class GameActivity extends Activity
     private void recursionMaze(int row, int column) {
         // 4 random directions
         int[] randDirs = generateRandomDirections();
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
+        Tile floorTile = new Tile(Tile.Types.WoodenFloor);
         // Examine each direction
         for (int randDir : randDirs) {
 

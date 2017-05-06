@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,27 +20,30 @@ import java.util.List;
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
 
-public class GameView extends PanZoomView implements GameBoardTouchListener
+public class GameView extends PanZoomView implements GameTouchListener
 {
 
     protected float mFocusX;
     protected float mFocusY;
-    protected GameBoardTouchListener mTouchListener;
+    protected GameTouchListener mTouchListener;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
     private float mHalfMaxCanvasHeight = 480;
-    private float mOriginOffsetX = 320;
-    private float mOriginOffsetY = 320;
+    private float mOriginOffsetX = 0;
+    private float mOriginOffsetY = 0;
     private float mSquareWidth = 64;         // use float for more accurate placement
     private float mSquareHeight = 64;
     private Rect  mDestRect;
     private RectF mDestRectF;
     private Tile[][] mGrid;
+    //TODO Player should be GameObject
+    private ArrayList<Tuple<Player, Coordinates>> mGameObjectList = new ArrayList<>();
     private int mGridSizeWidthAndHeight;
     private int mSquaresViewedAtStartup;
+
     public GameView(Context context) {
         super(context);
         setTouchListener(this);
@@ -48,32 +52,36 @@ public class GameView extends PanZoomView implements GameBoardTouchListener
         super(context, attrs);
         setTouchListener(this);
     }
-
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setTouchListener(this);
     }
 
-    public GameBoardTouchListener getTouchListener() {
+    public GameTouchListener getTouchListener() {
         return mTouchListener;
     }
 
-    public void setTouchListener(GameBoardTouchListener newListener) {
+    public void setTouchListener(GameTouchListener newListener) {
         mTouchListener = newListener;
     }
 
+    public void addGameObjects(ArrayList<Tuple<Player, Coordinates>> gameObjects){
+        mGameObjectList.addAll(gameObjects);
+    }
+
+    //TODO Player should be GameObjects
     // Inspiration found here: http://stackoverflow.com/questions/10616777/how-to-merge-to-two-bitmap-one-over-another
-    private Bitmap addPlayerToBitmap(Bitmap bmp1, List<Player> players) {
+    private Bitmap addPlayerToBitmap(Bitmap bmp1, List<Tuple<Player, Coordinates>> players) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(bmp1, new Matrix(), null);
 
         float column = 0;
         float row = 0;
-        for (Player p : players) {
+        for (Tuple p : players) {
 
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                    p.Icon), bmp1.getWidth() * (row / 4), bmp1.getHeight() * (column / 4), null);
+                    ((Player)p.x).getFigure()), bmp1.getWidth() * (row / 4), bmp1.getHeight() * (column / 4), null);
 
             // logic to distribute players over the tile, so each tile can hold 16 players
             if (column < 4)
@@ -118,21 +126,15 @@ public void drawOnCanvas (Canvas canvas) {
     for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
        dx = 0;
        for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
-        dest1.offsetTo (dx, dy);
+        dest1.offsetTo(dx, dy);
 
            switch (mGrid[j][i].Type) {
                case Wall: {
-                   if (mGrid[j][i].Players != null) {
-                       canvas.drawBitmap(addPlayerToBitmap(bm_wall, mGrid[j][i].Players), null, dest1, paint);
-                   } else
-                       canvas.drawBitmap(bm_wall, null, dest1, paint);
-                   break;
+                    canvas.drawBitmap(bm_wall, null, dest1, paint);
+                    break;
                }
                case WoodenFloor: {
-                   if (mGrid[j][i].Players != null) {
-                       canvas.drawBitmap(addPlayerToBitmap(bm_floor, mGrid[j][i].Players), null, dest1, paint);
-                   } else
-                       canvas.drawBitmap(bm_floor, null, dest1, paint);
+                   canvas.drawBitmap(bm_floor, null, dest1, paint);
                    break;
                }
            }
@@ -140,7 +142,15 @@ public void drawOnCanvas (Canvas canvas) {
        }
        dy = dy + mSquareHeight;
     }
+    UpdateMapWithPlayers(bm_floor);
 }
+
+    private void UpdateMapWithPlayers(Bitmap tile){
+        //TODO Should be implemented
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Nicklas"), new Coordinates(0,0)));
+
+        addPlayerToBitmap(tile, mGameObjectList);
+    }
 
 /**
  * onDrawPz
@@ -179,8 +189,8 @@ public void onDrawPz(Canvas canvas) {
     if (totalOffscreenSquaresX < 0f) totalOffscreenSquaresX = 0f;
     float totalOffscreenSquaresY = mGridSizeWidthAndHeight - numSquaresAlongY;
     if (totalOffscreenSquaresY < 0f) totalOffscreenSquaresY = 0f;
-    mOriginOffsetX = totalOffscreenSquaresX / 2.0f * mSquareWidth;
-    mOriginOffsetY = totalOffscreenSquaresY / 2.0f * mSquareHeight;
+    mOriginOffsetX = 0;//totalOffscreenSquaresX / 2.0f * mSquareWidth;
+    mOriginOffsetY = 0;//totalOffscreenSquaresY / 2.0f * mSquareHeight;
 
     // The canvas is translated by the amount we have
     // scrolled and the standard amount to move the origin
@@ -229,113 +239,37 @@ public void onDrawPz(Canvas canvas) {
  
 }
 
-@Override
-protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
-    super.setupToDraw (context, attrs, defStyle);
-}
+    @Override
+    protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
+        super.setupToDraw (context, attrs, defStyle);
+    }
 
 
     public void updateGrid(Tile grid[][]) {
-   // Set up the grid  and grid selection variables.
+        // Set up the grid  and grid selection variables.
         if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
 
-    mGrid = grid.clone();
-}
+        mGrid = grid.clone();
+    }
 
     public void onTouchDown(float downX, float downY) {
-        GameBoardTouchListener listener = getTouchListener();
+        GameTouchListener listener = getTouchListener();
         if (listener == null) return;
         listener.onTouchDown();
     }
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        // Convert view coordinates to canvas coordinates and, eventually,
-        // to index values for the cells being displayed.
+        //Calculate the coordinates pressed on the map
+        float xCoord = (mOriginOffsetX + upX - (mPosX-((mMaxCanvasWidth/2)*mScaleFactor-(mMaxCanvasWidth/2))))/mScaleFactor;
+        float yCoord = (mOriginOffsetY + upY - (mPosY-((mMaxCanvasHeight/2)*mScaleFactor-(mMaxCanvasHeight/2))))/mScaleFactor;
 
-        // If the scale is 1, it is easy. When the scale is one, we know that exactly
-        // pNumSquaresAlongSide are on the screen. The rest are off the screen.
-        // Since that has already been accounted for, in the origin offset values,
-        // simply add the x or y arg values to the origin offsets and divide
-        // by the square width to get index values.
-        float fx = (mOriginOffsetX + upX - mPosX) / mSquareWidth;
-        float fy = (mOriginOffsetY + upY - mPosY) / mSquareHeight;
-        float dfx = (mOriginOffsetX * mScaleFactor + downX - mPosX) / mSquareWidth;
-        float dfy = (mOriginOffsetY * mScaleFactor + downY - mPosY) / mSquareHeight;
-        float fx2 = fx, dfx2 = dfx;
-        float fy2 = fy, dfy2 = dfy;
+        //Coordinates to tile
+        int tileX = (int)(xCoord / mSquareWidth);
+        int tileY = (int)(yCoord / mSquareHeight);
 
-        /*if (mScaleFactor == 1.0f) {
-            // Use the four float values already computed. Convert them to int values. See below.
-        } else {*/
-            // If scaling is on, we have to adjust the up and down points by the scale factor and
-            // we have to account for the points that do not show up in the visible view.
-
-            // 1. Figure out how many squares are showing on the screen. We need that to convert view
-            // coordinates to index numbers.
-            float scaledSqWidth = (mScaleFactor * mSquareWidth);
-            float scaledSqHeight = (mScaleFactor * mSquareHeight);
-
-            // 2 (new method)
-            // We zoom around the center point of the canvas.
-            // First we need to figure out where the point is, in view coordinates. Look at the unzoomed values we have saved.
-            // The focus point never changes as we zoom. Use its x and y values to determine how many squares are showing on the screen.
-            // If you know the number of squares visible left and above the focus point, you can figure out how many squares are
-            // offscreen. (Remember we know the focus point is half of the canvas width and height.)
-            float vFocusX = mFocusX - mOriginOffsetX;
-            float vFocusY = mFocusY - mOriginOffsetY;
-            float numSquaresToLeft = vFocusX / scaledSqWidth;
-            float numSquaresAbove = vFocusY / scaledSqHeight;
-            float numSquaresToCenter = mMaxCanvasWidth / mSquareWidth / 2f;
-            float numSquaresOffscreenLeft = numSquaresToCenter - numSquaresToLeft;
-            float numSquaresOffscreenAbove = numSquaresToCenter - numSquaresAbove;
-            float vsqX = (upX - mPosX) / scaledSqWidth;
-            float vsqY = (upY - mPosY) / scaledSqHeight;
-            fx2 = vsqX + numSquaresOffscreenLeft;
-            fy2 = vsqY + numSquaresOffscreenAbove;
-            dfx2 = (downX - mPosX) / scaledSqWidth + numSquaresOffscreenLeft;
-            dfy2 = (downY - mPosY) / scaledSqHeight + numSquaresOffscreenAbove;
-
-        //}
-
-        float x2 = 0, y2 = 0;
-        /*x2 = mPosX - mPosX0;
-        y2 = mPosY - mPosY0;*/
-        /*if (AppConfig.DEBUG) {
-            Log.d (Constants.LOG_UI, "GameBoardView x2-y2: " + x2 + " - " + y2
-                    + " mPosX: " + mPosX + " mPosX0: " + mPosX0);
-        }*/
-
-
-        // We want integer index values to call the listener.
-        // Use floor to round down. Do not need to add one since origin offset includes whole square.
-        //
-        int sUpX = (int) Math.floor(fx2) + 1;
-        int sUpY = (int) Math.floor(fy2) + 1;
-        int sDownX = (int) Math.floor(dfx2) + 1;
-        int sDownY = (int) Math.floor(dfy2) + 1;
-        //int sUpX2 = (int) Math.floor (fx) + 1;
-        //int sUpY2 = (int) Math.floor (fy) + 1;
-
-        /*if (AppConfig.DEBUG) {
-            Log.d (Constants.LOG_UI, "ScanView.onTouchUp(1) s.x: " + sUpX + " s.y: " + sUpY
-                    + " down s.x " + sDownX + " down s.y: " + sDownY);
-            //Log.d (Constants.LOG_UI, "ScanView.onTouchUp(1) OLD s.x: " + sUpX2 + " s.y: " + sUpY2);
-
-        }*/
-        // The sUp and sDown values are index values relative to the canvas origin.
-        /*if (AppConfig.DEBUG)
-            Log.d (Constants.LOG_UI, "ScanView.onTouchUp(2) s.x: " + sUpX + " s.y: " + sUpY
-                    + " down s.x " + sDownX + " down s.y: " + sDownY);*/
-
-        // Next check to see if there is a listener for these events.
-        // If there is not, there is nothing else to do.
-        GameBoardTouchListener listener = getTouchListener();
+        GameTouchListener listener = getTouchListener();
         if (listener == null) return;
-
-        // Tell the listener about the Up event. Again note: sector x is really y on screen
-        //if (isLongPress) listener.onLongTouchUp (sDownX, sDownY, sUpX, sUpY);
-        /*else*/
-        listener.onTouchUp(sDownX, sDownY, sUpX, sUpY);
+        listener.onTouchUp(xCoord, yCoord);
     }
 
 
@@ -345,21 +279,10 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
     }
 
     @Override
-    public void onTouchUp(int downX, int downY, int upX, int upY) {
-        //Check that click is on board
-        if (upX > (mMaxCanvasWidth / mSquareWidth) || upY > (mMaxCanvasHeight / mSquareHeight))
-            return;
-        if (upX < 0 || upY < 0) return;
+    public void onTouchUp(float upX, float upY) {
 
-        Tile selectedTile = mGrid[upX - 1][upY - 1];
-        if (selectedTile.Players == null) return;
-        if (selectedTile.Players.size() > 0) {
-            //TODO Missing check on what figure it is and swap with correct figure
-            selectedTile.Players.get(0).Icon = R.drawable.player32selected;
-            invalidate(); //This method renders the map
-            //TODO call function for showing items
-        }
 
+        invalidate();
     }
 
     @Override
