@@ -10,4 +10,7 @@ class Player {
         Icon = icon;
         Name = name;
     }
+
+    Player() {
+    }
 }

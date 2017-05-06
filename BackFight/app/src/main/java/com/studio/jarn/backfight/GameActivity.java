@@ -1,7 +1,6 @@
 package com.studio.jarn.backfight;
 
-import android.graphics.BitmapFactory;
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,43 +18,55 @@ import java.util.Random;
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
-    static public final int GridSizeWidthAndHeight = 5;
-    static public final int SquaresViewedAtStartup = 3;
-
-    private static boolean isHidden = true;
-
     private static final int sGridSize = 16;
     private static final int sSquaresViewedAtStartup = 3;
+    private static boolean isHidden = true;
     private final Tile wallTile = new Tile(Tile.Types.Wall, null);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
     private final List<Integer> checkedList = new ArrayList<>();
-    private Tile[][] mGrid;
-
     Fragment itemsAndStatsFragment;
+    private Tile[][] mGrid;
     private int TileConnectivityCollectionNrCounter = 0;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
+        Intent i = getIntent();
+        if (i != null) {
+            setupGameView(i);
+        }
+    }
 
-        GridType gridType = GridType.DefaultGrid;
-        /*GridType gridType = GridType.Maze;*/
-        setupMyGrid(gridType);
+    private void setupGameView(Intent i) {
+        String UUID = i.getStringExtra(getString(R.string.EXTRA_UUID));
+        boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
 
-        addPlayers();
 
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
+            if (host) {
 
-            gv.setGridSize(sGridSize);
-            gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-            gv.updateGrid(mGrid);
+                //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
+                GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
+                setupMyGrid(gridType);
+
+                gv.setGridSize(sGridSize);
+                gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
+                gv.setUuidStartup(UUID);
+                addPlayers();
+                gv.initHostGrid(mGrid);
+            } else {
+                gv.setGridSize(sGridSize);
+                gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
+                gv.setUuidStartup(UUID);
+                gv.initClientGrid();
+            }
         }
     }
 
     public void switchItemListFragment(View view) {
-        if(isHidden) {
+        if (isHidden) {
             showItemListFragment();
             isHidden = false;
         } else {
@@ -67,10 +78,10 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void showItemListFragment() {
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        if(itemsAndStatsFragment == null) {
+        if (itemsAndStatsFragment == null) {
             itemsAndStatsFragment = new ItemsAndStatsFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
             ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
             ft.commit();
         }
@@ -80,7 +91,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
             ft.remove(itemsAndStatsFragment);
             ft.commit();
         }
@@ -91,7 +102,17 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         List<Player> players = new ArrayList<>();
         players.add(new Player(R.drawable.player32, "Pernille"));
 
-        mGrid[5][5].Players = players;
+        Random random = new Random();
+
+        while (true) {
+            int random1 = random.nextInt(sGridSize - 1);
+            int random2 = random.nextInt(sGridSize - 1);
+
+            if (mGrid[random1][random2].CanBePassed) {
+                mGrid[random1][random2].Players = players;
+                break;
+            }
+        }
     }
 
     private void setupMyGrid(GridType gridType)

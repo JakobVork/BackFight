@@ -34,14 +34,14 @@ public class ItemsAndStatsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_items_and_stats, container, false);
 
-        mItemList = new ArrayList<gameItem>();
+        mItemList = new ArrayList<>();
         mItemList.add(new gameItem("gameItem", "Test sword", R.drawable.item_sword));
         mItemList.add(new gameItem("gameItem", "Test sword", R.drawable.item_breastplate));
 
         final ItemAdaptor adapter = new ItemAdaptor(getActivity(), mItemList);
         mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
         mItemListView.setAdapter(adapter);
-        mItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        mItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mListener.onItemSelected(mItemList.get(position));
@@ -68,7 +68,7 @@ public class ItemsAndStatsFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnItemSelectedListener {
+    interface OnItemSelectedListener {
         void onItemSelected(gameItem item);
     }
 }
