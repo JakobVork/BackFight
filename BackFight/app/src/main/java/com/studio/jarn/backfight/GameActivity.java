@@ -1,8 +1,16 @@
 package com.studio.jarn.backfight;
 
+import android.graphics.BitmapFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.View;
+
+import com.studio.jarn.backfight.Items.gameItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,16 +18,17 @@ import java.util.List;
 import java.util.Random;
 
 
-public class GameActivity extends Activity
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
-
-
     private static final int sGridSize = 16;
     private static final int sSquaresViewedAtStartup = 3;
+    private static boolean isHidden = true;
     private final Tile wallTile = new Tile(Tile.Types.Wall, null);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
     private final List<Integer> checkedList = new ArrayList<>();
     private Tile[][] mGrid;
+
+    Fragment itemsAndStatsFragment;
     private int TileConnectivityCollectionNrCounter = 0;
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,8 @@ public class GameActivity extends Activity
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
 
 
+
+
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
             if (host) {
@@ -49,6 +60,7 @@ public class GameActivity extends Activity
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
                 gv.setUuidStartup(UUID);          //UUID.randomUUID().toString());
                 gv.initHostGrid(mGrid);
+                addPlayers();
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
@@ -58,17 +70,44 @@ public class GameActivity extends Activity
         }
     }
 
+    public void switchItemListFragment(View view) {
+        if(isHidden) {
+            showItemListFragment();
+            isHidden = false;
+        } else {
+            hideItemListFragment();
+            isHidden = true;
+        }
+    }
+
+    private void showItemListFragment() {
+        // Add ItemsAndStats fragment
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if(itemsAndStatsFragment == null) {
+            itemsAndStatsFragment = new ItemsAndStatsFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+            ft.commit();
+        }
+    }
+
+    private void hideItemListFragment() {
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if (itemsAndStatsFragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.remove(itemsAndStatsFragment);
+            ft.commit();
+        }
+    }
+
     //ToDO Needs implementation
     public void addPlayers() {
         List<Player> players = new ArrayList<>();
-        players.add(new Player(R.drawable.point, "Anders"));
-        players.add(new Player(R.drawable.player32, "Pernille"));
-        players.add(new Player(R.drawable.cart, "Pernille"));
-        players.add(new Player(R.drawable.point, "Pernille"));
         players.add(new Player(R.drawable.player32, "Pernille"));
 
-
-        Tile floorTileWithPlayers = new Tile(Tile.Types.WoodenFloor, players);
+        mGrid[5][5].Players = players;
     }
 
     private void setupMyGrid(GridType gridType)
@@ -288,5 +327,10 @@ public class GameActivity extends Activity
             intArray[i] = randoms.get(i);
 
         return intArray;
+    }
+
+    @Override
+    public void onItemSelected(gameItem item) {
+        Log.d("Item", "onItemSelected: Clicked!");
     }
 }

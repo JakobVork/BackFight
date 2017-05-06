@@ -371,13 +371,6 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         //}
 
         float x2 = 0, y2 = 0;
-        /*x2 = mPosX - mPosX0;
-        y2 = mPosY - mPosY0;*/
-        /*if (AppConfig.DEBUG) {
-            Log.d (Constants.LOG_UI, "GameBoardView x2-y2: " + x2 + " - " + y2
-                    + " mPosX: " + mPosX + " mPosX0: " + mPosX0);
-        }*/
-
 
         // We want integer index values to call the listener.
         // Use floor to round down. Do not need to add one since origin offset includes whole square.
@@ -386,28 +379,12 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         int sUpY = (int) Math.floor(fy2) + 1;
         int sDownX = (int) Math.floor(dfx2) + 1;
         int sDownY = (int) Math.floor(dfy2) + 1;
-        //int sUpX2 = (int) Math.floor (fx) + 1;
-        //int sUpY2 = (int) Math.floor (fy) + 1;
-
-        /*if (AppConfig.DEBUG) {
-            Log.d (Constants.LOG_UI, "ScanView.onTouchUp(1) s.x: " + sUpX + " s.y: " + sUpY
-                    + " down s.x " + sDownX + " down s.y: " + sDownY);
-            //Log.d (Constants.LOG_UI, "ScanView.onTouchUp(1) OLD s.x: " + sUpX2 + " s.y: " + sUpY2);
-
-        }*/
-        // The sUp and sDown values are index values relative to the canvas origin.
-        /*if (AppConfig.DEBUG)
-            Log.d (Constants.LOG_UI, "ScanView.onTouchUp(2) s.x: " + sUpX + " s.y: " + sUpY
-                    + " down s.x " + sDownX + " down s.y: " + sDownY);*/
 
         // Next check to see if there is a listener for these events.
         // If there is not, there is nothing else to do.
         GameBoardTouchListener listener = getTouchListener();
         if (listener == null) return;
 
-        // Tell the listener about the Up event. Again note: sector x is really y on screen
-        //if (isLongPress) listener.onLongTouchUp (sDownX, sDownY, sUpX, sUpY);
-        /*else*/
         listener.onTouchUp(sDownX, sDownY, sUpX, sUpY);
     }
 
