@@ -48,6 +48,9 @@ public class GameView extends PanZoomView implements GameBoardTouchListener
     private Tile[][] mGrid;
     private int mGridSizeWidthAndHeight;
     private int mSquaresViewedAtStartup;
+    private String mUuid;
+    private DatabaseReference databaseReference;
+
     public GameView(Context context) {
         super(context);
         setTouchListener(this);
@@ -110,6 +113,12 @@ public void setViewSizeAtStartup(int newValue)
    mSquaresViewedAtStartup = newValue;
 }
 
+    public void setUuidStartup(String uuid) {
+        mUuid = uuid;
+    }
+
+
+
     //Todo: remove hardcoded Players
 public void drawOnCanvas (Canvas canvas) {
 
@@ -121,6 +130,12 @@ public void drawOnCanvas (Canvas canvas) {
     //
     // Draw squares to fill the grid.
     //
+
+    //Check to see if there has been added an array to mGrid
+    if (mGrid[0][0] == null) {
+        return;
+    }
+
     RectF dest1 = mDestRectF;
     float dx, dy = 0;
     for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
@@ -243,40 +258,40 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
 }
 
 
-    public void updateGrid(Tile grid[][]) {
+    public void initHostGrid(Tile grid[][]) {
         // Set up the grid  and grid selection variables.
-        if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
+        if (mGrid == null)
+            mGrid = grid;
 
-        // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("123");
+        databaseReference = database.getReference(mUuid);
+        setupOnDataChange();
+        updateGrid(grid);
 
-    mGrid = grid.clone();
+    }
 
 
-        List<List<Tile>> list = new ArrayList<>();
-        for (Tile[] aMGrid : mGrid) {
-            list.add(Arrays.asList(aMGrid));
-        }
+    public void initClientGrid() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference(mUuid);
+        setupOnDataChange();
+    }
 
-        myRef.setValue(list);
-
-        //http://stackoverflow.com/questions/30933328/how-to-convert-firebase-data-to-java-object
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+    private void setupOnDataChange() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                int i = -1;
-                int j = -1;
+                int row = -1;
+                int column = -1;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    i++;
+                    row++;
                     for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
-                        j++;
-                        mGrid[i][j] = postSnapshot1.getValue(Tile.class);
+                        column++;
+                        mGrid[row][column] = postSnapshot1.getValue(Tile.class);
                     }
-                    j = -1;
+                    column = -1;
                 }
                 invalidate();
             }
@@ -287,15 +302,18 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
                 Log.w("", "Failed to read value.", error.toException());
             }
         });
-}
-
-
-    public void updateGridFromDatabase(Tile grid[][]) {
-        // Set up the grid  and grid selection variables.
-        if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
-
-        mGrid = grid.clone();
     }
+
+
+    public void updateGrid(Tile grid[][]) {
+
+        List<List<Tile>> list = new ArrayList<>();
+        for (Tile[] aMGrid : grid) {
+            list.add(Arrays.asList(aMGrid));
+        }
+        databaseReference.setValue(list);
+    }
+
 
     public void onTouchDown(float downX, float downY) {
         GameBoardTouchListener listener = getTouchListener();

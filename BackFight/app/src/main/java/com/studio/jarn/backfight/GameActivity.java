@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.Random;
 
 public class GameActivity extends Activity
 {
+
+
     private static final int sGridSize = 16;
     private static final int sSquaresViewedAtStartup = 3;
     private final Tile wallTile = new Tile(Tile.Types.Wall, null);
@@ -23,17 +26,35 @@ public class GameActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
+        Intent i = getIntent();
+        if (i != null) {
+            setupGameView(i);
+        }
+    }
 
-        GridType gridType = GridType.DefaultGrid;
-        /*GridType gridType = GridType.Maze;*/
-        setupMyGrid(gridType);
+    private void setupGameView(Intent i) {
+        String UUID = i.getStringExtra(getString(R.string.EXTRA_UUID));
+        boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
+
 
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
+            if (host) {
 
-            gv.setGridSize(sGridSize);
-            gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-            gv.updateGrid(mGrid);
+                //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
+                GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
+                setupMyGrid(gridType);
+
+                gv.setGridSize(sGridSize);
+                gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
+                gv.setUuidStartup(UUID);          //UUID.randomUUID().toString());
+                gv.initHostGrid(mGrid);
+            } else {
+                gv.setGridSize(sGridSize);
+                gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
+                gv.setUuidStartup(UUID);
+                gv.initClientGrid();
+            }
         }
     }
 

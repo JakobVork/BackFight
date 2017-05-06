@@ -1,9 +1,9 @@
 package com.studio.jarn.backfight;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -55,6 +55,11 @@ public class NewGameActivity extends AppCompatActivity {
 
     // Join lobby, maybe make a dialog to write id/password
     private void joinLobby() {
+        Intent StartGameIntent = new Intent(this, GameActivity.class);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
+        StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), false);
+
+        startActivity(StartGameIntent);
     }
 
     //Creates a lobby players can join before starting a game
