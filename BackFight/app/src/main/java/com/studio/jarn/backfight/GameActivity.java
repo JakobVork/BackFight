@@ -54,8 +54,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
                 gv.setUuidStartup(UUID);
-                gv.initHostGrid(mGrid);
                 addPlayers();
+                gv.initHostGrid(mGrid);
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
