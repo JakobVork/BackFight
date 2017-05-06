@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?> <set xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_mediumAnimTime">
 
     <!-- Copied from http://stackoverflow.com/questions/20802369/slide-left-right-animation-between-fragments -->

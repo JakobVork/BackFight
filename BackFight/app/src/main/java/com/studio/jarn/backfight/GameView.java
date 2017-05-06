@@ -399,7 +399,7 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         //Check that click is on board
         if (upX > (mMaxCanvasWidth / mSquareWidth) || upY > (mMaxCanvasHeight / mSquareHeight))
             return;
-        if (upX < 0 || upY < 0) return;
+        if (upX < 1 || upY < 1) return;
 
         Tile selectedTile = mGrid[upX - 1][upY - 1];
         if (selectedTile.Players == null) return;

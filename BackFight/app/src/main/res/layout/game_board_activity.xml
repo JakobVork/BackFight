@@ -13,20 +13,20 @@
         android:layout_weight="1"
         android:background="@color/grid_background"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintVertical_bias="1.0" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/game_board_activity_guideline_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/game_board_activity_guideline_fragment"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="444dp" />
+        tools:layout_editor_absoluteX="444dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
         android:id="@+id/game_board_activity_items_and_stats_fragment"
@@ -34,7 +34,7 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/game_board_activity_guideline_fragment"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

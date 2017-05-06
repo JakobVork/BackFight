@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.studio.jarn.backfight.Items.gameItem;
 
 import java.util.ArrayList;
 
-class ItemAdaptor extends BaseAdapter{
+class ItemAdaptor extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<gameItem> mItems;
@@ -40,13 +41,13 @@ class ItemAdaptor extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if(convertView == null) {
+        if (convertView == null) {
             LayoutInflater itemInflator = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = itemInflator.inflate(R.layout.items_and_stats_list_item, null);
         }
 
         mItem = mItems.get(position);
-        if(mItem != null) {
+        if (mItem != null) {
             TextView tvTitle = (TextView) convertView.findViewById(R.id.fragment_list_item_txt_title);
             tvTitle.setText(mItem.Title);
 

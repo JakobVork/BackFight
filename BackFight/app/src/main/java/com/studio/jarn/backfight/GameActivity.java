@@ -1,7 +1,5 @@
 package com.studio.jarn.backfight;
 
-import android.graphics.BitmapFactory;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,9 +24,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private final Tile wallTile = new Tile(Tile.Types.Wall, null);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
     private final List<Integer> checkedList = new ArrayList<>();
-    private Tile[][] mGrid;
-
     Fragment itemsAndStatsFragment;
+    private Tile[][] mGrid;
     private int TileConnectivityCollectionNrCounter = 0;
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +43,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
 
 
-
-
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
             if (host) {
@@ -58,7 +53,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID);          //UUID.randomUUID().toString());
+                gv.setUuidStartup(UUID);
                 gv.initHostGrid(mGrid);
                 addPlayers();
             } else {
@@ -71,7 +66,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     public void switchItemListFragment(View view) {
-        if(isHidden) {
+        if (isHidden) {
             showItemListFragment();
             isHidden = false;
         } else {
@@ -83,10 +78,10 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void showItemListFragment() {
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        if(itemsAndStatsFragment == null) {
+        if (itemsAndStatsFragment == null) {
             itemsAndStatsFragment = new ItemsAndStatsFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
             ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
             ft.commit();
         }
@@ -96,7 +91,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0 ,0);
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
             ft.remove(itemsAndStatsFragment);
             ft.commit();
         }
