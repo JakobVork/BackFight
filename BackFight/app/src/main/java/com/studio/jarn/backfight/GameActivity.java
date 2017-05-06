@@ -102,7 +102,17 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         List<Player> players = new ArrayList<>();
         players.add(new Player(R.drawable.player32, "Pernille"));
 
-        mGrid[5][5].Players = players;
+        Random random = new Random();
+
+        while (true) {
+            int random1 = random.nextInt(sGridSize - 1);
+            int random2 = random.nextInt(sGridSize - 1);
+
+            if (mGrid[random1][random2].CanBePassed) {
+                mGrid[random1][random2].Players = players;
+                break;
+            }
+        }
     }
 
     private void setupMyGrid(GridType gridType)
