@@ -31,8 +31,6 @@
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
-            <receiver android:name=".wew" >
-            </receiver>
         </service>
     </application>
 
