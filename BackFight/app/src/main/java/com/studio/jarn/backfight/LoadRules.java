@@ -40,11 +40,11 @@ class LoadRules implements ILoadRules {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         try {
             String line;
-            boolean first = false;
+            boolean first = true;
             while ((line = reader.readLine()) != null) {
-                if (!first) {
+                if (first) {
                     ruleTitle = line;
-                    first = true;
+                    first = false;
                 } else {
                     ruleDescription.add(line);
                 }

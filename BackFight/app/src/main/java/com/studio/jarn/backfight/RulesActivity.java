@@ -44,11 +44,11 @@ public class RulesActivity extends AppCompatActivity {
 
         Rules selectedRule = mAdapter.getItem(position);
         if (selectedRule != null) {
-            mTitle.setText(selectedRule.rulesName);
+            mTitle.setText(selectedRule.mRulesName);
 
             String temp = "";
-            for (int i = 0; i < selectedRule.rulesDescription.size(); i++) {
-                temp = temp + selectedRule.rulesDescription.get(i) + System.lineSeparator();
+            for (int i = 0; i < selectedRule.mRulesDescription.size(); i++) {
+                temp = temp + selectedRule.mRulesDescription.get(i) + System.lineSeparator();
             }
             mDetails.setText(temp);
         }
@@ -56,12 +56,7 @@ public class RulesActivity extends AppCompatActivity {
 
     // Get all rules from raw files
     private void getRules() {
-
-        mRules = new ArrayList<>();
-        ILoadRules loader = new LoadRules(this);
-        mRules = loader.getRules();
-
-
+        mRules = new LoadRules(this).getRules();
         setRulesInListView();
     }
 

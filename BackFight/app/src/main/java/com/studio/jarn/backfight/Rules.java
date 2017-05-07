@@ -3,15 +3,15 @@ package com.studio.jarn.backfight;
 import java.util.ArrayList;
 
 class Rules {
-    String rulesName;
-    ArrayList<String> rulesDescription;
+    String mRulesName;
+    ArrayList<String> mRulesDescription;
 
     Rules(String rulesName, ArrayList<String> description) {
-        this.rulesName = rulesName;
-        this.rulesDescription = description;
+        this.mRulesName = rulesName;
+        this.mRulesDescription = description;
     }
 
-    String getRulesName() {
-        return rulesName;
+    String getmRulesName() {
+        return mRulesName;
     }
 }
