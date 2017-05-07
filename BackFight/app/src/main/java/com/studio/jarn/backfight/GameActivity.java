@@ -18,8 +18,9 @@ import java.util.Random;
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
-    private static final int sGridSize = 16;
     private static final int sSquaresViewedAtStartup = 3;
+    private static final int sDefaultGridSize = 15;
+    private static int sGridSize = 16;
     private static boolean isHidden = true;
     private final Tile wallTile = new Tile(Tile.Types.Wall);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor);
@@ -41,7 +42,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void setupGameView(Intent i) {
         String UUID = i.getStringExtra(getString(R.string.EXTRA_UUID));
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
-
+        sGridSize = i.getIntExtra(getString(R.string.EXTRA_GRIDSIZE), sDefaultGridSize);
 
         GameView gv = (GameView) findViewById(R.id.boardview);
         if (gv != null) {
@@ -174,6 +175,22 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                     mGrid[row + spacesToGoRight][column] = floorTile;
                     break;
                 }
+                //not possible to to connect tiles by going horizontal, now try to go vertical
+                else if (spacesToGoRight == sGridSize - 1) {
+                    for (int spacesToGoDown = 0; spacesToGoDown < sGridSize - column; spacesToGoDown++) {
+                        if (!mGrid[row][column + spacesToGoDown].CanBePassed) {
+                            mGrid[row][column + spacesToGoDown] = floorTile;
+                            break;
+                        } else if (spacesToGoDown == column) {
+                            for (int spacesToGoUp = 0; spacesToGoUp < column; spacesToGoUp++) {
+                                if (!mGrid[row][column - spacesToGoUp].CanBePassed) {
+                                    mGrid[row][column - spacesToGoUp] = floorTile;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         } else {
             outerLoop:
@@ -183,7 +200,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                     break;
                 }
                 if (spacesToGoLeft == row) { //if there is no wall tiles to the left all the way to the edge, try to change to the right
-                    for (int spacesToGoRight = 0; spacesToGoRight <= sGridSize - 1 - row; spacesToGoRight++) {
+                    for (int spacesToGoRight = 0; spacesToGoRight < sGridSize - row; spacesToGoRight++) {
                         if (!mGrid[row + spacesToGoRight][column].CanBePassed) {
                             mGrid[row + spacesToGoRight][column] = floorTile;
                             break outerLoop;
