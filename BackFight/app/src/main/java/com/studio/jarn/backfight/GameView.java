@@ -43,6 +43,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     private ArrayList<Tuple<Player, Coordinates>> mGameObjectList = new ArrayList<>();
     private int mGridSizeWidthAndHeight;
     private int mSquaresViewedAtStartup;
+    private Player selectedObject;
 
     public GameView(Context context) {
         super(context);
@@ -65,8 +66,18 @@ public class GameView extends PanZoomView implements GameTouchListener
         mTouchListener = newListener;
     }
 
-    public void addGameObjects(ArrayList<Tuple<Player, Coordinates>> gameObjects){
-        mGameObjectList.addAll(gameObjects);
+    public void addGameObjects(){
+
+        float x = (mSquareWidth/4);
+        float y = (mSquareHeight/4)+10;
+
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, x, y)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y+1, x, y*2+1)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y*2+1, x, y*3+1)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y*3+1, x, y*4+1)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(x, 0, x*2, y)));
+
+        invalidate();
     }
 
     //TODO Player should be GameObjects
@@ -76,25 +87,9 @@ public class GameView extends PanZoomView implements GameTouchListener
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(bmp1, new Matrix(), null);
 
-        float column = 0;
-        float row = 0;
-        for (Tuple p : players) {
-
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                    ((Player)p.x).getFigure()), bmp1.getWidth() * (row / 4), bmp1.getHeight() * (column / 4), null);
-
-            // logic to distribute players over the tile, so each tile can hold 16 players
-            if (column < 4)
-                row++;
-            else {
-                Log.d("Error", "More than 16 players added");
-                break;
-            }
-            if (row == 4) {
-                column++;
-                row = 0;
-            }
-
+        for(Tuple<Player, Coordinates> p : players) {
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),p.x.getFigure()),
+                     p.y.x, p.y.y, null);
         }
 
         return bmOverlay;
@@ -130,11 +125,19 @@ public void drawOnCanvas (Canvas canvas) {
 
            switch (mGrid[j][i].Type) {
                case Wall: {
-                    canvas.drawBitmap(bm_wall, null, dest1, paint);
+                   if(i == 0 && j == 0){
+                       canvas.drawBitmap(addPlayerToBitmap(bm_floor, mGameObjectList), null, dest1, paint);
+                   }else{
+                       canvas.drawBitmap(bm_wall, null, dest1, paint);
+                   }
                     break;
                }
                case WoodenFloor: {
-                   canvas.drawBitmap(bm_floor, null, dest1, paint);
+                   if(i == 0 && j == 0){
+                       canvas.drawBitmap(addPlayerToBitmap(bm_floor, mGameObjectList), null, dest1, paint);
+                   }else{
+                       canvas.drawBitmap(bm_floor, null, dest1, paint);
+                   }
                    break;
                }
            }
@@ -142,7 +145,6 @@ public void drawOnCanvas (Canvas canvas) {
        }
        dy = dy + mSquareHeight;
     }
-    UpdateMapWithPlayers(bm_floor);
 }
 
     private void UpdateMapWithPlayers(Bitmap tile){
@@ -257,8 +259,13 @@ public void onDrawPz(Canvas canvas) {
         if (listener == null) return;
         listener.onTouchDown();
     }
-
+    Boolean test = false;
     public void onTouchUp(float downX, float downY, float upX, float upY) {
+        if(test == false){
+            addGameObjects();
+            test = true;
+        }
+
         //Calculate the coordinates pressed on the map
         float xCoord = (mOriginOffsetX + upX - (mPosX-((mMaxCanvasWidth/2)*mScaleFactor-(mMaxCanvasWidth/2))))/mScaleFactor;
         float yCoord = (mOriginOffsetY + upY - (mPosY-((mMaxCanvasHeight/2)*mScaleFactor-(mMaxCanvasHeight/2))))/mScaleFactor;
@@ -280,8 +287,25 @@ public void onDrawPz(Canvas canvas) {
 
     @Override
     public void onTouchUp(float upX, float upY) {
+        //Check every object on the map
+        for(Tuple<Player, Coordinates> test : mGameObjectList){
+            //Is click on object
+            if(test.y.x <= upX && upX <= test.y.xEnd && test.y.y <= upY && upY <= test.y.yEnd){
+                //If object is selected - deselect it
+                if(test.x.isSelected()){
+                    test.x.SelectPlayer();
+                    selectedObject = null;
+                }
+                //If object is not selected - deselect current selected object and select new object
+                else{
+                    test.x.SelectPlayer();
+                    if(!(selectedObject == null)) selectedObject.SelectPlayer();
+                    selectedObject = test.x;
+                }
+            }
+        }
 
-
+        //Update map
         invalidate();
     }
 

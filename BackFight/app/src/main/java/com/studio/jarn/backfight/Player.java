@@ -1,11 +1,12 @@
 package com.studio.jarn.backfight;
 
 
+import java.lang.reflect.Type;
 
 class Player {
     private final int Figure;
     private final int FigureSelected;
-    private boolean IsSelected = false;
+    private boolean Selected = false;
     String Name;
 
     Player(int figure, int figureSelected, String name) {
@@ -15,12 +16,16 @@ class Player {
     }
 
     void SelectPlayer(){
-        if(IsSelected) IsSelected = false;
-        else IsSelected = true;
+        if(Selected) Selected = false;
+        else Selected = true;
     }
 
     int getFigure() {
-        if(IsSelected) return FigureSelected;
+        if(Selected) return FigureSelected;
         else return Figure;
+    }
+
+    boolean isSelected(){
+        return Selected;
     }
 }

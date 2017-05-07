@@ -34,7 +34,6 @@ public class GameActivity extends Activity
             gv.setGridSize(sGridSize);
             gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
             gv.updateGrid(mGrid);
-            gv.addGameObjects(addPlayers());
         }
     }
 
@@ -42,8 +41,6 @@ public class GameActivity extends Activity
     //TODO Player should be GameObject
     public ArrayList<Tuple<Player, Coordinates>> addPlayers() {
         ArrayList<Tuple<Player, Coordinates>> gameObjects = new ArrayList<>();
-        gameObjects.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0)));
-        gameObjects.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0)));
 
         return gameObjects;
     }
