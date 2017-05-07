@@ -19,4 +19,10 @@
     <string name="rules_search">Search rules</string>
     <string name="rules_rulesDetails">Click on a rule to view the details</string>
     <string name="all_icon">Icon</string>
+    <string name="EXTRA_HOST">com.jarn.extra.host</string>
+    <string name="EXTRA_GRIDTYPE">com.jarn.extra.gridtype</string>
+    <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
+    <string name="lobby_default">Default</string>
+    <string name="lobby_maze">Maze</string>
+
 </resources>
