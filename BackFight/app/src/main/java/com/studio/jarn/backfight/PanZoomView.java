@@ -71,7 +71,6 @@ public void drawOnCanvas (Canvas canvas) {
     mSampleImage.draw(canvas);
 }
 
-
 @Override
 public void onDraw(Canvas canvas) {
     super.onDraw(canvas);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -52,8 +51,9 @@ public class GameView extends PanZoomView implements GameTouchListener
     private int mSquaresViewedAtStartup;
     private String mUuid;
     private DatabaseReference databaseReference;
+    private Player mSelectedObject;
 
-    private Player selectedObject;
+
 
     public GameView(Context context) {
         super(context);
@@ -63,7 +63,6 @@ public class GameView extends PanZoomView implements GameTouchListener
         super(context, attrs);
         setTouchListener(this);
     }
-
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setTouchListener(this);
@@ -77,33 +76,21 @@ public class GameView extends PanZoomView implements GameTouchListener
         mTouchListener = newListener;
     }
 
+
+    //TODO should be implemented correctly
     public void addGameObjects(){
 
         float x = (mSquareWidth/4);
-        float y = (mSquareHeight/4)+10;
+        float y = (mSquareHeight/4);
 
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, x, y)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y+1, x, y*2+1)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y*2+1, x, y*3+1)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y*3+1, x, y*4+1)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(x, 0, x*2, y)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, mSquareHeight)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y+1, mSquareHeight)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y*2+1, mSquareHeight)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, y*3+1, mSquareHeight)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(x, 0, mSquareHeight)));
+        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(x*4, 0, mSquareHeight)));
 
         invalidate();
-    }
-
-    //TODO Player should be GameObjects
-    // Inspiration found here: http://stackoverflow.com/questions/10616777/how-to-merge-to-two-bitmap-one-over-another
-    private Bitmap addPlayerToBitmap(Bitmap bmp1, List<Tuple<Player, Coordinates>> players) {
-        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(bmp1, new Matrix(), null);
-
-        for(Tuple<Player, Coordinates> p : players) {
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),p.x.getFigure()),
-                     p.y.x, p.y.y, null);
-        }
-
-        return bmOverlay;
     }
 
 public void setGridSize(int newValue)
@@ -148,19 +135,11 @@ public void drawOnCanvas (Canvas canvas) {
 
            switch (mGrid[j][i].Type) {
                case Wall: {
-                   if(i == 0 && j == 0){
-                       canvas.drawBitmap(addPlayerToBitmap(bm_floor, mGameObjectList), null, dest1, paint);
-                   }else{
-                       canvas.drawBitmap(bm_wall, null, dest1, paint);
-                   }
+                   canvas.drawBitmap(bm_wall, null, dest1, paint);
                     break;
                }
                case WoodenFloor: {
-                   if(i == 0 && j == 0){
-                       canvas.drawBitmap(addPlayerToBitmap(bm_floor, mGameObjectList), null, dest1, paint);
-                   }else{
-                       canvas.drawBitmap(bm_floor, null, dest1, paint);
-                   }
+                   canvas.drawBitmap(bm_floor, null, dest1, paint);
                    break;
                }
            }
@@ -168,14 +147,14 @@ public void drawOnCanvas (Canvas canvas) {
        }
        dy = dy + mSquareHeight;
     }
+    myDraw(canvas);
 }
 
-    private void UpdateMapWithPlayers(Bitmap tile){
-        //TODO Should be implemented
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Nicklas"), new Coordinates(0,0)));
-
-        addPlayerToBitmap(tile, mGameObjectList);
+private void myDraw(Canvas canvas){
+    for(Tuple<Player, Coordinates> tuple : mGameObjectList ){
+        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), tuple.y.x, tuple.y.y, null);
     }
+}
 
 /**
  * onDrawPz
@@ -332,11 +311,12 @@ public void onDrawPz(Canvas canvas) {
         if (listener == null) return;
         listener.onTouchDown();
     }
-    Boolean test = false;
+    boolean onlyOnce = true;
+
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        if(test == false){
+        if(onlyOnce){
             addGameObjects();
-            test = true;
+            onlyOnce = false;
         }
 
         //Calculate the coordinates pressed on the map
@@ -361,24 +341,33 @@ public void onDrawPz(Canvas canvas) {
     @Override
     public void onTouchUp(float upX, float upY) {
         //Check every object on the map
-        for(Tuple<Player, Coordinates> test : mGameObjectList){
-            //Is click on object
-            if(test.y.x <= upX && upX <= test.y.xEnd && test.y.y <= upY && upY <= test.y.yEnd){
+        for(Tuple<Player, Coordinates> tuple : mGameObjectList){
+
+            //Moving a player
+            if(tuple.x.equals(mSelectedObject)){
+                tuple.y.x = ((int)(upX / mSquareWidth))*mSquareWidth;
+                tuple.y.y = ((int)(upY / mSquareHeight))*mSquareHeight;
+                tuple.y.setEndCoordinates(mSquareHeight);
+                tuple.x.SelectPlayer();
+                mSelectedObject = null;
+            }
+
+            //Selecting and deselecting a player
+            if(tuple.y.x <= upX && upX <= tuple.y.getXEnd() && tuple.y.y <= upY && upY <= tuple.y.getYEnd()){
                 //If object is selected - deselect it
-                if(test.x.isSelected()){
-                    test.x.SelectPlayer();
-                    selectedObject = null;
+                if(tuple.x.isSelected()){
+                    tuple.x.SelectPlayer();
+                    mSelectedObject = null;
                 }
                 //If object is not selected - deselect current selected object and select new object
                 else{
-                    test.x.SelectPlayer();
-                    if(!(selectedObject == null)) selectedObject.SelectPlayer();
-                    selectedObject = test.x;
+                    tuple.x.SelectPlayer();
+                    if(!(mSelectedObject == null)) mSelectedObject.SelectPlayer();
+                    mSelectedObject = tuple.x;
                 }
             }
         }
-
-        //Update map
+        //Render map
         invalidate();
     }
 
@@ -386,5 +375,6 @@ public void onDrawPz(Canvas canvas) {
     public void onLongTouchUp(int downX, int downY, int upX, int upY) {
 
     }
+
 } // end class
   

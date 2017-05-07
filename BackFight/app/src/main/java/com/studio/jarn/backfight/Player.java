@@ -1,34 +1,29 @@
 package com.studio.jarn.backfight;
 
 
-import java.lang.reflect.Type;
-
 class Player {
-    private final int Figure;
-    private final int FigureSelected;
-    private boolean Selected = false;
+    private final int mFigure;
+    private final int mFigureSelected;
+    private boolean mSelected = false;
     String Name;
 
-    Player(int figure, int figureSelected, String name) {
-        Figure = figure;
+    Player(int Figure, int FigureSelected, String name) {
+        mFigure = Figure;
         Name = name;
-        this.FigureSelected = figureSelected;
+        mFigureSelected = FigureSelected;
     }
 
     void SelectPlayer(){
-        if(Selected) Selected = false;
-        else Selected = true;
+        if(mSelected) mSelected = false;
+        else mSelected = true;
     }
 
     int getFigure() {
-        if(Selected) return FigureSelected;
-        else return Figure;
+        if(mSelected) return mFigureSelected;
+        else return mFigure;
     }
 
     boolean isSelected(){
-        return Selected;
-    }
-
-    Player() {
+        return mSelected;
     }
 }

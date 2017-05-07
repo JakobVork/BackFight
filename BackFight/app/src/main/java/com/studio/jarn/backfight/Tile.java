@@ -20,6 +20,9 @@ class Tile {
         this(type, 0);
     }
 
+    Tile(){
+
+    }
 
     private void canBePassedSwitch(Types type) {
         switch (type) {
