@@ -40,7 +40,7 @@ public class RulesActivity extends AppCompatActivity {
     // Set the details for the rule selected
     // TODO finde en anden måde så den understøtter 15
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void onMovieSelected(int position) {
+    public void onRuleSelected(int position) {
 
         Rules selectedRule = mAdapter.getItem(position);
         if (selectedRule != null) {
@@ -69,7 +69,7 @@ public class RulesActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onMovieSelected(position);
+                onRuleSelected(position);
             }
         });
 

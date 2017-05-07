@@ -9,11 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-interface ILoadRules {
-    ArrayList<Rules> getRules();
-}
-
-class LoadRules implements ILoadRules {
+class LoadRules {
 
     private ArrayList<Rules> mRules = new ArrayList<>();
     private Activity activity;
@@ -22,7 +18,7 @@ class LoadRules implements ILoadRules {
         activity = a;
     }
 
-    public ArrayList<Rules> getRules() {
+    ArrayList<Rules> getRules() {
 
         getSingleRule("credits");
         getSingleRule("movement");
@@ -34,7 +30,7 @@ class LoadRules implements ILoadRules {
 
         String ruleTitle = "raw/" + Rule;
         ArrayList<String> ruleDescription = new ArrayList<>();
-        Rules temp;
+        Rules rule;
         InputStream is = activity.getResources().openRawResource(activity.getResources().getIdentifier(ruleTitle,
                 "raw", activity.getPackageName()));
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -49,8 +45,8 @@ class LoadRules implements ILoadRules {
                     ruleDescription.add(line);
                 }
             }
-            temp = new Rules(ruleTitle, ruleDescription);
-            mRules.add(temp);
+            rule = new Rules(ruleTitle, ruleDescription);
+            mRules.add(rule);
         } catch (Exception ex) {
             Log.e("ERROR", "Something wrong during CSV file read", ex);
         }
