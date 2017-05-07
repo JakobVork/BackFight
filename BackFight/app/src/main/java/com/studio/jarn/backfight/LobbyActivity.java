@@ -14,6 +14,7 @@ public class LobbyActivity extends AppCompatActivity {
     Button mBtnBack;
     Button mBtnStart;
     NumberPicker mNpGridSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

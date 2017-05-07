@@ -1,12 +1,13 @@
 package com.studio.jarn.backfight;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SplashActivity extends AppCompatActivity {
@@ -23,9 +24,12 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void StartAnimation() {
+        ImageView mIcon = (ImageView) findViewById(R.id.activity_splash_img_title);
         TextView mBackFight = (TextView) findViewById(R.id.activity_splash_tv_title);
-        Animation StartAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        mBackFight.startAnimation(StartAnimation);
+        Animation StartAnimationIcon = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation StartAnimationText = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        mBackFight.startAnimation(StartAnimationText);
+        mIcon.startAnimation(StartAnimationIcon);
     }
 
     private void makeDelayBeforeMainStarts() {
