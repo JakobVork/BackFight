@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "950069390337",
+    "firebase_url": "https://backfight-cf370.firebaseio.com",
+    "project_id": "backfight-cf370",
+    "storage_bucket": "backfight-cf370.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950069390337:android:22b2c6794a3bb390",
+        "android_client_info": {
+          "package_name": "com.studio.jarn.backfight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950069390337-ei4aiaco3rm5kf9g8r6vec7guq7ja6i6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studio.jarn.backfight",
+            "certificate_hash": "67842ebe228f93d59962095230eabd45d589aeb1"
+          }
+        },
+        {
+          "client_id": "950069390337-00p043univ9bbadrq2372qisoqanei5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDefJwMvAab8XUrVhLI3VyVZZl-sv0c60"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950069390337-00p043univ9bbadrq2372qisoqanei5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

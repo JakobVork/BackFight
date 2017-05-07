@@ -1,14 +1,14 @@
 package com.studio.jarn.backfight;
 
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 public class RulesActivity extends AppCompatActivity {
 
-    Button mbtnBack;
+    Button mBtnBack;
 
     //Maybe make a listview of the rules?
 
@@ -22,13 +22,13 @@ public class RulesActivity extends AppCompatActivity {
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {
-        mbtnBack = (Button) findViewById(R.id.activity_rules_btn_back);
+        mBtnBack = (Button) findViewById(R.id.activity_rules_btn_back);
 
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-        mbtnBack.setOnClickListener(new View.OnClickListener() {
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 backToMainMenu();

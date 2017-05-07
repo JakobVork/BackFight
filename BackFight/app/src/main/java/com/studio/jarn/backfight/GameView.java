@@ -11,7 +11,14 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -43,6 +50,9 @@ public class GameView extends PanZoomView implements GameTouchListener
     private ArrayList<Tuple<Player, Coordinates>> mGameObjectList = new ArrayList<>();
     private int mGridSizeWidthAndHeight;
     private int mSquaresViewedAtStartup;
+    private String mUuid;
+    private DatabaseReference databaseReference;
+
     private Player selectedObject;
 
     public GameView(Context context) {
@@ -53,6 +63,7 @@ public class GameView extends PanZoomView implements GameTouchListener
         super(context, attrs);
         setTouchListener(this);
     }
+
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setTouchListener(this);
@@ -105,6 +116,12 @@ public void setViewSizeAtStartup(int newValue)
    mSquaresViewedAtStartup = newValue;
 }
 
+    public void setUuidStartup(String uuid) {
+        mUuid = uuid;
+    }
+
+
+
     //Todo: remove hardcoded Players
 public void drawOnCanvas (Canvas canvas) {
 
@@ -116,6 +133,12 @@ public void drawOnCanvas (Canvas canvas) {
     //
     // Draw squares to fill the grid.
     //
+
+    //Check to see if there has been added an array to mGrid
+    if (mGrid[0][0] == null) {
+        return;
+    }
+
     RectF dest1 = mDestRectF;
     float dx, dy = 0;
     for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
@@ -247,12 +270,62 @@ public void onDrawPz(Canvas canvas) {
     }
 
 
-    public void updateGrid(Tile grid[][]) {
+    public void initHostGrid(Tile grid[][]) {
         // Set up the grid  and grid selection variables.
-        if (mGrid == null) mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
+        if (mGrid == null)
+            mGrid = grid;
 
-        mGrid = grid.clone();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference(mUuid);
+        setupOnDataChange();
+        updateGrid(grid);
+
     }
+
+
+    public void initClientGrid() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference(mUuid);
+        setupOnDataChange();
+    }
+
+    private void setupOnDataChange() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                int row = -1;
+                int column = -1;
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    row++;
+                    for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
+                        column++;
+                        mGrid[row][column] = postSnapshot1.getValue(Tile.class);
+                    }
+                    column = -1;
+                }
+                invalidate();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+
+    public void updateGrid(Tile grid[][]) {
+
+        List<List<Tile>> list = new ArrayList<>();
+        for (Tile[] aMGrid : grid) {
+            list.add(Arrays.asList(aMGrid));
+        }
+        databaseReference.setValue(list);
+    }
+
 
     public void onTouchDown(float downX, float downY) {
         GameTouchListener listener = getTouchListener();

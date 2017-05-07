@@ -13,4 +13,7 @@
     <string name="newGame_join">Join</string>
     <string name="lobby_startGame">Start Game</string>
     <string name="lobby_title">Lobby</string>
+    <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
+    <string name="EXTRA_HOST">sa</string>
+    <string name="EXTRA_GRIDTYPE">s</string>
 </resources>

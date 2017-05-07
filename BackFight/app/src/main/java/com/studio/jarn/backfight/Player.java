@@ -28,4 +28,7 @@ class Player {
     boolean isSelected(){
         return Selected;
     }
+
+    Player() {
+    }
 }
