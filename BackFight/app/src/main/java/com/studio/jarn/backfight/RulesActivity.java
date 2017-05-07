@@ -38,8 +38,10 @@ public class RulesActivity extends AppCompatActivity {
     }
 
     // Set the details for the rule selected
+    // TODO finde en anden måde så den understøtter 15
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onMovieSelected(int position) {
+
         Rules selectedRule = mAdapter.getItem(position);
         if (selectedRule != null) {
             mTitle.setText(selectedRule.rulesName);
