@@ -10,4 +10,8 @@ class Rules {
         this.rulesName = rulesName;
         this.rulesDescription = description;
     }
+
+    String getRulesName() {
+        return rulesName;
+    }
 }
