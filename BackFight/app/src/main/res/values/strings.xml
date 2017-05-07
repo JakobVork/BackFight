@@ -14,6 +14,10 @@
     <string name="lobby_startGame">Start Game</string>
     <string name="lobby_title">Lobby</string>
     <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
-    <string name="EXTRA_HOST">sa</string>
-    <string name="EXTRA_GRIDTYPE">s</string>
+    <string name="EXTRA_HOST">com.jarn.extra.host</string>
+    <string name="EXTRA_GRIDTYPE">com.jarn.extra.gridtype</string>
+    <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
+    <string name="lobby_default">Default</string>
+    <string name="lobby_maze">Maze</string>
+
 </resources>
