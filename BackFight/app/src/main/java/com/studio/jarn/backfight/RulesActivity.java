@@ -22,7 +22,7 @@ public class RulesActivity extends AppCompatActivity {
     Button mBtnBack;
     ListView mLwList;
     RulesAdapter mAdapter;
-    EditText mSeach;
+    EditText mSearch;
     ArrayList<Rules> mRules;
     TextView mTitle;
     TextView mDetails;
@@ -55,13 +55,10 @@ public class RulesActivity extends AppCompatActivity {
     // Get all rules from raw files
     private void getRules() {
 
+        mRules = new ArrayList<>();
         ILoadRules loader = new LoadRules(this);
         mRules = loader.getRules();
 
-        if (mRules == null) {
-            //if null create fake list
-            mRules = new ArrayList<>();
-        }
 
         setRulesInListView();
     }
@@ -79,7 +76,7 @@ public class RulesActivity extends AppCompatActivity {
             }
         });
 
-        mSeach.addTextChangedListener(new TextWatcher() {
+        mSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Must be empty
@@ -105,7 +102,7 @@ public class RulesActivity extends AppCompatActivity {
         mTitle = (TextView) findViewById(R.id.activity_rules_tv_title);
         mDetails = (TextView) findViewById(R.id.activity_rules_tv_details);
         mLwList = (ListView) findViewById(R.id.activity_rules_lw_listOfRules);
-        mSeach = (EditText) findViewById(R.id.activity_rules_et_search);
+        mSearch = (EditText) findViewById(R.id.activity_rules_et_search);
 
         initViewDetails();
     }
