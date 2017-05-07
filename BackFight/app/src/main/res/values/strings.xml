@@ -13,6 +13,9 @@
     <string name="newGame_join">Join</string>
     <string name="lobby_startGame">Start Game</string>
     <string name="lobby_title">Lobby</string>
+    <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
+    <string name="EXTRA_HOST">sa</string>
+    <string name="EXTRA_GRIDTYPE">s</string>
     <string name="rules_search">Search rules</string>
     <string name="rules_rulesDetails">Click on a rule to view the details</string>
     <string name="all_icon">Icon</string>

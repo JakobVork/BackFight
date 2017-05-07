@@ -1,9 +1,9 @@
 package com.studio.jarn.backfight;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -44,28 +44,28 @@ public class MainMenuActivity extends AppCompatActivity {
                 openNewGameActivity();
             }
         });
-        
+
         mBtnLoadGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openLoadGameActivity();
             }
         });
-        
+
         mBtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openSettingsActivity();
             }
         });
-        
+
         mBtnRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRulesActivity();
             }
         });
-        
+
         mBtnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,9 +1,9 @@
 package com.studio.jarn.backfight;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -47,6 +47,12 @@ public class LobbyActivity extends AppCompatActivity {
     // Starts the game
     private void startGame() {
         Intent StartGameIntent = new Intent(this, GameActivity.class);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
+        StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
+        GridType gridType = GridType.DefaultGrid;
+        /*GridType gridType = GridType.Maze;*/
+        StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridType);
+
         startActivity(StartGameIntent);
     }
 
