@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.studio.jarn.backfight.Items.gameItem;
+import com.studio.jarn.backfight.Items.GameItem;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class ItemsAndStatsFragment extends Fragment {
 
     private OnItemSelectedListener mListener;
 
-    private ArrayList<gameItem> mItemList;
+    private ArrayList<GameItem> mItemList;
     private ListView mItemListView;
 
     public ItemsAndStatsFragment() {
@@ -35,8 +35,8 @@ public class ItemsAndStatsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_items_and_stats, container, false);
 
         mItemList = new ArrayList<>();
-        mItemList.add(new gameItem("gameItem", "Test sword", R.drawable.item_sword));
-        mItemList.add(new gameItem("gameItem", "Test sword", R.drawable.item_breastplate));
+        mItemList.add(new GameItem("GameItem", "Test sword", R.drawable.item_sword));
+        mItemList.add(new GameItem("GameItem", "Test sword", R.drawable.item_breastplate));
 
         final ItemAdaptor adapter = new ItemAdaptor(getActivity(), mItemList);
         mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
@@ -69,6 +69,6 @@ public class ItemsAndStatsFragment extends Fragment {
     }
 
     interface OnItemSelectedListener {
-        void onItemSelected(gameItem item);
+        void onItemSelected(GameItem item);
     }
 }

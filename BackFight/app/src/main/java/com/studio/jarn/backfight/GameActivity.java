@@ -8,7 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
-import com.studio.jarn.backfight.Items.gameItem;
+import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemWeapon;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +32,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
+
+        GameItem sword_simple1 = new ItemWeapon();
 
         Intent i = getIntent();
         if (i != null) {
@@ -335,7 +338,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     @Override
-    public void onItemSelected(gameItem item) {
+    public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
     }
 }

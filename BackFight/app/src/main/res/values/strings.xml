@@ -16,4 +16,22 @@
     <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
     <string name="EXTRA_HOST">sa</string>
     <string name="EXTRA_GRIDTYPE">s</string>
+
+    <!-- Items -->
+    <string name="item_sword_simple_title">Simple Sword</string>
+    <string name="item_sword_simple_description">It\'s not much, but just hit with the pointy end.</string>
+    <string name="item_sword_dual_title">Dual Swords</string>
+    <string name="item_sword_dual_description">The more the merrier!</string>
+    <string name="item_sword_scimitar_title">Merchant Scimitar</string>
+    <string name="item_sword_scimitar_description">Stolen from some guy.. Now I just need to steal his camel</string>
+    <string name="item_sword_magical_title">Al Samirs Sword</string>
+    <string name="item_sword_magical_description">The Sword of Al Samir is forged in the elver castle. It possess\' some fragments from the mightly dragon Phlamir.</string>
+    <string name="item_scepter_title">Scepter</string>
+    <string name="item_scepter_description">It might be royal, but it\'s not effecient.</string>
+    <string name="item_axe_title">Battle Axe</string>
+    <string name="item_axe_description">No tree nor monster can stop you now</string>
+    <string name="item_axe_major_title">Battle Axe Of Lionheart</string>
+    <string name="item_axe_major_description">This axe was used in the Battle of Jaffa by Lionheart himself.</string>
+    <string name="item_sword_flame_title">Drakur\'s flaming sword</string>
+    <string name="item_sword_flame_description">Legends tell what this sword can do.</string>
 </resources>

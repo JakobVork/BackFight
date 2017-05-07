@@ -8,17 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.studio.jarn.backfight.Items.gameItem;
+import com.studio.jarn.backfight.Items.GameItem;
 
 import java.util.ArrayList;
 
 class ItemAdaptor extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<gameItem> mItems;
-    private gameItem mItem;
+    private ArrayList<GameItem> mItems;
+    private GameItem mItem;
 
-    ItemAdaptor(Context c, ArrayList<gameItem> itemList) {
+    ItemAdaptor(Context c, ArrayList<GameItem> itemList) {
         this.mContext = c;
         this.mItems = itemList;
     }
