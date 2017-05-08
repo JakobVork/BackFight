@@ -6,11 +6,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.RadioGroup;
 
 public class LobbyActivity extends AppCompatActivity {
 
     Button mBtnBack;
     Button mBtnStart;
+    NumberPicker mNpGridSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +22,12 @@ public class LobbyActivity extends AppCompatActivity {
         hideActionBar();
         initButtons();
         getData();
+
+
+        mNpGridSize = (NumberPicker) findViewById(R.id.activity_lobby_np_mapSize);
+        mNpGridSize.setMaxValue(30);
+        mNpGridSize.setMinValue(5);
+        mNpGridSize.setValue(15);
     }
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
@@ -49,11 +59,24 @@ public class LobbyActivity extends AppCompatActivity {
         Intent StartGameIntent = new Intent(this, GameActivity.class);
         StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
-        GridType gridType = GridType.DefaultGrid;
-        /*GridType gridType = GridType.Maze;*/
+
+        StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDSIZE), mNpGridSize.getValue());
+        GridType gridType = gridTypeSelector();
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridType);
 
         startActivity(StartGameIntent);
+    }
+
+    private GridType gridTypeSelector() {
+        RadioGroup rg = (RadioGroup) findViewById(R.id.activity_lobby_rg_gridType);
+
+        switch (rg.getCheckedRadioButtonId()) {
+            case R.id.activity_lobby_rb_default:
+                return GridType.DefaultGrid;
+            case R.id.activity_lobby_rb_maze:
+                return GridType.Maze;
+        }
+        return null;
     }
 
     // Go back to main menu

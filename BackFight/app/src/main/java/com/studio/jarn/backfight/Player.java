@@ -4,11 +4,11 @@ package com.studio.jarn.backfight;
 
 class Player {
     int Icon;
-    String Name;
+    private String mName;
 
     Player(int icon, String name) {
         Icon = icon;
-        Name = name;
+        mName = name;
     }
 
     Player() {

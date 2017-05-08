@@ -16,6 +16,13 @@
     <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
     <string name="EXTRA_HOST">sa</string>
     <string name="EXTRA_GRIDTYPE">s</string>
+    <string name="rules_search">Search rules</string>
+    <string name="rules_rulesDetails">Click on a rule to view the details</string>
+    <string name="all_icon">Icon</string>
+    <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
+    <string name="lobby_default">Default</string>
+    <string name="lobby_maze">Maze</string>
+
 
     <!-- Items -->
     <string name="item_sword_simple_title">Simple Sword</string>
@@ -34,4 +41,5 @@
     <string name="item_axe_major_description">This axe was used in the Battle of Jaffa by Lionheart himself.</string>
     <string name="item_sword_flame_title">Drakur\'s flaming sword</string>
     <string name="item_sword_flame_description">Legends tell what this sword can do.</string>
+
 </resources>
