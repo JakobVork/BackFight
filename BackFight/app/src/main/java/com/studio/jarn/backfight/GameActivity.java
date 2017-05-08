@@ -54,6 +54,9 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmenthide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(getFragmentManager().getBackStackEntryCount() > 0) {
+                    getFragmentManager().popBackStack();
+                }
                 hideItemListFragment();
             }
         });
@@ -97,16 +100,16 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmenthide.setVisibility(View.VISIBLE);
 
-        // TODO: There's currently a bug - if the user is in detail view, and hit hide, when show won't show again.
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment == null) {
             itemsAndStatsFragment = new ItemsAndStatsFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
-            ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
-            ft.commit();
         }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
+        ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+        ft.commit();
+
     }
 
     private void hideItemListFragment() {
