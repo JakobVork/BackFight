@@ -6,15 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.example.Weather;
-
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by ander on 07-05-2017.
- */
 
 public class WeatherDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 2;
@@ -54,7 +47,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
 
     public List<WeatherInfo> getAllWeatherInfo(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + WeatherReaderContract.TaskEntry.TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("select * from " + WeatherReaderContract.TaskEntry.TABLE_NAME + " ORDER BY " + WeatherReaderContract.TaskEntry.COLUMN_NAME_TIME + " DESC", null);
         try {
             List itemIds = new ArrayList<>();
             while(cursor.moveToNext()) {
@@ -73,8 +66,6 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
             return null;
         }
     }
-
-
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + WeatherReaderContract.TaskEntry.TABLE_NAME + " (" +
