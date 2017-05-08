@@ -71,7 +71,6 @@ public void drawOnCanvas (Canvas canvas) {
     mSampleImage.draw(canvas);
 }
 
-
 @Override
 public void onDraw(Canvas canvas) {
     super.onDraw(canvas);
@@ -189,6 +188,8 @@ switch (e.getAction() & MotionEvent.ACTION_MASK) {
     }
 }
 
+
+
 this.performClick ();           // Do this to get rid of warning message.
                                 // Not sure what it does.
 return true;
@@ -205,7 +206,7 @@ public boolean performClick() {
     }
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        //Gets overwrited by GameActivity which implements GameBoardTouchListener interface.
+        //Gets overwrited by GameActivity which implements GameTouchListener interface.
     }
 
 protected void setupScaleDetector (Context context, AttributeSet attrs, int defStyle) {
@@ -243,6 +244,11 @@ private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureLis
 
         // Don't let the object get too small or too large.
         mScaleFactor = Math.max(mMinScaleFactor, Math.min(mScaleFactor, mMaxScaleFactor));
+
+/*
+        mPosX = mPosX * (-3616*mScaleFactor+3616);
+        mPosY = mPosY * (-3616*mScaleFactor+3616);
+*/
 
         invalidate();
         return true;

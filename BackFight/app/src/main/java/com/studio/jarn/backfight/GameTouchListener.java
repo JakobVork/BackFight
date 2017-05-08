@@ -9,7 +9,7 @@ package com.studio.jarn.backfight;
  * No coordinates are included in the call to onTouchDown.
  */
 
-public interface GameBoardTouchListener {
+public interface GameTouchListener {
 
     /**
      * This method is called when a touch Down action occurs.
@@ -27,14 +27,14 @@ public interface GameBoardTouchListener {
      * Index values are 0 based.
      * Values are between 0 and NumSquaresAlongCanvas-1.
      *
-     * @param downX int - x value of the down action square
-     * @param downY int - y value of the down action square
-     * @param upX   int - x value of the up action square
-     * @param upY   int - y value of the up action square
+     * @param tileX int - The tiles X value on the map
+     * @param tileY int - The tiles Y value on the map
+     * @param placementX   int - The placement X value on the tile
+     * @param placementY   int - The placement Y value on the tile
      * @return void
      */
 
-    void onTouchUp(int downX, int downY, int upX, int upY);
+    void onTouchUp(int tileX, int tileY, int placementX, int placementY);
 
     /**
      * This method is called when a touch Up action occurs and the time between down and up

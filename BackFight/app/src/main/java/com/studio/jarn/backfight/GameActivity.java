@@ -22,8 +22,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static final int sDefaultGridSize = 15;
     private static int sGridSize = 16;
     private static boolean isHidden = true;
-    private final Tile wallTile = new Tile(Tile.Types.Wall, null);
-    private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
+    private final Tile wallTile = new Tile(Tile.Types.Wall);
+    private final Tile floorTile = new Tile(Tile.Types.WoodenFloor);
     private final List<Integer> checkedList = new ArrayList<>();
     Fragment itemsAndStatsFragment;
     private Tile[][] mGrid;
@@ -55,7 +55,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
                 gv.setUuidStartup(UUID);
-                addPlayers();
+                //addPlayers();
                 gv.initHostGrid(mGrid);
             } else {
                 gv.setGridSize(sGridSize);
@@ -98,7 +98,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    //ToDO Needs implementation
+/*    //ToDO Needs implementation
     public void addPlayers() {
         List<Player> players = new ArrayList<>();
         players.add(new Player(R.drawable.player32, "Pernille"));
@@ -114,7 +114,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 break;
             }
         }
-    }
+    }*/
 
     private void setupMyGrid(GridType gridType)
     {
@@ -245,7 +245,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
     //recursive logic to take a floor tile and visit all the connecting neighbors
     private void visitAllConnectedNeighbors(int tileConnectivityCollectionNr, int row, int column) {
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null, tileConnectivityCollectionNr);
+        Tile floorTile = new Tile(Tile.Types.WoodenFloor, tileConnectivityCollectionNr);
         mGrid[row][column] = floorTile;
         if (row > 0 && mGrid[row - 1][column].CanBePassed && mGrid[row - 1][column].TileConnectivityCollectionNr != tileConnectivityCollectionNr)
             visitAllConnectedNeighbors(tileConnectivityCollectionNr, row - 1, column);
@@ -288,7 +288,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void recursionMaze(int row, int column) {
         // 4 random directions
         int[] randDirs = generateRandomDirections();
-        Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
+        Tile floorTile = new Tile(Tile.Types.WoodenFloor);
         // Examine each direction
         for (int randDir : randDirs) {
 
