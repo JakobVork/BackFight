@@ -9,7 +9,7 @@ package com.studio.jarn.backfight;
  * No coordinates are included in the call to onTouchDown.
  */
 
-public interface GameBoardTouchListener {
+public interface GameTouchListener {
 
     /**
      * This method is called when a touch Down action occurs.
@@ -34,7 +34,7 @@ public interface GameBoardTouchListener {
      * @return void
      */
 
-    void onTouchUp(int downX, int downY, int upX, int upY);
+    void onTouchUp(float upX, float upY);
 
     /**
      * This method is called when a touch Up action occurs and the time between down and up

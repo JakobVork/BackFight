@@ -71,7 +71,6 @@ public void drawOnCanvas (Canvas canvas) {
     mSampleImage.draw(canvas);
 }
 
-
 @Override
 public void onDraw(Canvas canvas) {
     super.onDraw(canvas);
@@ -205,7 +204,7 @@ public boolean performClick() {
     }
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        //Gets overwrited by GameActivity which implements GameBoardTouchListener interface.
+        //Gets overwrited by GameActivity which implements GameTouchListener interface.
     }
 
 protected void setupScaleDetector (Context context, AttributeSet attrs, int defStyle) {
