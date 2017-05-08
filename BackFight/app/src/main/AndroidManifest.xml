@@ -18,10 +18,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".GameActivity"
@@ -54,7 +51,12 @@
             android:name=".NewGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
-            android:theme="@style/FullscreenMenuTheme" />
+            android:theme="@style/FullscreenMenuTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".LobbyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

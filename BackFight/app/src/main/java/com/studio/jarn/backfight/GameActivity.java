@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
@@ -27,19 +31,39 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor, null);
     private final List<Integer> checkedList = new ArrayList<>();
     Fragment itemsAndStatsFragment;
+    Fragment itemsAndStatsFragmentDetailed;
     private Tile[][] mGrid;
     private int TileConnectivityCollectionNrCounter = 0;
+
+    private ImageView mIvItemFragmentShow;
+    private ImageView mIvItemFragmenthide;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
-        GameItem sword_simple1 = new ItemWeapon();
-
         Intent i = getIntent();
         if (i != null) {
             setupGameView(i);
         }
+
+        mIvItemFragmenthide = (ImageView) findViewById(R.id.game_board_activity_btn_hide_items);
+        mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_btn_show_items);
+        hideItemListFragment();
+
+        mIvItemFragmenthide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideItemListFragment();
+            }
+        });
+
+        mIvItemFragmentShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemListFragment();
+            }
+        });
     }
 
     private void setupGameView(Intent i) {
@@ -69,17 +93,11 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    public void switchItemListFragment(View view) {
-        if (isHidden) {
-            showItemListFragment();
-            isHidden = false;
-        } else {
-            hideItemListFragment();
-            isHidden = true;
-        }
-    }
-
     private void showItemListFragment() {
+        mIvItemFragmentShow.setVisibility(View.GONE);
+        mIvItemFragmenthide.setVisibility(View.VISIBLE);
+
+        // TODO: There's currently a bug - if the user is in detail view, and hit hide, when show won't show again.
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment == null) {
@@ -92,6 +110,9 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void hideItemListFragment() {
+        mIvItemFragmentShow.setVisibility(View.VISIBLE);
+        mIvItemFragmenthide.setVisibility(View.GONE);
+
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -357,5 +378,11 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     @Override
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance((ItemWeapon) item);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

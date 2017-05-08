@@ -1,15 +1,23 @@
 package com.studio.jarn.backfight;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemFactory;
+import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.Items.Weapons;
 
 import java.util.ArrayList;
 
@@ -34,9 +42,18 @@ public class ItemsAndStatsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_items_and_stats, container, false);
 
+        ItemFactory itemFac = new ItemFactory(getContext());
         mItemList = new ArrayList<>();
-        mItemList.add(new GameItem("GameItem", "Test sword", R.drawable.item_sword));
-        mItemList.add(new GameItem("GameItem", "Test sword", R.drawable.item_breastplate));
+
+        GameItem item = itemFac.Weapons.SwordSimple();
+        mItemList.add(item);
+        item = itemFac.Weapons.SwordFlame();
+        mItemList.add(item);
+        item = itemFac.Weapons.AxeMajor();
+        mItemList.add(item);
+        item = itemFac.Weapons.Scepter();
+        mItemList.add(item);
+
 
         final ItemAdaptor adapter = new ItemAdaptor(getActivity(), mItemList);
         mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
@@ -50,6 +67,8 @@ public class ItemsAndStatsFragment extends Fragment {
 
         return view;
     }
+    LinearLayout lastDetail = null;
+
 
     @Override
     public void onAttach(Context context) {
