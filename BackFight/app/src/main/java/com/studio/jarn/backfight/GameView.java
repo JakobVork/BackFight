@@ -9,7 +9,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.Switch;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,7 +52,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     private String mUuid;
     private DatabaseReference databaseReference;
     private Player mSelectedObject;
-    int tileDivision = 4;
+    private int mTileDivision = 4;
 
 
 
@@ -389,8 +388,8 @@ public void onDrawPz(Canvas canvas) {
         Coordinates map = new Coordinates();
         map.tileX = (int)(x / mSquareWidth);
         map.tileY = (int)(y / mSquareHeight);
-        float placementWidth = mSquareWidth/tileDivision;
-        float placementHeight = mSquareHeight/tileDivision;
+        float placementWidth = mSquareWidth/ mTileDivision;
+        float placementHeight = mSquareHeight/ mTileDivision;
 
 
         map.placementOnTileX = (int)(x - (mSquareWidth*map.tileX));
@@ -410,11 +409,11 @@ public void onDrawPz(Canvas canvas) {
     }
 
     private float getXCoordFromObjectPlacement(Coordinates objectCoordinates){
-        return (mSquareWidth * objectCoordinates.tileX) + (mSquareWidth*objectCoordinates.placementOnTileX/tileDivision);
+        return (mSquareWidth * objectCoordinates.tileX) + (mSquareWidth*objectCoordinates.placementOnTileX/ mTileDivision);
     }
 
     private float getYCoordFromObjectPlacement(Coordinates objectCoordinates){
-        return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight*objectCoordinates.placementOnTileY/tileDivision);
+        return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight*objectCoordinates.placementOnTileY/ mTileDivision);
     }
 } // end class
   
