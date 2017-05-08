@@ -348,6 +348,7 @@ public void onDrawPz(Canvas canvas) {
 
                 tuple.y.tileX = tileX;
                 tuple.y.tileY = tileY;
+
                 tuple.y.placementOnTileX = placementX;
                 tuple.y.placementOnTileY = placementY;
                 tuple.x.SelectPlayer();
@@ -414,6 +415,12 @@ public void onDrawPz(Canvas canvas) {
 
     private float getYCoordFromObjectPlacement(Coordinates objectCoordinates){
         return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight*objectCoordinates.placementOnTileY/ mTileDivision);
+    }
+
+    private void moveToTile(int x, int y, Coordinates objectCoord){
+        for (Tuple<Player, Coordinates> tuple : mGameObjectList){
+
+        }
     }
 } // end class
   

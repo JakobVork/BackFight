@@ -245,8 +245,10 @@ private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureLis
         // Don't let the object get too small or too large.
         mScaleFactor = Math.max(mMinScaleFactor, Math.min(mScaleFactor, mMaxScaleFactor));
 
+/*
         mPosX = mPosX * (-3616*mScaleFactor+3616);
         mPosY = mPosY * (-3616*mScaleFactor+3616);
+*/
 
         invalidate();
         return true;
