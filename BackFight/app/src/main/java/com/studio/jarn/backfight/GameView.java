@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.common.collect.Iterables;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -267,7 +268,6 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         databaseReference = database.getReference(mUuid);
         setupOnDataChange();
         updateGrid(grid);
-
     }
 
 
@@ -285,6 +285,14 @@ protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
                 // whenever data at this location is updated.
                 int row = -1;
                 int column = -1;
+
+                int sizeOfArrayOnFirebase = Iterables.size(dataSnapshot.getChildren());
+                if (mGridSizeWidthAndHeight != sizeOfArrayOnFirebase) {
+                    mGridSizeWidthAndHeight = sizeOfArrayOnFirebase;
+                    mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
+                }
+
+
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     row++;
                     for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
