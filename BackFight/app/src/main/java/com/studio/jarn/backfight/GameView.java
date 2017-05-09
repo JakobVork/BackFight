@@ -332,6 +332,8 @@ public void onDrawPz(Canvas canvas) {
     @Override
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
+        if(placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth/mSquareWidth) || tileY >= (mMaxCanvasHeight/mSquareHeight)) return;
+
         //Check every object on the map
         for(Tuple<Player, Coordinates> tuple : mGameObjectList){
             //Move selected object
