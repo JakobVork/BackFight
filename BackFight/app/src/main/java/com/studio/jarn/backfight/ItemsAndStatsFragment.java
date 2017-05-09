@@ -3,6 +3,7 @@ package com.studio.jarn.backfight;
 import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import com.google.gson.Gson;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,6 +36,24 @@ public class ItemsAndStatsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            String jsonItems = getArguments().getString("Test");
+            ArrayList<GameItem> items = new Gson().fromJson(jsonItems, new ArrayList<GameItem>() {}.getClass());
+        }
+    }
+
+    public static ItemsAndStatsFragment newInstance(ArrayList<GameItem> items) {
+        if(items == null) {
+            return null;
+        }
+
+        ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
+        Bundle args = new Bundle();
+        String jsonArray = new Gson().toJson(items);
+        args.putString("Test", jsonArray);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemFactory;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 
 import java.util.ArrayList;
@@ -100,6 +101,11 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmenthide.setVisibility(View.VISIBLE);
 
+        ArrayList<GameItem> items = new ArrayList<GameItem>();
+        ItemFactory fac = new ItemFactory(getApplicationContext());
+        items.add(fac.Weapons.AxeMajor());
+        ItemsAndStatsFragment.newInstance(items);
+
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment == null) {
@@ -109,7 +115,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
         ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
         ft.commit();
-
     }
 
     private void hideItemListFragment() {
