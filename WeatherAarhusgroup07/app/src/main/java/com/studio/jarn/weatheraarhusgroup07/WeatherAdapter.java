@@ -12,10 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * Created by ander on 07-05-2017.
- */
-
 public class WeatherAdapter extends ArrayAdapter<WeatherInfo> {
 
     SimpleDateFormat sdf;

@@ -2,10 +2,6 @@ package com.studio.jarn.weatheraarhusgroup07;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by Banders on 23-04-2017.
- */
-
 public class WeatherReaderContract {
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.

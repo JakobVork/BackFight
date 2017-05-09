@@ -27,7 +27,7 @@ public class WeatherService extends Service {
     private AsyncTask timerTask;
     private final IBinder mBinder = new LocalBinder();
     private WeatherDbHelper mDbHelper;
-    private int UpdateInterval = 1; // min
+    private int UpdateInterval = 30; // min
 
     public class LocalBinder extends Binder {
         WeatherService getService() {
