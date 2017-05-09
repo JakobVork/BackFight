@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -20,11 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
     boolean mBound = false;
     WeatherService mService;
-    String Test;
     ListView listView;
     WeatherAdapter adapter;
+    WeatherInfo info;
+    List<WeatherInfo> weatherInfos;
 
     private final int REQUEST_PERMISSIONS_INTERNET = 1;
     private final int REQUEST_PERMISSIONS_ACCESS_NETWORK_STATE = 2;
@@ -57,6 +60,26 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("test", new Gson().toJson(weatherInfos));
+        outState.putString("test2", new Gson().toJson(info));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bindToService();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnection);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -65,12 +88,14 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
 
+
         // Setup FAB button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mService.VolleyRequest();
+                updateUI();
             }
         });
 
@@ -85,24 +110,36 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                TextView txtWeatherInfo = (TextView) findViewById(R.id.content_main_tv_current_weather);
-                List<WeatherInfo> weatherInfos = mService.getAllWeatherInfos();
-
-                // use newest entry on txtWeatherInfo
-                if(!weatherInfos.isEmpty()){
-                    WeatherInfo info = weatherInfos.get(0);
-                    txtWeatherInfo.setText(info.Description + "\n" + String.format("%.1f", info.Temp) + "\u2103");
-                } else {
-                    Toast.makeText(getApplicationContext(), "There were no info", Toast.LENGTH_SHORT).show();
-                }
-
-                // Assign list to have all entries
-                adapter.clear();
-                adapter.addAll(weatherInfos);
+                updateUI();
             }
         };
 
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(receiver, new IntentFilter("timerTick"));
+
+
+        if(savedInstanceState != null){
+            updateUI();
+        }
+
+    }
+
+    private void updateUI() {
+        TextView txtWeatherInfo = (TextView) findViewById(R.id.content_main_tv_current_weather);
+        weatherInfos = mService.getPastWeather();
+
+        // use newest entry on txtWeatherInfo
+        if(!weatherInfos.isEmpty()){
+            info  = weatherInfos.get(0);
+            txtWeatherInfo.setText(info.Description + "\n" + String.format("%.1f", info.Temp) + "\u2103");
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.NoWeatherInfo), Toast.LENGTH_SHORT).show();
+        }
+
+        // Assign list to have all entries
+        adapter.clear();
+        adapter.addAll(weatherInfos);
+
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.NewWeatherinfoRecieved), Toast.LENGTH_SHORT).show();
     }
 
     private void bindToService() {
@@ -124,9 +161,6 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.content_main_lw_weather);
 
         listView.setAdapter(adapter);
-/*
-        List<WeatherInfo> weatherInfos = mService.getAllWeatherInfos();
-        adapter.addAll(weatherInfos); */
     }
 
 
@@ -160,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 }
                 else {
-                    Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.PermissionNotGranted), Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -168,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 }
                 else {
-                    Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.PermissionNotGranted), Toast.LENGTH_SHORT).show();
                 }
 
                 break;

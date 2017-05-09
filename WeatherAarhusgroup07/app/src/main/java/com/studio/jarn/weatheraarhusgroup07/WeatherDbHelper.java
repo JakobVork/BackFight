@@ -45,9 +45,28 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
     }
 
 
+    public WeatherInfo getWeatherInfo() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + WeatherReaderContract.TaskEntry.TABLE_NAME + " ORDER BY " + WeatherReaderContract.TaskEntry.COLUMN_NAME_TIME + " DESC LIMIT 1", null);
+
+        try {
+            cursor.moveToFirst();
+            long id = cursor.getLong( cursor.getColumnIndex(WeatherReaderContract.TaskEntry.COLUMN_NAME_ID) );
+            String desc = cursor.getString( cursor.getColumnIndex(WeatherReaderContract.TaskEntry.COLUMN_NAME_DESC) );
+            double temp = cursor.getDouble( cursor.getColumnIndex(WeatherReaderContract.TaskEntry.COLUMN_NAME_TEMP) );
+            int time = cursor.getInt( cursor.getColumnIndex(WeatherReaderContract.TaskEntry.COLUMN_NAME_TIME) );
+
+            cursor.close();
+            return new WeatherInfo(id, desc, temp, time);
+        } catch (Exception e) {
+            Log.d("WeatherDbHelper", "getCurrentWeather: An error occurred");
+            return null;
+        }
+    }
+
     public List<WeatherInfo> getAllWeatherInfo(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + WeatherReaderContract.TaskEntry.TABLE_NAME + " ORDER BY " + WeatherReaderContract.TaskEntry.COLUMN_NAME_TIME + " DESC", null);
+        Cursor cursor = db.rawQuery("select * from " + WeatherReaderContract.TaskEntry.TABLE_NAME + " ORDER BY " + WeatherReaderContract.TaskEntry.COLUMN_NAME_TIME + " DESC LIMIT 48", null);
         try {
             List itemIds = new ArrayList<>();
             while(cursor.moveToNext()) {

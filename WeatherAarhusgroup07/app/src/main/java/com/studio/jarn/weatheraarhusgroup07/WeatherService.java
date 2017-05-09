@@ -27,6 +27,7 @@ public class WeatherService extends Service {
     private AsyncTask timerTask;
     private final IBinder mBinder = new LocalBinder();
     private WeatherDbHelper mDbHelper;
+    private int UpdateInterval = 1; // min
 
     public class LocalBinder extends Binder {
         WeatherService getService() {
@@ -47,7 +48,7 @@ public class WeatherService extends Service {
             @Override
             protected Object doInBackground(Object[] params) {
                 Log.d("WeatherService", "doInBackground: Start Timer");
-                tick(20 * 1000 /*s*/);
+                tick(UpdateInterval * 1000 * 60 /*min*/);
                 return null;
             }
         };
@@ -64,7 +65,6 @@ public class WeatherService extends Service {
             Log.d("Tick", "Ticking!");
             NewInfoReceivedBroadcast();
 
-
             tick(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -74,7 +74,6 @@ public class WeatherService extends Service {
     private void NewInfoReceivedBroadcast() {
         LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getApplicationContext());
         Intent broadcastMessage = new Intent("timerTick");
-        broadcastMessage.putExtra("message", "Tick!");
         broadcaster.sendBroadcast(broadcastMessage);
     }
 
@@ -98,10 +97,10 @@ public class WeatherService extends Service {
     }
 
     /////////// Weather Methods /////////////
-    public List<WeatherInfo> getAllWeatherInfos(){
+    public List<WeatherInfo> getPastWeather(){
         return mDbHelper.getAllWeatherInfo();
     }
-
+    public WeatherInfo getCurrentWeather() {return mDbHelper.getWeatherInfo();}
 
     public void VolleyRequest() {
         String url = "http://api.openweathermap.org/data/2.5/weather?id=2624652&APPID=2f340ec18fa5dcbc72f44bb06fbfd563";
@@ -122,7 +121,12 @@ public class WeatherService extends Service {
                             Example example = gson.fromJson(response.toString(), Example.class);
                             Log.d("GSON: ", example.getMain().getTemp().toString());
                             //adding 2 hours for gtm +1 (Denmark) and summertime
-                            mDbHelper.AddWeatherInfo(new WeatherInfo(0, example.getWeather().get(0).getDescription(), getTempInCelsius(example.getMain().getTemp()), example.getDt() + 60*60*2));
+                            WeatherInfo weather = new WeatherInfo(0, example.getWeather().get(0).getDescription(), getTempInCelsius(example.getMain().getTemp()), example.getDt() + 60*60*2);
+                            // Check if current weather has the same timestamp.
+                            WeatherInfo test = mDbHelper.getWeatherInfo();
+                            if(mDbHelper.getWeatherInfo().getTime() != weather.getTime()) {
+                                mDbHelper.AddWeatherInfo(weather);
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
