@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             WeatherService.LocalBinder binder = (WeatherService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
+            updateUI();
         }
 
         @Override
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(savedInstanceState != null){
-            updateUI();
+
         }
 
     }
