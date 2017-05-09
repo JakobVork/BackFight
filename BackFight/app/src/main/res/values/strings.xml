@@ -22,5 +22,6 @@
     <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
     <string name="lobby_default">Default</string>
     <string name="lobby_maze">Maze</string>
+    <string name="EXTRA_PLAYERLIST">com.jarn.extra.playerlist</string>
 
 </resources>

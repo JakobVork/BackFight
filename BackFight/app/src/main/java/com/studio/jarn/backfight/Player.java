@@ -4,8 +4,8 @@ package com.studio.jarn.backfight;
 
 class Player {
     String Name;
-    private int mFigure = 0;
-    private int mFigureSelected = 0;
+    int mFigure = 0;
+    int mFigureSelected = 0;
     private boolean mSelected = false;
 
     Player(int Figure, int FigureSelected, String name) {

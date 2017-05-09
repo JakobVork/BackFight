@@ -20,12 +20,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class LobbyActivity extends AppCompatActivity {
 
+    static final String DATABASE_POSTFIX_STARTGAME = "StartGame";
+    static final String DATABASE_POSTFIX_RADIOGROUP = "RadioGroup";
+    static final String DATABASE_POSTFIX_NUMBERPICKER = "NumberPicker";
     Button mBtnBack;
     Button mBtnStart;
     TextView mTvId;
@@ -34,12 +39,8 @@ public class LobbyActivity extends AppCompatActivity {
     RadioButton mRbMaze;
     NumberPicker mNpGridSize;
     PlayerAdapter mPlayerAdapter;
-    String mRandomHostId;
-    String mHostIdRadioButtonSelected;
-    String mHostIdNumberPicker;
-    boolean mHost;
-    String mClientId;
-
+    List<Player> listOfPlayersCurrentlyInGame = new ArrayList<>();
+    String gameId;
     RadioGroup rg;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -55,42 +56,64 @@ public class LobbyActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         mTvId = (TextView) findViewById(R.id.activity_lobby_tv_id);
-        mHost = i.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
+        boolean host = i.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
         database = FirebaseDatabase.getInstance();
 
-        if (mHost) {
+        if (host) {
 
-            mRandomHostId = UUID.randomUUID().toString().substring(30);
-            mTvId.setText(mRandomHostId);
+            gameId = UUID.randomUUID().toString().substring(30);
+            mTvId.setText(gameId);
 
-            databaseReference = database.getReference(mRandomHostId);
+            databaseReference = database.getReference(gameId);
             databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
 
             setupListView();
-
             setupRadioGroupListener();
-            updateGridTypeOnDb(0); //Set default as default on db
-            updateNumberPickerOnDb(15); //Set default as 15 on db
+            updateNumberPickerOnDb(15); //Set 15 as default on db
+
 
         } else {
-            mBtnStart.setEnabled(false);
+            mBtnStart.setVisibility(View.GONE);
             mNpGridSize.setEnabled(false);
 
             mRbDefault = (RadioButton) findViewById(R.id.activity_lobby_rb_default);
             mRbMaze = (RadioButton) findViewById(R.id.activity_lobby_rb_maze);
             mRbDefault.setEnabled(false);
             mRbMaze.setEnabled(false);
-            mClientId = i.getExtras().getString(getString(R.string.EXTRA_UUID));
-            mTvId.setText(mClientId);
+            gameId = i.getExtras().getString(getString(R.string.EXTRA_UUID));
+            mTvId.setText(gameId);
 
-            databaseReference = database.getReference(mClientId);
+            databaseReference = database.getReference(gameId);
             databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+
+            setupStartGameListener();
 
             setupListView();
 
-
             syncWhenChangingControllers();
         }
+
+    }
+
+    private void setupStartGameListener() {
+        //Setup listener to listen when the game starts
+        String gameIdRadioButtonSelected = gameId + DATABASE_POSTFIX_STARTGAME;
+        databaseReference = database.getReference(gameIdRadioButtonSelected);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    startGameClient();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
 
     }
 
@@ -102,14 +125,15 @@ public class LobbyActivity extends AppCompatActivity {
                 updateGridTypeOnDb(rg.indexOfChild(findViewById(rg.getCheckedRadioButtonId())));
             }
         });
+        updateGridTypeOnDb(0); //Set default as default on db
     }
 
     private void syncWhenChangingControllers() {
         mRbDefault = (RadioButton) findViewById(R.id.activity_lobby_rb_default);
         mRbMaze = (RadioButton) findViewById(R.id.activity_lobby_rb_maze);
 
-        mHostIdNumberPicker = mClientId + "N";
-        databaseReference = database.getReference(mHostIdNumberPicker);
+        String gameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
+        databaseReference = database.getReference(gameIdNumberPicker);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,8 +148,8 @@ public class LobbyActivity extends AppCompatActivity {
             }
         });
 
-        mHostIdRadioButtonSelected = mClientId + "R";
-        databaseReference = database.getReference(mHostIdRadioButtonSelected);
+        String gameIdButtonSelected = gameId + DATABASE_POSTFIX_RADIOGROUP;
+        databaseReference = database.getReference(gameIdButtonSelected);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -139,8 +163,6 @@ public class LobbyActivity extends AppCompatActivity {
                 Log.w("", "Failed to read value.", databaseError.toException());
             }
         });
-
-
     }
 
     private void setupListView() {
@@ -151,10 +173,9 @@ public class LobbyActivity extends AppCompatActivity {
         // Attach the adapter to a ListView
 
         mLvPlayers = (ListView) findViewById(R.id.activity_lobby_lv_players);
-
         mLvPlayers.setAdapter(mPlayerAdapter);
         mPlayerAdapter.add(new Player(R.drawable.player32, R.drawable.player32selected, "Test"));
-
+        databaseReference = database.getReference(gameId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -163,6 +184,10 @@ public class LobbyActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
+                for (Player player : playerList) {
+                    listOfPlayersCurrentlyInGame.add(player);
+                }
+
                 mPlayerAdapter.clear();
                 mPlayerAdapter.addAll(playerList);
             }
@@ -191,8 +216,8 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void updateNumberPickerOnDb(int value) {
-        mHostIdNumberPicker = mRandomHostId + "N";
-        databaseReference = database.getReference(mHostIdNumberPicker);
+        String gameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
+        databaseReference = database.getReference(gameIdNumberPicker);
         databaseReference.setValue(value);
     }
 
@@ -215,14 +240,20 @@ public class LobbyActivity extends AppCompatActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startGame();
+                startGameHost();
             }
         });
     }
 
     // Starts the game
-    private void startGame() {
+    private void startGameHost() {
         Intent StartGameIntent = new Intent(this, GameActivity.class);
+
+        if (listOfPlayersCurrentlyInGame.size() == 0)
+            return;
+        String jsonPlayerList = new Gson().toJson(listOfPlayersCurrentlyInGame);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_PLAYERLIST), jsonPlayerList);
+
         StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
 
@@ -230,12 +261,23 @@ public class LobbyActivity extends AppCompatActivity {
         GridType gridType = gridTypeSelector();
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridType);
 
+        //Updating the StartGame key to other players know the game has started!!!
+        String gameStartGame = gameId + DATABASE_POSTFIX_STARTGAME;
+        databaseReference = database.getReference(gameStartGame);
+        databaseReference.setValue(true);
+
+        startActivity(StartGameIntent);
+    }
+
+    private void startGameClient() {
+        Intent StartGameIntent = new Intent(this, GameActivity.class);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
+        StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), false);
         startActivity(StartGameIntent);
     }
 
     private GridType gridTypeSelector() {
         rg = (RadioGroup) findViewById(R.id.activity_lobby_rg_gridType);
-
 
         switch (rg.getCheckedRadioButtonId()) {
             case R.id.activity_lobby_rb_default:
@@ -247,8 +289,8 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void updateGridTypeOnDb(int value) {
-        mHostIdRadioButtonSelected = mRandomHostId + "R";
-        databaseReference = database.getReference(mHostIdRadioButtonSelected);
+        String gameIdRadioButtonSelected = gameId + DATABASE_POSTFIX_RADIOGROUP;
+        databaseReference = database.getReference(gameIdRadioButtonSelected);
         databaseReference.setValue(value);
     }
 

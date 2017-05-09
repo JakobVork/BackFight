@@ -79,13 +79,30 @@ public class GameView extends PanZoomView implements GameTouchListener
 
     //TODO should be implemented correctly
     public void addGameObjects() {
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 0, 0)));
+/*        mGameObjectList.add(new Tuple<>();
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-        invalidate();
+        invalidate();*/
+    }
+
+    public void initAddPlayers(List<Player> players) {
+        outerLoop:
+        for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
+            for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
+                if (mGrid[i][j].CanBePassed) {
+                    for (Player player : players) {
+                        mGameObjectList.add(new Tuple<>(new Player(player.mFigure, player.mFigureSelected, player.Name), new Coordinates(0, 0, i, j)));
+                    }
+                    invalidate();
+                    break outerLoop;
+                }
+            }
+        }
+
+
     }
 
 public void setGridSize(int newValue)

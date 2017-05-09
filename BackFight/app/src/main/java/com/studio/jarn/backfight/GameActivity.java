@@ -8,8 +8,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.gameItem;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +51,14 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         if (gv != null) {
             if (host) {
 
+                //Casting to List example: http://stackoverflow.com/questions/5813434/trouble-with-gson-serializing-an-arraylist-of-pojos
+                Type listOfTestObject = new TypeToken<List<Player>>() {
+                }.getType();
+
+                String playerListInJson = i.getStringExtra(getString(R.string.EXTRA_PLAYERLIST));
+                List<Player> playerList = new Gson().fromJson(playerListInJson, listOfTestObject);
+
+                //TODO
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
                 setupMyGrid(gridType);
@@ -57,6 +68,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.setUuidStartup(UUID);
                 //addPlayers();
                 gv.initHostGrid(mGrid);
+                gv.initAddPlayers(playerList);
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
