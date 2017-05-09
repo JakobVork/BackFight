@@ -64,13 +64,13 @@ public class LobbyActivity extends AppCompatActivity {
             mTvId.setText(mRandomHostId);
 
             databaseReference = database.getReference(mRandomHostId);
-            databaseReference.push().setValue(new Player(R.drawable.player32, "AndersHost"));
+            databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
 
             setupListView();
 
             setupRadioGroupListener();
-            updateGridTypeOnDb(1);
-            updateNumberPickerOnDb(15);
+            updateGridTypeOnDb(0); //Set default as default on db
+            updateNumberPickerOnDb(15); //Set default as 15 on db
 
         } else {
             mBtnStart.setEnabled(false);
@@ -84,7 +84,7 @@ public class LobbyActivity extends AppCompatActivity {
             mTvId.setText(mClientId);
 
             databaseReference = database.getReference(mClientId);
-            databaseReference.push().setValue(new Player(R.drawable.player32, "AndersClient"));
+            databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
 
             setupListView();
 
@@ -153,7 +153,7 @@ public class LobbyActivity extends AppCompatActivity {
         mLvPlayers = (ListView) findViewById(R.id.activity_lobby_lv_players);
 
         mLvPlayers.setAdapter(mPlayerAdapter);
-        mPlayerAdapter.add(new Player(R.drawable.player32, "Test"));
+        mPlayerAdapter.add(new Player(R.drawable.player32, R.drawable.player32selected, "Test"));
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

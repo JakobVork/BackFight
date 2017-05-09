@@ -189,8 +189,7 @@ switch (e.getAction() & MotionEvent.ACTION_MASK) {
 }
 
 
-
-this.performClick ();           // Do this to get rid of warning message.
+    this.performClick();           // Do this to get rid of warning message.
                                 // Not sure what it does.
 return true;
 }

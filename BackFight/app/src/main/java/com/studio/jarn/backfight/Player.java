@@ -1,11 +1,12 @@
 package com.studio.jarn.backfight;
 
 
+
 class Player {
-    private final int mFigure;
-    private final int mFigureSelected;
-    private boolean mSelected = false;
     String Name;
+    private int mFigure = 0;
+    private int mFigureSelected = 0;
+    private boolean mSelected = false;
 
     Player(int Figure, int FigureSelected, String name) {
         mFigure = Figure;
@@ -13,17 +14,20 @@ class Player {
         mFigureSelected = FigureSelected;
     }
 
-    void SelectPlayer(){
-        if(mSelected) mSelected = false;
-        else mSelected = true;
+    //Needed for casting from Firebase
+    Player() {
+    }
+
+    void SelectPlayer() {
+        mSelected = !mSelected;
     }
 
     int getFigure() {
-        if(mSelected) return mFigureSelected;
+        if (mSelected) return mFigureSelected;
         else return mFigure;
     }
 
-    boolean isSelected(){
+    boolean isSelected() {
         return mSelected;
     }
 }

@@ -33,6 +33,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     protected float mFocusX;
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
+    boolean onlyOnce = true;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -54,9 +55,6 @@ public class GameView extends PanZoomView implements GameTouchListener
     private DatabaseReference databaseReference;
     private Player mSelectedObject;
     private int mTileDivision = 4;
-
-
-
     public GameView(Context context) {
         super(context);
         setTouchListener(this);
@@ -65,6 +63,7 @@ public class GameView extends PanZoomView implements GameTouchListener
         super(context, attrs);
         setTouchListener(this);
     }
+
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setTouchListener(this);
@@ -78,9 +77,8 @@ public class GameView extends PanZoomView implements GameTouchListener
         mTouchListener = newListener;
     }
 
-
     //TODO should be implemented correctly
-    public void addGameObjects(){
+    public void addGameObjects() {
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 0, 0)));
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
         mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
@@ -104,8 +102,6 @@ public void setViewSizeAtStartup(int newValue)
         mUuid = uuid;
     }
 
-
-
     //Todo: remove hardcoded Players
 public void drawOnCanvas (Canvas canvas) {
 
@@ -128,12 +124,12 @@ public void drawOnCanvas (Canvas canvas) {
     for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
        dx = 0;
        for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
-        dest1.offsetTo(dx, dy);
+           dest1.offsetTo(dx, dy);
 
            switch (mGrid[j][i].Type) {
                case Wall: {
                    canvas.drawBitmap(bm_wall, null, dest1, paint);
-                    break;
+                   break;
                }
                case WoodenFloor: {
                    canvas.drawBitmap(bm_floor, null, dest1, paint);
@@ -147,28 +143,28 @@ public void drawOnCanvas (Canvas canvas) {
     myDraw(canvas);
 }
 
-private void myDraw(Canvas canvas){
-    for(Tuple<Player, Coordinates> tuple : mGameObjectList ){
-        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+    private void myDraw(Canvas canvas) {
+        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+        }
     }
-}
 
 /**
  * onDrawPz
  * This method is copied from here http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
- 
+
 @Override
 public void onDrawPz(Canvas canvas) {
-   
+
     canvas.save();
- 
+
     // Get the width and height of the view.
     int viewH = getHeight (), viewW = getWidth ();
 
     boolean isLandscape = (viewW > viewH);
     float shortestWidth = isLandscape ? viewH : viewW;
- 
+
     // Set width and height to be used for the squares.
     mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
     mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
@@ -232,19 +228,18 @@ public void onDrawPz(Canvas canvas) {
        dest1.right = mSquareWidth; dest1.bottom = mSquareHeight;
        mDestRectF = dest1;
     }
-    
+
     // Do the drawing operation for the view.
     drawOnCanvas (canvas);
- 
+
     canvas.restore();
- 
+
 }
 
     @Override
-    protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
-        super.setupToDraw (context, attrs, defStyle);
+    protected void setupToDraw(Context context, AttributeSet attrs, int defStyle) {
+        super.setupToDraw(context, attrs, defStyle);
     }
-
 
     public void initHostGrid(Tile grid[][]) {
         // Set up the grid  and grid selection variables.
@@ -256,7 +251,6 @@ public void onDrawPz(Canvas canvas) {
         setupOnDataChange();
         updateGrid(grid);
     }
-
 
     public void initClientGrid() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -299,7 +293,6 @@ public void onDrawPz(Canvas canvas) {
         });
     }
 
-
     public void updateGrid(Tile grid[][]) {
 
         List<List<Tile>> list = new ArrayList<>();
@@ -309,16 +302,14 @@ public void onDrawPz(Canvas canvas) {
         databaseReference.setValue(list);
     }
 
-
     public void onTouchDown(float downX, float downY) {
         GameTouchListener listener = getTouchListener();
         if (listener == null) return;
         listener.onTouchDown();
     }
-    boolean onlyOnce = true;
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        if(onlyOnce){
+        if (onlyOnce) {
             addGameObjects();
             onlyOnce = false;
         }
@@ -341,11 +332,11 @@ public void onDrawPz(Canvas canvas) {
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Check every object on the map
-        for(Tuple<Player, Coordinates> tuple : mGameObjectList){
+        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             //Move selected object
-            if(tuple.x.equals(mSelectedObject)){
-                for(Tuple<Player, Coordinates> tuple1 : mGameObjectList){
-                    if(tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY){
+            if (tuple.x.equals(mSelectedObject)) {
+                for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
+                    if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
                         mSelectedObject.SelectPlayer();
                         tuple1.x.SelectPlayer();
                         mSelectedObject = tuple1.x;
@@ -364,14 +355,14 @@ public void onDrawPz(Canvas canvas) {
             }
 
             //Select or DeSelect object
-            if(tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY){
+            if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
 
-                if(tuple.x.isSelected()){
+                if (tuple.x.isSelected()) {
                     mSelectedObject.SelectPlayer();
                     mSelectedObject = null;
-                }else{
+                } else {
                     tuple.x.SelectPlayer();
-                    if(mSelectedObject != null) mSelectedObject.SelectPlayer();
+                    if (mSelectedObject != null) mSelectedObject.SelectPlayer();
                     mSelectedObject = tuple.x;
                 }
             }
@@ -389,44 +380,52 @@ public void onDrawPz(Canvas canvas) {
     }
 
     //TODO Should be moved to own class
-    private Coordinates getTileFromPixelValue(float xCoord, float yCoord){
-        float x = (mOriginOffsetX + xCoord - (mPosX-((mMaxCanvasWidth/2)*mScaleFactor-(mMaxCanvasWidth/2))))/mScaleFactor;
-        float y = (mOriginOffsetY + yCoord - (mPosY-((mMaxCanvasHeight/2)*mScaleFactor-(mMaxCanvasHeight/2))))/mScaleFactor;
+    private Coordinates getTileFromPixelValue(float xCoord, float yCoord) {
+        float x = (mOriginOffsetX + xCoord - (mPosX - ((mMaxCanvasWidth / 2) * mScaleFactor - (mMaxCanvasWidth / 2)))) / mScaleFactor;
+        float y = (mOriginOffsetY + yCoord - (mPosY - ((mMaxCanvasHeight / 2) * mScaleFactor - (mMaxCanvasHeight / 2)))) / mScaleFactor;
 
         //Coordinates to tile
         Coordinates map = new Coordinates();
-        map.tileX = (int)(x / mSquareWidth);
-        map.tileY = (int)(y / mSquareHeight);
-        float placementWidth = mSquareWidth/ mTileDivision;
-        float placementHeight = mSquareHeight/ mTileDivision;
+        map.tileX = (int) (x / mSquareWidth);
+        map.tileY = (int) (y / mSquareHeight);
+        float placementWidth = mSquareWidth / mTileDivision;
+        float placementHeight = mSquareHeight / mTileDivision;
 
 
-        map.placementOnTileX = (int)(x - (mSquareWidth*map.tileX));
-        if(0 <= map.placementOnTileX && map.placementOnTileX <= placementWidth) map.placementOnTileX = 0;
-        else if(placementWidth < map.placementOnTileX && map.placementOnTileX <= (placementWidth*2)) map.placementOnTileX = 1;
-        else if((placementWidth*2) < map.placementOnTileX && map.placementOnTileX <= (placementWidth*3)) map.placementOnTileX = 2;
-        else if((placementWidth*3) < map.placementOnTileX && map.placementOnTileX <= placementWidth*4) map.placementOnTileX = 3;
+        map.placementOnTileX = (int) (x - (mSquareWidth * map.tileX));
+        if (0 <= map.placementOnTileX && map.placementOnTileX <= placementWidth)
+            map.placementOnTileX = 0;
+        else if (placementWidth < map.placementOnTileX && map.placementOnTileX <= (placementWidth * 2))
+            map.placementOnTileX = 1;
+        else if ((placementWidth * 2) < map.placementOnTileX && map.placementOnTileX <= (placementWidth * 3))
+            map.placementOnTileX = 2;
+        else if ((placementWidth * 3) < map.placementOnTileX && map.placementOnTileX <= placementWidth * 4)
+            map.placementOnTileX = 3;
 
-        map.placementOnTileY = (int)(y - (mSquareHeight*map.tileY));
-        if(0 <= map.placementOnTileY && map.placementOnTileY <= placementHeight) map.placementOnTileY = 0;
-        else if(placementHeight < map.placementOnTileY && map.placementOnTileY <= (placementHeight*2)) map.placementOnTileY = 1;
-        else if((placementHeight*2) < map.placementOnTileY && map.placementOnTileY <= (placementHeight*3)) map.placementOnTileY = 2;
-        else if((placementHeight*3) < map.placementOnTileY && map.placementOnTileY <= (placementHeight*4)) map.placementOnTileY = 3;
+        map.placementOnTileY = (int) (y - (mSquareHeight * map.tileY));
+        if (0 <= map.placementOnTileY && map.placementOnTileY <= placementHeight)
+            map.placementOnTileY = 0;
+        else if (placementHeight < map.placementOnTileY && map.placementOnTileY <= (placementHeight * 2))
+            map.placementOnTileY = 1;
+        else if ((placementHeight * 2) < map.placementOnTileY && map.placementOnTileY <= (placementHeight * 3))
+            map.placementOnTileY = 2;
+        else if ((placementHeight * 3) < map.placementOnTileY && map.placementOnTileY <= (placementHeight * 4))
+            map.placementOnTileY = 3;
 
 
         return map;
     }
 
-    private float getXCoordFromObjectPlacement(Coordinates objectCoordinates){
-        return (mSquareWidth * objectCoordinates.tileX) + (mSquareWidth*objectCoordinates.placementOnTileX/ mTileDivision);
+    private float getXCoordFromObjectPlacement(Coordinates objectCoordinates) {
+        return (mSquareWidth * objectCoordinates.tileX) + (mSquareWidth * objectCoordinates.placementOnTileX / mTileDivision);
     }
 
-    private float getYCoordFromObjectPlacement(Coordinates objectCoordinates){
-        return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight*objectCoordinates.placementOnTileY/ mTileDivision);
+    private float getYCoordFromObjectPlacement(Coordinates objectCoordinates) {
+        return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight * objectCoordinates.placementOnTileY / mTileDivision);
     }
 
-    private void moveToTile(int x, int y, Coordinates objectCoord){
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList){
+    private void moveToTile(int x, int y, Coordinates objectCoord) {
+        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
 
         }
     }
