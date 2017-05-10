@@ -10,7 +10,6 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -22,8 +21,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mService.VolleyRequest();
-                updateUI();
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.NewWeatherinfoRecieved), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -103,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 updateUI();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.NewWeatherInfoRecieved), Toast.LENGTH_SHORT).show();
             }
         };
 

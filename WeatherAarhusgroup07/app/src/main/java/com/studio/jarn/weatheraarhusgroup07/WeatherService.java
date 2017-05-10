@@ -63,7 +63,7 @@ public class WeatherService extends Service {
             Thread.sleep(time);
 
             Log.d("Tick", "Ticking!");
-            NewInfoReceivedBroadcast();
+            VolleyRequest();
 
             tick(time);
         } catch (InterruptedException e) {
@@ -123,9 +123,10 @@ public class WeatherService extends Service {
                             //adding 2 hours for gtm +1 (Denmark) and summertime
                             WeatherInfo weather = new WeatherInfo(0, example.getWeather().get(0).getDescription(), getTempInCelsius(example.getMain().getTemp()), example.getDt() + 60*60*2);
                             // Check if current weather has the same timestamp.
-                            WeatherInfo test = mDbHelper.getWeatherInfo();
-                            if(mDbHelper.getWeatherInfo().getTime() != weather.getTime()) {
+                            WeatherInfo lastWeather = mDbHelper.getWeatherInfo();
+                            if(lastWeather == null || lastWeather.getTime() != weather.getTime()) {
                                 mDbHelper.AddWeatherInfo(weather);
+                                NewInfoReceivedBroadcast(); // Inform, that new info has been added
                             }
 
                         } catch (JSONException e) {
@@ -144,8 +145,6 @@ public class WeatherService extends Service {
         RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
         //Adding request to the queue
         requestQueue.add(jsObjRequest);
-
-        NewInfoReceivedBroadcast();
     }
 
     private double getTempInCelsius(double k){

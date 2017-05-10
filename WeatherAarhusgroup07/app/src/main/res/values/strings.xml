@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="current">Current:</string>
     <string name="weather">weather</string>
-    <string name="NoWeatherInfo">There were no info</string>
+    <string name="NoWeatherInfo">There is no weather info</string>
     <string name="PermissionNotGranted">Permission not granted</string>
-    <string name="NewWeatherinfoRecieved">New weather info recieved.</string>
+    <string name="NewWeatherInfoRecieved">Synced with newest weather info</string>
 </resources>
