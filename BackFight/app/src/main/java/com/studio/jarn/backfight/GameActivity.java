@@ -10,12 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.studio.jarn.backfight.Items.gameItem;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.studio.jarn.backfight.Items.gameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -31,7 +27,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     private static int sGridSize = 16;
-    private static boolean isHidden = true;
     private final Tile wallTile = new Tile(Tile.Types.Wall);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor);
     private final List<Integer> checkedList = new ArrayList<>();
@@ -89,11 +84,11 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             if (host) {
 
                 //Casting to List example: http://stackoverflow.com/questions/5813434/trouble-with-gson-serializing-an-arraylist-of-pojos
-                Type listOfTestObject = new TypeToken<List<Player>>() {
+                Type playerListType = new TypeToken<List<Player>>() {
                 }.getType();
 
                 String playerListInJson = i.getStringExtra(getString(R.string.EXTRA_PLAYERLIST));
-                List<Player> playerList = new Gson().fromJson(playerListInJson, listOfTestObject);
+                List<Player> playerList = new Gson().fromJson(playerListInJson, playerListType);
 
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
