@@ -21,7 +21,7 @@ public class ItemWeapon extends GameItem {
 
         Random rnd = new Random();
 
-        //nextInt er inclusive 0 and exclusive Value. Therefore + 1 is added as parameter for
+        //nextInt is inclusive 0 and exclusive Value. Therefore + 1 is added as parameter for
         // securing MaxValue, and +MinRoll roll for securing min value
         DmgMin = rnd.nextInt(DmgMin_MaxRoll - DmgMin_MinRoll + 1) + DmgMin_MinRoll;
         DmgMax = rnd.nextInt(DmgMax_MaxRoll - DmgMax_MinRoll + 1) + DmgMax_MinRoll;
