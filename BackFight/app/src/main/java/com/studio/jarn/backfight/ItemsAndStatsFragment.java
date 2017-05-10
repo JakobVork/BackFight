@@ -38,16 +38,16 @@ public class ItemsAndStatsFragment extends Fragment {
     }
 
     public static ItemsAndStatsFragment newInstance(ArrayList<GameItem> items) {
-        if(items == null) {
-            return null;
+        if(items != null) {
+            ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
+            Bundle args = new Bundle();
+            String jsonArray = new Gson().toJson(items);
+            args.putString(jsonItemsString, jsonArray);
+            fragment.setArguments(args);
+            return fragment;
         }
 
-        ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
-        Bundle args = new Bundle();
-        String jsonArray = new Gson().toJson(items);
-        args.putString(jsonItemsString, jsonArray);
-        fragment.setArguments(args);
-        return fragment;
+        return null;
     }
 
     @Override
