@@ -67,17 +67,17 @@ public class fragment_item_details extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_item_details, container, false);
 
-        ImageView img = (ImageView) view.findViewById(R.id.fragment_item_details_img);
-        TextView tvTitle = (TextView) view.findViewById(R.id.fragment_item_details_title);
-        TextView tvDescription = (TextView) view.findViewById(R.id.fragment_item_details_description);
-        TextView tvStats = (TextView) view.findViewById(R.id.fragment_item_details_stats);
+        ImageView img = (ImageView) view.findViewById(R.id.fragment_item_details_iv_img);
+        TextView tvTitle = (TextView) view.findViewById(R.id.fragment_item_details_tv_title);
+        TextView tvDescription = (TextView) view.findViewById(R.id.fragment_item_details_tv_description);
+        TextView tvStats = (TextView) view.findViewById(R.id.fragment_item_details_tv_stats);
 
         img.setImageResource(mImage);
         tvTitle.setText(mTitle);
         tvDescription.setText(mDescription);
         tvStats.setText(mDmgMin + "-" + mDmgMax);
 
-        ImageButton ibBack = (ImageButton) view.findViewById(R.id.imageButton);
+        ImageButton ibBack = (ImageButton) view.findViewById(R.id.fragment_item_details_ib_back);
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

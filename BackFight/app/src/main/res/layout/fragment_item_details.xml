@@ -8,35 +8,37 @@
     tools:context="com.studio.jarn.backfight.fragment_item_details">
 
     <ImageView
-        android:id="@+id/fragment_item_details_img"
+        android:id="@+id/fragment_item_details_iv_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/item_breastplate" />
 
     <TextView
-        android:id="@+id/fragment_item_details_title"
+        android:id="@+id/fragment_item_details_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Title"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Space
+        android:id="@+id/fragment_item_details_space_title"
         android:layout_width="match_parent"
         android:layout_height="16dp" />
 
     <TextView
-        android:id="@+id/fragment_item_details_description"
+        android:id="@+id/fragment_item_details_tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Space
+        android:id="@+id/fragment_item_details_space_description"
         android:layout_width="match_parent"
         android:layout_height="16dp" />
 
     <TextView
-        android:id="@+id/fragment_item_details_stats"
+        android:id="@+id/fragment_item_details_tv_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stats" />
@@ -50,7 +52,7 @@
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/fragment_item_details_ib_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="left"
