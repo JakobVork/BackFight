@@ -9,7 +9,7 @@ package com.studio.jarn.backfight;
  * No coordinates are included in the call to onTouchDown.
  */
 
-public interface GameTouchListener {
+interface GameTouchListener {
 
     /**
      * This method is called when a touch Down action occurs.
@@ -31,7 +31,6 @@ public interface GameTouchListener {
      * @param tileY int - The tiles Y value on the map
      * @param placementX   int - The placement X value on the tile
      * @param placementY   int - The placement Y value on the tile
-     * @return void
      */
 
     void onTouchUp(int tileX, int tileY, int placementX, int placementY);
@@ -48,7 +47,6 @@ public interface GameTouchListener {
      * @param downY int - y value of the down action square
      * @param upX   int - x value of the up action square
      * @param upY   int - y value of the up action square
-     * @return void
      */
 
     void onLongTouchUp(int downX, int downY, int upX, int upY);
