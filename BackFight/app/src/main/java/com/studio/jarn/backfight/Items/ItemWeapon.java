@@ -1,7 +1,5 @@
 package com.studio.jarn.backfight.Items;
 
-import com.studio.jarn.backfight.R;
-
 import java.util.Random;
 
 public class ItemWeapon extends GameItem {
