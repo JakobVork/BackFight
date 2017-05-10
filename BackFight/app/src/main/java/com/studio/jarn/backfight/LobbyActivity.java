@@ -176,7 +176,6 @@ public class LobbyActivity extends AppCompatActivity {
 
         mLvPlayers = (ListView) findViewById(R.id.activity_lobby_lv_players);
         mLvPlayers.setAdapter(mPlayerAdapter);
-        mPlayerAdapter.add(new Player(R.drawable.player32, R.drawable.player32selected, "Test"));
         databaseReference = database.getReference(gameId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
