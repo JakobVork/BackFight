@@ -1,26 +1,18 @@
 package com.studio.jarn.backfight;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.google.gson.Gson;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
+import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
-import com.studio.jarn.backfight.Items.ItemFactory;
 import com.studio.jarn.backfight.Items.ItemWeapon;
-import com.studio.jarn.backfight.Items.Weapons;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ItemsAndStatsFragment extends Fragment {
@@ -29,6 +21,7 @@ public class ItemsAndStatsFragment extends Fragment {
 
     private ArrayList<GameItem> mItemList;
     private ListView mItemListView;
+    private final static String jsonItemsString = "jsonItemsString";
 
     public ItemsAndStatsFragment() {
     }
@@ -38,8 +31,9 @@ public class ItemsAndStatsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            String jsonItems = getArguments().getString("Test");
-            ArrayList<GameItem> items = new Gson().fromJson(jsonItems, new ArrayList<GameItem>() {}.getClass());
+            String jsonItems = getArguments().getString(jsonItemsString);
+            Type listType = new TypeToken<ArrayList<ItemWeapon>>(){}.getType();
+            mItemList = new Gson().fromJson(jsonItems, listType);
         }
     }
 
@@ -51,7 +45,7 @@ public class ItemsAndStatsFragment extends Fragment {
         ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
         Bundle args = new Bundle();
         String jsonArray = new Gson().toJson(items);
-        args.putString("Test", jsonArray);
+        args.putString(jsonItemsString, jsonArray);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,19 +55,6 @@ public class ItemsAndStatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_items_and_stats, container, false);
-
-        ItemFactory itemFac = new ItemFactory(getContext());
-        mItemList = new ArrayList<>();
-
-        GameItem item = itemFac.Weapons.SwordSimple();
-        mItemList.add(item);
-        item = itemFac.Weapons.SwordFlame();
-        mItemList.add(item);
-        item = itemFac.Weapons.AxeMajor();
-        mItemList.add(item);
-        item = itemFac.Weapons.Scepter();
-        mItemList.add(item);
-
 
         final ItemAdaptor adapter = new ItemAdaptor(getActivity(), mItemList);
         mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
@@ -87,8 +68,6 @@ public class ItemsAndStatsFragment extends Fragment {
 
         return view;
     }
-    LinearLayout lastDetail = null;
-
 
     @Override
     public void onAttach(Context context) {

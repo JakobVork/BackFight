@@ -109,7 +109,20 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment == null) {
-            itemsAndStatsFragment = new ItemsAndStatsFragment();
+            // TODO: Use correct items instead of hardcoded.
+            ItemFactory itemFac = new ItemFactory(getApplicationContext());
+            ArrayList<GameItem> itemList = new ArrayList<>();
+
+            GameItem item = itemFac.Weapons.SwordSimple();
+            itemList.add(item);
+            item = itemFac.Weapons.SwordFlame();
+            itemList.add(item);
+            item = itemFac.Weapons.AxeMajor();
+            itemList.add(item);
+            item = itemFac.Weapons.Scepter();
+            itemList.add(item);
+
+            itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList);
         }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
@@ -387,7 +400,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance((ItemWeapon) item);
+        ItemWeapon test = (ItemWeapon) item;
+        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance(test);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
         ft.addToBackStack(null);
