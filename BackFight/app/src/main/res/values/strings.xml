@@ -16,6 +16,7 @@
     <string name="newGame_dialogMessage">Insert host ID</string>
     <string name="newGame_dialogBtnPositive">Join game</string>
     <string name="newGame_dialogBtnNegative">Cancel</string>
+    <string name="newGame_dialogErrorMessage">Game Id does not exist</string>
     <string name="lobby_startGame">Start Game</string>
     <string name="lobby_title">Lobby</string>
     <string name="lobby_default">Default</string>
@@ -28,4 +29,5 @@
     <string name="EXTRA_HOST">com.jarn.extra.host</string>
     <string name="EXTRA_GRIDTYPE">com.jarn.extra.gridtype</string>
     <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
+
 </resources>

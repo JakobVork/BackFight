@@ -95,7 +95,7 @@ public class NewGameActivity extends AppCompatActivity {
 
                             startActivity(lobbyIntent);
                         } else {
-                            Toast.makeText(NewGameActivity.this, "Game Id does not exist", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NewGameActivity.this, R.string.newGame_dialogErrorMessage, Toast.LENGTH_SHORT).show();
                             mDialogText = input.getText().toString();
                         }
                     }

@@ -40,10 +40,10 @@ public class LobbyActivity extends AppCompatActivity {
     NumberPicker mNpGridSize;
     PlayerAdapter mPlayerAdapter;
     List<Player> listOfPlayersCurrentlyInGame = new ArrayList<>();
-    String gameId;
+    String mGameId;
     RadioGroup mRg;
     FirebaseDatabase database;
-    DatabaseReference databaseReference;
+    DatabaseReference mDatabaseReference;
     Intent intent;
     boolean host;
 
@@ -82,12 +82,12 @@ public class LobbyActivity extends AppCompatActivity {
 
         mRbDefault.setEnabled(false);
         mRbMaze.setEnabled(false);
-        gameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
-        mTvId.setText(gameId);
+        mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
+        mTvId.setText(mGameId);
 
-        databaseReference = database.getReference(gameId);
+        mDatabaseReference = database.getReference(mGameId);
         //TODO needs to be extracted from SharedPrefs
-        databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+        mDatabaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
 
         setupStartGameListener();
 
@@ -97,12 +97,12 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void setupHost() {
-        gameId = UUID.randomUUID().toString().substring(30);
-        mTvId.setText(gameId);
+        mGameId = UUID.randomUUID().toString().substring(30);
+        mTvId.setText(mGameId);
 
-        databaseReference = database.getReference(gameId);
+        mDatabaseReference = database.getReference(mGameId);
         //TODO needs to be extracted from SharedPrefs
-        databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
+        mDatabaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
 
         setupListView();
         setupRadioGroupListener();
@@ -116,9 +116,9 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void setupStartGameListener() {
         //Setup listener to listen when the game starts
-        String gameIdRadioButtonSelected = gameId + DATABASE_POSTFIX_STARTGAME;
-        databaseReference = database.getReference(gameIdRadioButtonSelected);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        String gameIdRadioButtonSelected = mGameId + DATABASE_POSTFIX_STARTGAME;
+        mDatabaseReference = database.getReference(gameIdRadioButtonSelected);
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -148,9 +148,9 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void syncWhenChangingControllers() {
-        String gameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
-        databaseReference = database.getReference(gameIdNumberPicker);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        String gameIdNumberPicker = mGameId + DATABASE_POSTFIX_NUMBERPICKER;
+        mDatabaseReference = database.getReference(gameIdNumberPicker);
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -165,9 +165,9 @@ public class LobbyActivity extends AppCompatActivity {
             }
         });
 
-        String gameIdButtonSelected = gameId + DATABASE_POSTFIX_RADIOGROUP;
-        databaseReference = database.getReference(gameIdButtonSelected);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        String gameIdButtonSelected = mGameId + DATABASE_POSTFIX_RADIOGROUP;
+        mDatabaseReference = database.getReference(gameIdButtonSelected);
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ((RadioButton) mRg.getChildAt((Ints.checkedCast(((long) dataSnapshot.getValue()))))).setChecked(true);
@@ -189,8 +189,8 @@ public class LobbyActivity extends AppCompatActivity {
         // Attach the adapter to a ListView
 
         mLvPlayers.setAdapter(mPlayerAdapter);
-        databaseReference = database.getReference(gameId);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference = database.getReference(mGameId);
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Player> playerList = new ArrayList<Player>() {
@@ -230,9 +230,9 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void updateNumberPickerOnDb(int value) {
-        String gameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
-        databaseReference = database.getReference(gameIdNumberPicker);
-        databaseReference.setValue(value);
+        String gameIdNumberPicker = mGameId + DATABASE_POSTFIX_NUMBERPICKER;
+        mDatabaseReference = database.getReference(gameIdNumberPicker);
+        mDatabaseReference.setValue(value);
     }
 
     private void setOnClickListeners() {
@@ -260,7 +260,7 @@ public class LobbyActivity extends AppCompatActivity {
         String jsonPlayerList = new Gson().toJson(listOfPlayersCurrentlyInGame);
         StartGameIntent.putExtra(getString(R.string.EXTRA_PLAYERLIST), jsonPlayerList);
 
-        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), gameId);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), mGameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
 
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDSIZE), mNpGridSize.getValue());
@@ -268,16 +268,16 @@ public class LobbyActivity extends AppCompatActivity {
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridType);
 
         //Updating the StartGame key to other players know the game has started!!!
-        String gameStartGame = gameId + DATABASE_POSTFIX_STARTGAME;
-        databaseReference = database.getReference(gameStartGame);
-        databaseReference.setValue(true);
+        String gameStartGame = mGameId + DATABASE_POSTFIX_STARTGAME;
+        mDatabaseReference = database.getReference(gameStartGame);
+        mDatabaseReference.setValue(true);
 
         startActivity(StartGameIntent);
     }
 
     private void startGameClient() {
         Intent StartGameIntent = new Intent(this, GameActivity.class);
-        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), gameId);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), mGameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), false);
         startActivity(StartGameIntent);
     }
@@ -293,9 +293,9 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void updateGridTypeOnDb(int value) {
-        String gameIdRadioButtonSelected = gameId + DATABASE_POSTFIX_RADIOGROUP;
-        databaseReference = database.getReference(gameIdRadioButtonSelected);
-        databaseReference.setValue(value);
+        String gameIdRadioButtonSelected = mGameId + DATABASE_POSTFIX_RADIOGROUP;
+        mDatabaseReference = database.getReference(gameIdRadioButtonSelected);
+        mDatabaseReference.setValue(value);
     }
 
 
