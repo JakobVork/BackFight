@@ -402,8 +402,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        ItemWeapon test = (ItemWeapon) item;
-        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance(test);
+        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance((ItemWeapon) item);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
         ft.addToBackStack(null);
