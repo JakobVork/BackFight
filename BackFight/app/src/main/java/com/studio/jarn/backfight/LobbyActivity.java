@@ -65,6 +65,7 @@ public class LobbyActivity extends AppCompatActivity {
             mTvId.setText(gameId);
 
             databaseReference = database.getReference(gameId);
+            //TODO needs to be extracted from SharedPrefs
             databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
 
             setupListView();
@@ -84,6 +85,7 @@ public class LobbyActivity extends AppCompatActivity {
             mTvId.setText(gameId);
 
             databaseReference = database.getReference(gameId);
+            //TODO needs to be extracted from SharedPrefs
             databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
 
             setupStartGameListener();
