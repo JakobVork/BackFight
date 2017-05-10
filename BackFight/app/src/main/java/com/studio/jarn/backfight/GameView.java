@@ -37,7 +37,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     boolean onlyOnce = true;
     FirebaseDatabase database;
     // Variables that control placement and translation of the canvas.
-    // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
+// Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
@@ -46,7 +46,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     private float mOriginOffsetY = 0;
     private float mSquareWidth = 64;         // use float for more accurate placement
     private float mSquareHeight = 64;
-    private Rect  mDestRect;
+    private Rect mDestRect;
     private RectF mDestRectF;
     private Tile[][] mGrid;
     //TODO Player should be GameObject
@@ -63,6 +63,7 @@ public class GameView extends PanZoomView implements GameTouchListener
         super(context);
         setTouchListener(this);
     }
+
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setTouchListener(this);
@@ -84,30 +85,30 @@ public class GameView extends PanZoomView implements GameTouchListener
     //TODO should be implemented correctly
     public void addGameObjects() {
 /*        mGameObjectList.add(new Tuple<>();
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
-        mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-        invalidate();*/
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
+    invalidate();*/
     }
 
-    public void initAddPlayers(List<Player> players, String playerDatabaseId) {
+    public void initAddPlayers(List<Player> players) {
         int coordinatesCounter = 0;
         ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates = new ArrayList<>();
         outerLoop:
-        for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
-            for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
-                if (mGrid[i][j].CanBePassed) {
+        for (int row = 0; row < mGridSizeWidthAndHeight; row++) {
+            for (int column = 0; column < mGridSizeWidthAndHeight; column++) {
+                if (mGrid[row][column].CanBePassed) {
                     for (Player player : players) {
-                        playersWithCoordinates.add(new Tuple<>(player, new Coordinates(j, i, coordinatesCounter++, 0)));
+                        playersWithCoordinates.add(new Tuple<>(player, new Coordinates(column, row, coordinatesCounter++, 0)));
                     }
                     addPlayerListToDb(playersWithCoordinates);
 
                     break outerLoop;
-                }
             }
         }
+    }
     }
 
     private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
@@ -173,7 +174,7 @@ public void drawOnCanvas (Canvas canvas) {
     private void myDraw(Canvas canvas) {
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
-        }
+    }
     }
 
 /**
@@ -308,7 +309,7 @@ public void onDrawPz(Canvas canvas) {
                     for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
                         column++;
                         mGrid[row][column] = postSnapshot1.getValue(Tile.class);
-                    }
+                }
                     column = -1;
                 }
                 invalidate();
@@ -371,7 +372,7 @@ public void onDrawPz(Canvas canvas) {
                         mSelectedObject = tuple1.x;
                         invalidate();
                         return;
-                    }
+                }
                 }
 
                 tuple.y.tileX = tileX;
