@@ -57,19 +57,20 @@ public class NewGameActivity extends AppCompatActivity {
         });
     }
 
+
     // Display Dialog to enter game ID
     private void DisplayEnterIdDialog() {
         //Source: http://stackoverflow.com/questions/10903754/input-text-dialog-android
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Input ID");
+        builder.setTitle(R.string.newGame_dialogTitle);
 
         // Set up the input
         final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
         builder.setView(input);
-        builder.setMessage("Insert host ID");
-        builder.setPositiveButton("Join game", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.newGame_dialogMessage);
+        builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent lobbyIntent = new Intent(NewGameActivity.this, LobbyActivity.class);
@@ -79,7 +80,7 @@ public class NewGameActivity extends AppCompatActivity {
                 startActivity(lobbyIntent);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.newGame_dialogBtnNegative, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

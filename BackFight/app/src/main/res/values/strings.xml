@@ -24,4 +24,8 @@
     <string name="EXTRA_HOST">com.jarn.extra.host</string>
     <string name="EXTRA_GRIDTYPE">com.jarn.extra.gridtype</string>
     <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
+    <string name="newGame_dialogTitle">Input ID</string>
+    <string name="newGame_dialogMessage">Insert host ID</string>
+    <string name="newGame_dialogBtnPositive">Join game</string>
+    <string name="newGame_dialogBtnNegative">Cancel</string>
 </resources>
