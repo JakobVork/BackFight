@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
     boolean onlyOnce = true;
+    FirebaseDatabase database;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -55,6 +57,8 @@ public class GameView extends PanZoomView implements GameTouchListener
     private DatabaseReference databaseReference;
     private Player mSelectedObject;
     private int mTileDivision = 4;
+    private String mUuidPlayers;
+
     public GameView(Context context) {
         super(context);
         setTouchListener(this);
@@ -88,21 +92,27 @@ public class GameView extends PanZoomView implements GameTouchListener
         invalidate();*/
     }
 
-    public void initAddPlayers(List<Player> players) {
+    public void initAddPlayers(List<Player> players, String playerDatabaseId) {
+        int coordinatesCounter = 0;
+        ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates = new ArrayList<>();
         outerLoop:
         for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
             for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
                 if (mGrid[i][j].CanBePassed) {
                     for (Player player : players) {
-                        mGameObjectList.add(new Tuple<>(new Player(player.mFigure, player.mFigureSelected, player.Name), new Coordinates(0, 0, i, j)));
+                        playersWithCoordinates.add(new Tuple<>(player, new Coordinates(j, i, coordinatesCounter++, 0)));
                     }
-                    invalidate();
+                    addPlayerListToDb(playersWithCoordinates);
+
                     break outerLoop;
                 }
             }
         }
+    }
 
-
+    private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
+        databaseReference = database.getReference(mUuidPlayers);
+        databaseReference.setValue(playersWithCoordinates);
     }
 
 public void setGridSize(int newValue)
@@ -263,14 +273,14 @@ public void onDrawPz(Canvas canvas) {
         if (mGrid == null)
             mGrid = grid;
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(mUuid);
         setupOnDataChange();
         updateGrid(grid);
     }
 
     public void initClientGrid() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(mUuid);
         setupOnDataChange();
     }
@@ -283,6 +293,8 @@ public void onDrawPz(Canvas canvas) {
                 // whenever data at this location is updated.
                 int row = -1;
                 int column = -1;
+
+                if (dataSnapshot.getValue() == null) return;
 
                 int sizeOfArrayOnFirebase = Iterables.size(dataSnapshot.getChildren());
                 if (mGridSizeWidthAndHeight != sizeOfArrayOnFirebase) {
@@ -387,6 +399,7 @@ public void onDrawPz(Canvas canvas) {
 
         }
 
+        addPlayerListToDb(mGameObjectList); //TODo
         //Render map
         invalidate();
     }
@@ -429,7 +442,6 @@ public void onDrawPz(Canvas canvas) {
         else if ((placementHeight * 3) < map.placementOnTileY && map.placementOnTileY <= (placementHeight * 4))
             map.placementOnTileY = 3;
 
-
         return map;
     }
 
@@ -445,6 +457,30 @@ public void onDrawPz(Canvas canvas) {
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
 
         }
+    }
+
+    public void setPlayerListener(String uuidPlayers) {
+        mUuidPlayers = uuidPlayers;
+        databaseReference = database.getReference(mUuidPlayers);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mGameObjectList.clear();
+
+                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
+                };
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mGameObjectList.add(postSnapshot.getValue(genericTypeIndicator));
+                }
+                invalidate();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 } // end class
   

@@ -137,8 +137,10 @@ public class LobbyActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mNpGridSize = (NumberPicker) findViewById(R.id.activity_lobby_np_mapSize);
-                mNpGridSize.setValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
+                if (dataSnapshot.getValue() != null) {
+                    mNpGridSize = (NumberPicker) findViewById(R.id.activity_lobby_np_mapSize);
+                    mNpGridSize.setValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
+                }
             }
 
             @Override
@@ -184,6 +186,7 @@ public class LobbyActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
+                listOfPlayersCurrentlyInGame.clear();
                 for (Player player : playerList) {
                     listOfPlayersCurrentlyInGame.add(player);
                 }
@@ -254,7 +257,7 @@ public class LobbyActivity extends AppCompatActivity {
         String jsonPlayerList = new Gson().toJson(listOfPlayersCurrentlyInGame);
         StartGameIntent.putExtra(getString(R.string.EXTRA_PLAYERLIST), jsonPlayerList);
 
-        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), gameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
 
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDSIZE), mNpGridSize.getValue());
@@ -271,7 +274,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void startGameClient() {
         Intent StartGameIntent = new Intent(this, GameActivity.class);
-        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), "String");
+        StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), gameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), false);
         startActivity(StartGameIntent);
     }

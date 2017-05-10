@@ -21,6 +21,8 @@ import java.util.Random;
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
+    static final String DATABASE_POSTFIX_GRID = "Grid";
+    static final String DATABASE_POSTFIX_PLAYERS = "PlayerList";
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     private static int sGridSize = 16;
@@ -58,22 +60,25 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 String playerListInJson = i.getStringExtra(getString(R.string.EXTRA_PLAYERLIST));
                 List<Player> playerList = new Gson().fromJson(playerListInJson, listOfTestObject);
 
-                //TODO
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
                 setupMyGrid(gridType);
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID);
+                gv.setUuidStartup(UUID + DATABASE_POSTFIX_GRID);
+
                 //addPlayers();
                 gv.initHostGrid(mGrid);
-                gv.initAddPlayers(playerList);
+                gv.setPlayerListener(UUID + DATABASE_POSTFIX_PLAYERS);
+                gv.initAddPlayers(playerList, UUID + DATABASE_POSTFIX_PLAYERS);
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID);
+                gv.setUuidStartup(UUID + DATABASE_POSTFIX_GRID);
                 gv.initClientGrid();
+
+                gv.setPlayerListener(UUID + DATABASE_POSTFIX_PLAYERS);
             }
         }
     }
