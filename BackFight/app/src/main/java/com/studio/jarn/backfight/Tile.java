@@ -6,7 +6,7 @@ class Tile {
     boolean CanBePassed;
 
 
-    Tile(Types type,int tileConnectivityCollectionNr) {
+    Tile(Types type, int tileConnectivityCollectionNr) {
         Type = type;
 
         //Used for calculating connectivity for the CanBePassed tiles
@@ -20,7 +20,7 @@ class Tile {
         this(type, 0);
     }
 
-    Tile(){
+    Tile() {
 
     }
 

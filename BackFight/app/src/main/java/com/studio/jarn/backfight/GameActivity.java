@@ -8,11 +8,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.studio.jarn.backfight.Items.gameItem;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.studio.jarn.backfight.Items.gameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +26,8 @@ import java.util.Random;
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
+    static final String DATABASE_POSTFIX_GRID = "Grid";
+    static final String DATABASE_POSTFIX_PLAYERS = "PlayerList";
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     private static int sGridSize = 16;
@@ -81,20 +88,32 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         if (gv != null) {
             if (host) {
 
+                //Casting to List example: http://stackoverflow.com/questions/5813434/trouble-with-gson-serializing-an-arraylist-of-pojos
+                Type listOfTestObject = new TypeToken<List<Player>>() {
+                }.getType();
+
+                String playerListInJson = i.getStringExtra(getString(R.string.EXTRA_PLAYERLIST));
+                List<Player> playerList = new Gson().fromJson(playerListInJson, listOfTestObject);
+
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
                 setupMyGrid(gridType);
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID);
+                gv.setUuidStartup(UUID + DATABASE_POSTFIX_GRID);
+
                 //addPlayers();
                 gv.initHostGrid(mGrid);
+                gv.setPlayerListener(UUID + DATABASE_POSTFIX_PLAYERS);
+                gv.initAddPlayers(playerList);
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID);
+                gv.setUuidStartup(UUID + DATABASE_POSTFIX_GRID);
                 gv.initClientGrid();
+
+                gv.setPlayerListener(UUID + DATABASE_POSTFIX_PLAYERS);
             }
         }
     }
