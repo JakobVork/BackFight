@@ -4,12 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.studio.jarn.backfight.Items.GameItem;
@@ -37,7 +34,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private int TileConnectivityCollectionNrCounter = 0;
 
     private ImageView mIvItemFragmentShow;
-    private ImageView mIvItemFragmenthide;
+    private ImageView mIvItemFragmentHide;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +45,16 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             setupGameView(i);
         }
 
-        mIvItemFragmenthide = (ImageView) findViewById(R.id.game_board_activity_btn_hide_items);
+        setupItemFragment();
+    }
+
+    private void setupItemFragment() {
+
+        mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_btn_hide_items);
         mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_btn_show_items);
         hideItemListFragment();
 
-        mIvItemFragmenthide.setOnClickListener(new View.OnClickListener() {
+        mIvItemFragmentHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(getFragmentManager().getBackStackEntryCount() > 0) {
@@ -99,7 +101,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
     private void showItemListFragment() {
         mIvItemFragmentShow.setVisibility(View.GONE);
-        mIvItemFragmenthide.setVisibility(View.VISIBLE);
+        mIvItemFragmentHide.setVisibility(View.VISIBLE);
 
         ArrayList<GameItem> items = new ArrayList<GameItem>();
         ItemFactory fac = new ItemFactory(getApplicationContext());
@@ -132,7 +134,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
     private void hideItemListFragment() {
         mIvItemFragmentShow.setVisibility(View.VISIBLE);
-        mIvItemFragmenthide.setVisibility(View.GONE);
+        mIvItemFragmentHide.setVisibility(View.GONE);
 
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment != null) {
