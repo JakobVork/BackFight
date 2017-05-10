@@ -41,60 +41,77 @@ public class LobbyActivity extends AppCompatActivity {
     PlayerAdapter mPlayerAdapter;
     List<Player> listOfPlayersCurrentlyInGame = new ArrayList<>();
     String gameId;
-    RadioGroup rg;
+    RadioGroup mRg;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
+    Intent intent;
+    boolean host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         hideActionBar();
-        initButtons();
+
+        setAllWidgets();
+        setOnClickListeners();
         getData();
         setNumberPicker();
+        getValuesFromIntent();
 
-        Intent i = getIntent();
-        mTvId = (TextView) findViewById(R.id.activity_lobby_tv_id);
-        boolean host = i.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
         database = FirebaseDatabase.getInstance();
 
-        if (host) {
+        if (host) setupHost();
+        else setupClient();
+    }
 
-            gameId = UUID.randomUUID().toString().substring(30);
-            mTvId.setText(gameId);
+    private void setAllWidgets() {
+        mRg = (RadioGroup) findViewById(R.id.activity_lobby_rg_gridType);
+        mRbDefault = (RadioButton) findViewById(R.id.activity_lobby_rb_default);
+        mRbMaze = (RadioButton) findViewById(R.id.activity_lobby_rb_maze);
+        mTvId = (TextView) findViewById(R.id.activity_lobby_tv_id);
+        mNpGridSize = (NumberPicker) findViewById(R.id.activity_lobby_np_mapSize);
+        mLvPlayers = (ListView) findViewById(R.id.activity_lobby_lv_players);
+        mBtnBack = (Button) findViewById(R.id.activity_lobby_btn_back);
+        mBtnStart = (Button) findViewById(R.id.activity_lobby_btn_start);
+    }
 
-            databaseReference = database.getReference(gameId);
-            //TODO needs to be extracted from SharedPrefs
-            databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
+    private void setupClient() {
+        mBtnStart.setVisibility(View.GONE);
+        mNpGridSize.setEnabled(false);
 
-            setupListView();
-            setupRadioGroupListener();
-            updateNumberPickerOnDb(15); //Set 15 as default on db
+        mRbDefault.setEnabled(false);
+        mRbMaze.setEnabled(false);
+        gameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
+        mTvId.setText(gameId);
 
+        databaseReference = database.getReference(gameId);
+        //TODO needs to be extracted from SharedPrefs
+        databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
 
-        } else {
-            mBtnStart.setVisibility(View.GONE);
-            mNpGridSize.setEnabled(false);
+        setupStartGameListener();
 
-            mRbDefault = (RadioButton) findViewById(R.id.activity_lobby_rb_default);
-            mRbMaze = (RadioButton) findViewById(R.id.activity_lobby_rb_maze);
-            mRbDefault.setEnabled(false);
-            mRbMaze.setEnabled(false);
-            gameId = i.getExtras().getString(getString(R.string.EXTRA_UUID));
-            mTvId.setText(gameId);
+        setupListView();
 
-            databaseReference = database.getReference(gameId);
-            //TODO needs to be extracted from SharedPrefs
-            databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+        syncWhenChangingControllers();
+    }
 
-            setupStartGameListener();
+    private void setupHost() {
+        gameId = UUID.randomUUID().toString().substring(30);
+        mTvId.setText(gameId);
 
-            setupListView();
+        databaseReference = database.getReference(gameId);
+        //TODO needs to be extracted from SharedPrefs
+        databaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
 
-            syncWhenChangingControllers();
-        }
+        setupListView();
+        setupRadioGroupListener();
+        updateNumberPickerOnDb(15); //Set 15 as default on db
+    }
 
+    private void getValuesFromIntent() {
+        intent = getIntent();
+        host = intent.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
     }
 
     private void setupStartGameListener() {
@@ -120,27 +137,23 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void setupRadioGroupListener() {
-        rg = (RadioGroup) findViewById(R.id.activity_lobby_rg_gridType);
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                updateGridTypeOnDb(rg.indexOfChild(findViewById(rg.getCheckedRadioButtonId())));
+                updateGridTypeOnDb(mRg.indexOfChild(findViewById(mRg.getCheckedRadioButtonId())));
             }
         });
         updateGridTypeOnDb(0); //Set default as default on db
     }
 
     private void syncWhenChangingControllers() {
-        mRbDefault = (RadioButton) findViewById(R.id.activity_lobby_rb_default);
-        mRbMaze = (RadioButton) findViewById(R.id.activity_lobby_rb_maze);
-
         String gameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
         databaseReference = database.getReference(gameIdNumberPicker);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mNpGridSize = (NumberPicker) findViewById(R.id.activity_lobby_np_mapSize);
                     mNpGridSize.setValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
                 }
             }
@@ -157,8 +170,7 @@ public class LobbyActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                rg = (RadioGroup) findViewById(R.id.activity_lobby_rg_gridType);
-                ((RadioButton) rg.getChildAt((Ints.checkedCast(((long) dataSnapshot.getValue()))))).setChecked(true);
+                ((RadioButton) mRg.getChildAt((Ints.checkedCast(((long) dataSnapshot.getValue()))))).setChecked(true);
             }
 
             @Override
@@ -176,7 +188,6 @@ public class LobbyActivity extends AppCompatActivity {
         mPlayerAdapter = new PlayerAdapter(this, playerList);
         // Attach the adapter to a ListView
 
-        mLvPlayers = (ListView) findViewById(R.id.activity_lobby_lv_players);
         mLvPlayers.setAdapter(mPlayerAdapter);
         databaseReference = database.getReference(gameId);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -206,7 +217,6 @@ public class LobbyActivity extends AppCompatActivity {
 
 
     private void setNumberPicker() {
-        mNpGridSize = (NumberPicker) findViewById(R.id.activity_lobby_np_mapSize);
         mNpGridSize.setMaxValue(30);
         mNpGridSize.setMinValue(5);
         mNpGridSize.setValue(15);
@@ -223,14 +233,6 @@ public class LobbyActivity extends AppCompatActivity {
         String gameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
         databaseReference = database.getReference(gameIdNumberPicker);
         databaseReference.setValue(value);
-    }
-
-    // Find the buttons in the layoutfile and call to make OnClickListener on them
-    private void initButtons() {
-        mBtnBack = (Button) findViewById(R.id.activity_lobby_btn_back);
-        mBtnStart = (Button) findViewById(R.id.activity_lobby_btn_start);
-
-        setOnClickListeners();
     }
 
     private void setOnClickListeners() {
@@ -281,9 +283,7 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private GridType gridTypeSelector() {
-        rg = (RadioGroup) findViewById(R.id.activity_lobby_rg_gridType);
-
-        switch (rg.getCheckedRadioButtonId()) {
+        switch (mRg.getCheckedRadioButtonId()) {
             case R.id.activity_lobby_rb_default:
                 return GridType.DefaultGrid;
             case R.id.activity_lobby_rb_maze:
