@@ -1,12 +1,12 @@
 package com.studio.jarn.backfight;
 
-class Tile {
+public class Tile {
     Types Type;
-    int TileConnectivityCollectionNr;
-    boolean CanBePassed;
+    public int TileConnectivityCollectionNr;
+    public boolean CanBePassed;
 
 
-    Tile(Types type, int tileConnectivityCollectionNr) {
+    public Tile(Types type, int tileConnectivityCollectionNr) {
         Type = type;
 
         //Used for calculating connectivity for the CanBePassed tiles
@@ -16,11 +16,11 @@ class Tile {
         canBePassedSwitch(type);
     }
 
-    Tile(Types type) {
+    public Tile(Types type) {
         this(type, 0);
     }
 
-    Tile() {
+    public Tile() {
 
     }
 
@@ -38,7 +38,7 @@ class Tile {
     }
 
 
-    enum Types {
+    public enum Types {
         WoodenFloor, Wall
     }
 }
