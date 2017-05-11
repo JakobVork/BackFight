@@ -32,6 +32,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     protected float mFocusX;
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
+    boolean onlyOnce = true;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -53,9 +54,6 @@ public class GameView extends PanZoomView implements GameTouchListener
     private DatabaseReference databaseReference;
     private Player mSelectedObject;
     private int mTileDivision = 4;
-
-
-
     public GameView(Context context) {
         super(context);
         setTouchListener(this);
@@ -64,6 +62,7 @@ public class GameView extends PanZoomView implements GameTouchListener
         super(context, attrs);
         setTouchListener(this);
     }
+
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setTouchListener(this);
@@ -76,7 +75,6 @@ public class GameView extends PanZoomView implements GameTouchListener
     public void setTouchListener(GameTouchListener newListener) {
         mTouchListener = newListener;
     }
-
 
     //TODO should be implemented correctly
     public void addGameObjects(){
@@ -101,8 +99,6 @@ public void setViewSizeAtStartup(int newValue)
     public void setUuidStartup(String uuid) {
         mUuid = uuid;
     }
-
-
 
     //Todo: remove hardcoded Players
 public void drawOnCanvas (Canvas canvas) {
@@ -155,18 +151,18 @@ private void myDraw(Canvas canvas){
  * onDrawPz
  * This method is copied from here http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
- 
+
 @Override
 public void onDrawPz(Canvas canvas) {
-   
+
     canvas.save();
- 
+
     // Get the width and height of the view.
     int viewH = getHeight (), viewW = getWidth ();
 
     boolean isLandscape = (viewW > viewH);
     float shortestWidth = isLandscape ? viewH : viewW;
- 
+
     // Set width and height to be used for the squares.
     mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
     mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
@@ -230,19 +226,18 @@ public void onDrawPz(Canvas canvas) {
        dest1.right = mSquareWidth; dest1.bottom = mSquareHeight;
        mDestRectF = dest1;
     }
-    
+
     // Do the drawing operation for the view.
     drawOnCanvas (canvas);
- 
+
     canvas.restore();
- 
+
 }
 
     @Override
     protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         super.setupToDraw (context, attrs, defStyle);
     }
-
 
     public void initHostGrid(Tile grid[][]) {
         // Set up the grid  and grid selection variables.
@@ -255,7 +250,6 @@ public void onDrawPz(Canvas canvas) {
         updateGrid(grid);
 
     }
-
 
     public void initClientGrid() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -290,7 +284,6 @@ public void onDrawPz(Canvas canvas) {
         });
     }
 
-
     public void updateGrid(Tile grid[][]) {
 
         List<List<Tile>> list = new ArrayList<>();
@@ -300,13 +293,11 @@ public void onDrawPz(Canvas canvas) {
         databaseReference.setValue(list);
     }
 
-
     public void onTouchDown(float downX, float downY) {
         GameTouchListener listener = getTouchListener();
         if (listener == null) return;
         listener.onTouchDown();
     }
-    boolean onlyOnce = true;
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
         if(onlyOnce){
@@ -344,6 +335,7 @@ public void onDrawPz(Canvas canvas) {
                         mSelectedObject.SelectPlayer();
                         tuple1.x.SelectPlayer();
                         mSelectedObject = tuple1.x;
+
                         if(tuple.x.equals(tuple1.x)){
                             tuple.x.SelectPlayer();
                             mSelectedObject = null;
@@ -354,11 +346,7 @@ public void onDrawPz(Canvas canvas) {
                     }
                 }
 
-                tuple.y.tileX = tileX;
-                tuple.y.tileY = tileY;
-
-                tuple.y.placementOnTileX = placementX;
-                tuple.y.placementOnTileY = placementY;
+                tuple.y = moveToTile(tileX, tileY);
                 tuple.x.SelectPlayer();
                 mSelectedObject = null;
             }
@@ -421,10 +409,34 @@ public void onDrawPz(Canvas canvas) {
         return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight*objectCoordinates.placementOnTileY/ mTileDivision);
     }
 
-    private void moveToTile(int x, int y, Coordinates objectCoord){
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList){
+    private Coordinates moveToTile(int tileX, int tileY) {
+        ArrayList<Tuple<Player, Coordinates>> onTile = new ArrayList<Tuple<Player, Coordinates>>();
 
+        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+            if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
+        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }
+        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }*/
+
+        if (onTile.size() == (mTileDivision * mTileDivision)) return null;
+
+
+        for (int y = 0; y < mTileDivision; y++) {
+            for (int x = 0; x < mTileDivision; x++) {
+                Boolean placementFree = true;
+                for (Tuple<Player, Coordinates> tuple : onTile) {
+                    if (tuple.y.placementOnTileX == x && tuple.y.placementOnTileY == y)
+                        placementFree = false;
+                }
+                if (placementFree) return new Coordinates(tileX, tileY, x, y);
+            }
+        }
+
+        return null;
     }
 } // end class
   
