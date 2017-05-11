@@ -19,33 +19,31 @@ import java.util.List;
 
 class FirebaseHelper {
 
-    private static final String DATABASE_POSTFIX_GRID = "Grid";
-    private static final String DATABASE_POSTFIX_PLAYERS = "PlayerList";
-    private static final String DATABASE_POSTFIX_STARTGAME = "StartGame";
-    private static final String DATABASE_POSTFIX_RADIOGROUP = "RadioGroup";
-    private static final String DATABASE_POSTFIX_NUMBERPICKER = "NumberPicker";
-    private FirebaseDatabase database;
+    private static final String sDatabasePostfixGrid = "Grid";
+    private static final String sDatabasePostfixPlayers = "PlayerList";
+    private static final String sDatabasePostfixStartGame = "StartGame";
+    private static final String sDatabasePostfixRadioGroup = "RadioGroup";
+    private static final String sDatabasePostfixNumberPicker = "NumberPicker";
+    private FirebaseDatabase mDatabase;
     private String mGameId;
     private String mGameIdRadio;
     private String mGameIdStartGame;
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
-    private NewGameListener newGameListener;
-    private LobbyListener lobbyListener;
-    private GameViewListener gameViewListener;
-    //newGameListener
+    private NewGameListener mNewGameListener;
+    private LobbyListener mLobbyListener;
+    private GameViewListener mGameViewListener;
+    //mNewGameListener
     private String dialogInput;
 
     FirebaseHelper(Context context) {
-        database = FirebaseDatabase.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
 
         if (context instanceof NewGameListener) {
-            newGameListener = (NewGameListener) context;
+            mNewGameListener = (NewGameListener) context;
         } else if (context instanceof LobbyListener) {
-            lobbyListener = (LobbyListener) context;
-        } else if (context instanceof GameViewListener) {
-            gameViewListener = (GameViewListener) context;
+            mLobbyListener = (LobbyListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement Listener");
@@ -53,10 +51,10 @@ class FirebaseHelper {
     }
 
     FirebaseHelper(View view) {
-        database = FirebaseDatabase.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
 
         if (view instanceof GameViewListener) {
-            gameViewListener = (GameViewListener) view;
+            mGameViewListener = (GameViewListener) view;
         } else {
             throw new RuntimeException(view.toString()
                     + " must implement Listener");
@@ -66,25 +64,25 @@ class FirebaseHelper {
 
     void setStandardKey(String gameId) {
         mGameId = gameId;
-        mGameIdRadio = gameId + DATABASE_POSTFIX_RADIOGROUP;
-        mGameIdStartGame = gameId + DATABASE_POSTFIX_STARTGAME;
-        mGameIdNumberPicker = gameId + DATABASE_POSTFIX_NUMBERPICKER;
-        mGameIdGrid = gameId + DATABASE_POSTFIX_GRID;
-        mGameIdPlayers = gameId + DATABASE_POSTFIX_PLAYERS;
+        mGameIdRadio = gameId + sDatabasePostfixRadioGroup;
+        mGameIdStartGame = gameId + sDatabasePostfixStartGame;
+        mGameIdNumberPicker = gameId + sDatabasePostfixNumberPicker;
+        mGameIdGrid = gameId + sDatabasePostfixGrid;
+        mGameIdPlayers = gameId + sDatabasePostfixPlayers;
     }
 
     //NewGameListener
     void validateIfGameExist(String input) {
         dialogInput = input;
 
-        DatabaseReference databaseReference = database.getReference(dialogInput);
+        DatabaseReference databaseReference = mDatabase.getReference(dialogInput);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    newGameListener.onTest(true, dialogInput);
+                    mNewGameListener.onTest(true, dialogInput);
                 } else {
-                    newGameListener.onTest(false, dialogInput);
+                    mNewGameListener.onTest(false, dialogInput);
                 }
             }
 
@@ -96,17 +94,17 @@ class FirebaseHelper {
     }
 
 
-    //lobbyListener
+    //mLobbyListener
     void addPlayerToDb(Player player) {
-        database.getReference(mGameId).push().setValue(player);
+        mDatabase.getReference(mGameId).push().setValue(player);
     }
 
     void setupStartGameListener() {
-        database.getReference(mGameIdStartGame).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(mGameIdStartGame).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    lobbyListener.startGameClient();
+                    mLobbyListener.startGameClient();
                 }
             }
 
@@ -119,11 +117,11 @@ class FirebaseHelper {
     }
 
     void setupWidgetsListener() {
-        database.getReference(mGameIdNumberPicker).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(mGameIdNumberPicker).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    lobbyListener.setNumberPickerValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
+                    mLobbyListener.setNumberPickerValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
                 }
             }
 
@@ -134,10 +132,10 @@ class FirebaseHelper {
             }
         });
 
-        database.getReference(mGameIdRadio).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(mGameIdRadio).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                lobbyListener.setRadioGroupButton((Ints.checkedCast(((long) dataSnapshot.getValue()))));
+                mLobbyListener.setRadioGroupButton((Ints.checkedCast(((long) dataSnapshot.getValue()))));
             }
 
             @Override
@@ -149,7 +147,7 @@ class FirebaseHelper {
     }
 
     void setListViewListener() {
-        database.getReference(mGameId).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(mGameId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Player> playerList = new ArrayList<Player>() {
@@ -157,7 +155,7 @@ class FirebaseHelper {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
-                lobbyListener.setPlayerList(playerList);
+                mLobbyListener.setPlayerList(playerList);
             }
 
             @Override
@@ -169,25 +167,25 @@ class FirebaseHelper {
     }
 
     void setNumberPicker(int value) {
-        database.getReference(mGameIdNumberPicker).setValue(value);
+        mDatabase.getReference(mGameIdNumberPicker).setValue(value);
     }
 
     void setStartGame() {
-        database.getReference(mGameIdStartGame).setValue(true);
+        mDatabase.getReference(mGameIdStartGame).setValue(true);
     }
 
     void setGridType(int value) {
-        database.getReference(mGameIdRadio).setValue(value);
+        mDatabase.getReference(mGameIdRadio).setValue(value);
     }
 
 
     //GameViewListener
     void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        database.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
+        mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
     }
 
     void setupGridListener() {
-        database.getReference(mGameIdGrid).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(mGameIdGrid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -209,7 +207,7 @@ class FirebaseHelper {
                     }
                     column = -1;
                 }
-                gameViewListener.setGrid(sizeOfArrayOnFirebase, grid);
+                mGameViewListener.setGrid(sizeOfArrayOnFirebase, grid);
             }
 
             @Override
@@ -221,7 +219,7 @@ class FirebaseHelper {
     }
 
     void setPlayerListListener() {
-        database.getReference(mGameIdPlayers).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(mGameIdPlayers).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -232,7 +230,7 @@ class FirebaseHelper {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
-                gameViewListener.setPlayerList(playerList);
+                mGameViewListener.setPlayerList(playerList);
 
             }
 
@@ -245,6 +243,6 @@ class FirebaseHelper {
     }
 
     void setGrid(List<List<Tile>> list) {
-        database.getReference(mGameIdGrid).setValue(list);
+        mDatabase.getReference(mGameIdGrid).setValue(list);
     }
 }
