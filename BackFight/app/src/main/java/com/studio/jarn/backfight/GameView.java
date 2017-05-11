@@ -23,7 +23,6 @@ import com.studio.jarn.backfight.Items.ItemFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -494,19 +493,16 @@ public void onDrawPz(Canvas canvas) {
     }
 
     public void spawnItems(int numberOfItems) {
-        Random rnd = new Random();
         ItemFactory fac = new ItemFactory(getContext());
         int i = 0;
 
         // Continue untill all items are spawned
         while (i < numberOfItems) {
-            int coordX = rnd.nextInt(mGridSize);
-            int coordY = rnd.nextInt(mGridSize);
 
+            Coordinates coordinates = Coordinates.getRandom(mGridSize);
             // Check if tile is passable, else just roll again.
-            if(tileIsPassable(coordX, coordY)) {
-                GameItem item = fac.Weapons.getRandomWeapon();
-                spawnItemOnTile(item ,coordX, coordY);
+            if(tileIsPassable(coordinates)) {
+                spawnItemOnTile(fac.Weapons.getRandomWeapon(), coordinates);
                 i++;
             }
         }
@@ -514,12 +510,12 @@ public void onDrawPz(Canvas canvas) {
         invalidate();
     }
 
-    public void spawnItemOnTile(GameItem item, int x, int y) {
-        mGameItemList.add(new Tuple<>(item, new Coordinates(x, y, 1, 1)));
+    public void spawnItemOnTile(GameItem item, Coordinates coordinates) {
+        mGameItemList.add(new Tuple<>(item, coordinates));
     }
 
-    private boolean tileIsPassable(int x, int y) {
-        return mGrid[y][x].CanBePassed;
+    private boolean tileIsPassable(Coordinates coordinates) {
+        return mGrid[coordinates.tileY][coordinates.tileX].CanBePassed;
     }
 
 } // end class
