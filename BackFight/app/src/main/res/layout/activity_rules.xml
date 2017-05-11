@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grid_background"
-    tools:context="com.studio.jarn.backfight.RulesActivity">
+    tools:context="com.studio.jarn.backfight.Rules_Activity.RulesActivity">
 
     <TextView
         android:id="@+id/activity_rules_tv_title"

@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.Rules_Activity;
 
 
 import android.app.Activity;
