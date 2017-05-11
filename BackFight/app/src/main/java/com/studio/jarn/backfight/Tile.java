@@ -1,9 +1,9 @@
 package com.studio.jarn.backfight;
 
 public class Tile {
-    Types Type;
     public int TileConnectivityCollectionNr;
     public boolean CanBePassed;
+    Types Type;
 
 
     public Tile(Types type, int tileConnectivityCollectionNr) {

@@ -8,15 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 
-import com.google.common.collect.Iterables;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
 
@@ -37,7 +29,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     protected GameTouchListener mTouchListener;
     boolean onlyOnce = true;
     // Variables that control placement and translation of the canvas.
-    // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
+// Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
@@ -57,7 +49,6 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private FirebaseHelper firebaseHelper;
     private Player mSelectedObject;
     private int mTileDivision = 4;
-
 
 
     public GameView(Context context) {
@@ -85,13 +76,13 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
 
     //TODO should be implemented correctly
     public void addGameObjects() {
-    /*        mGameObjectList.add(new Tuple<>();
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-    invalidate();*/
+/*        mGameObjectList.add(new Tuple<>();
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
+invalidate();*/
     }
 
     public void initAddPlayers(List<Player> players) {
@@ -107,9 +98,9 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                     addPlayerListToDb(playersWithCoordinates);
 
                     break outerLoop;
-                }
             }
         }
+    }
     }
 
     private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
@@ -162,9 +153,9 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                         canvas.drawBitmap(bm_floor, null, dest1, paint);
                         break;
                     }
-               }
-                dx = dx + mSquareWidth;
            }
+                dx = dx + mSquareWidth;
+            }
             dy = dy + mSquareHeight;
         }
         myDraw(canvas);
@@ -347,7 +338,8 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Click is outside map: do nothing
-        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight)) return;
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
+            return;
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
@@ -367,7 +359,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
 
                         invalidate();
                         return;
-                    }
+                }
                 }
 
                 Coordinates movedTo = moveToTile(tileX, tileY);
@@ -451,12 +443,12 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
-        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
-            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-        }
-        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
-            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-        }*/
+    /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
+        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+    }
+    for(Tuple<Item, Coordinates> tuple : mGameObjectList){
+        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+    }*/
 
         if (onTile.size() == (mTileDivision * mTileDivision)) return null;
 
@@ -484,7 +476,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
 
             Coordinates coordinates = Coordinates.getRandom(mGridSize);
             // Check if tile is passable, else just roll again.
-            if(tileIsPassable(coordinates)) {
+            if (tileIsPassable(coordinates)) {
                 spawnItemOnTile(fac.Weapons.getRandomWeapon(), coordinates);
                 i++;
             }
