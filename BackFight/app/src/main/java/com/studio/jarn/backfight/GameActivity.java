@@ -21,7 +21,6 @@ import com.studio.jarn.backfight.MapGeneration.MazeMap;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener

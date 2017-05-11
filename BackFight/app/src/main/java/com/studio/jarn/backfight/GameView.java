@@ -63,7 +63,6 @@ public class GameView extends PanZoomView implements GameTouchListener
     private String mUuidPlayers;
 
 
-
     public GameView(Context context) {
         super(context);
         setTouchListener(this);
@@ -123,7 +122,7 @@ public class GameView extends PanZoomView implements GameTouchListener
 
 public void setGridSize(int newValue)
 {
-   mGridSize = newValue;
+    mGridSize = newValue;
 }
 
 public void setViewSizeAtStartup(int newValue)
@@ -156,7 +155,7 @@ public void drawOnCanvas (Canvas canvas) {
     float dx, dy = 0;
     for (int j = 0; j < mGridSize; j++) {
        dx = 0;
-       for (int i = 0; i < mGridSize; i++) {
+        for (int i = 0; i < mGridSize; i++) {
            dest1.offsetTo(dx, dy);
 
            switch (mGrid[j][i].Type) {
@@ -180,6 +179,7 @@ public void drawOnCanvas (Canvas canvas) {
         int marginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
         int widthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
         int heightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
+
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
             Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, widthValue, heightValue, true);
@@ -221,7 +221,7 @@ public void onDrawPz(Canvas canvas) {
     // The canvas is centered in the view so half of what
     // remains to be displayed can be used to calculate the
     // origin offset values.
-    mMaxCanvasWidth  = mGridSize * mSquareWidth;
+    mMaxCanvasWidth = mGridSize * mSquareWidth;
     mMaxCanvasHeight = mGridSize * mSquareHeight;
     mHalfMaxCanvasWidth  = mMaxCanvasWidth / 2.0f;
     mHalfMaxCanvasHeight = mMaxCanvasHeight / 2.0f;
@@ -378,7 +378,8 @@ public void onDrawPz(Canvas canvas) {
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Click is outside map: do nothing
-        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight)) return;
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
+            return;
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
@@ -539,7 +540,7 @@ public void onDrawPz(Canvas canvas) {
 
             Coordinates coordinates = Coordinates.getRandom(mGridSize);
             // Check if tile is passable, else just roll again.
-            if(tileIsPassable(coordinates)) {
+            if (tileIsPassable(coordinates)) {
                 spawnItemOnTile(fac.Weapons.getRandomWeapon(), coordinates);
                 i++;
             }
