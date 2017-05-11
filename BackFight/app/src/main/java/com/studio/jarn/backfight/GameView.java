@@ -173,8 +173,13 @@ public void drawOnCanvas (Canvas canvas) {
 
     private void myDraw(Canvas canvas) {
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
-    }
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
+            int marginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
+            int widthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
+            int heightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
+            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, widthValue, heightValue, true);
+            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + marginValue, getYCoordFromObjectPlacement(tuple.y) + marginValue, null);
+        }
     }
 
 /**
