@@ -27,9 +27,7 @@ public class DefaultMap implements IMapGenerator {
                     mGrid[row][column] = new Tile(Tile.Types.Wall);
             }
         }
-        mGrid = connectAllFloorSpacesInMap(mGrid);
-
-        return mGrid;
+        return connectAllFloorSpacesInMap(mGrid);
     }
 
     private Tile[][] connectAllFloorSpacesInMap(Tile[][] mGrid) {
