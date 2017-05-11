@@ -36,10 +36,10 @@ public class GameView extends PanZoomView implements GameTouchListener
     protected float mFocusX;
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
-    boolean onlyOnce = true;
+    Boolean onlyOnce = true;
     FirebaseDatabase database;
     // Variables that control placement and translation of the canvas.
-// Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
+    // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
@@ -61,6 +61,8 @@ public class GameView extends PanZoomView implements GameTouchListener
     private Player mSelectedObject;
     private int mTileDivision = 4;
     private String mUuidPlayers;
+
+
 
     public GameView(Context context) {
         super(context);
@@ -109,9 +111,9 @@ public class GameView extends PanZoomView implements GameTouchListener
                     addPlayerListToDb(playersWithCoordinates);
 
                     break outerLoop;
+                }
             }
         }
-    }
     }
 
     private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
@@ -316,7 +318,7 @@ public void onDrawPz(Canvas canvas) {
                     for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
                         column++;
                         mGrid[row][column] = postSnapshot1.getValue(Tile.class);
-                }
+                    }
                     column = -1;
                 }
                 invalidate();
@@ -368,6 +370,10 @@ public void onDrawPz(Canvas canvas) {
     @Override
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
+        //Click is outside map: do nothing
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight)) return;
+        if (!mGrid[tileY][tileX].CanBePassed) return;
+
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             //Move selected object
@@ -377,27 +383,28 @@ public void onDrawPz(Canvas canvas) {
                         mSelectedObject.SelectPlayer();
                         tuple1.x.SelectPlayer();
                         mSelectedObject = tuple1.x;
+
+                        if (tuple.x.equals(tuple1.x)) {
+                            tuple.x.SelectPlayer();
+                            mSelectedObject = null;
+                        }
+
                         invalidate();
                         return;
-                }
+                    }
                 }
 
-                tuple.y.tileX = tileX;
-                tuple.y.tileY = tileY;
-
-                tuple.y.placementOnTileX = placementX;
-                tuple.y.placementOnTileY = placementY;
-                tuple.x.SelectPlayer();
-                mSelectedObject = null;
+                Coordinates movedTo = moveToTile(tileX, tileY);
+                if (movedTo != null) {
+                    tuple.y = movedTo;
+                    tuple.x.SelectPlayer();
+                    mSelectedObject = null;
+                }
             }
 
             //Select or DeSelect object
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
-
-                if (tuple.x.isSelected()) {
-                    mSelectedObject.SelectPlayer();
-                    mSelectedObject = null;
-                } else {
+                if (!tuple.x.isSelected()) {
                     tuple.x.SelectPlayer();
                     if (mSelectedObject != null) mSelectedObject.SelectPlayer();
                     mSelectedObject = tuple.x;
@@ -462,10 +469,34 @@ public void onDrawPz(Canvas canvas) {
         return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight * objectCoordinates.placementOnTileY / mTileDivision);
     }
 
-    private void moveToTile(int x, int y, Coordinates objectCoord) {
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+    private Coordinates moveToTile(int tileX, int tileY) {
+        ArrayList<Tuple<Player, Coordinates>> onTile = new ArrayList<>();
 
+        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+            if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
+        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }
+        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }*/
+
+        if (onTile.size() == (mTileDivision * mTileDivision)) return null;
+
+
+        for (int y = 0; y < mTileDivision; y++) {
+            for (int x = 0; x < mTileDivision; x++) {
+                Boolean placementFree = true;
+                for (Tuple<Player, Coordinates> tuple : onTile) {
+                    if (tuple.y.placementOnTileX == x && tuple.y.placementOnTileY == y)
+                        placementFree = false;
+                }
+                if (placementFree) return new Coordinates(tileX, tileY, x, y);
+            }
+        }
+
+        return null;
     }
 
     public void setPlayerListener(String uuidPlayers) {

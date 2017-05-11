@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
@@ -58,7 +59,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmentHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getFragmentManager().getBackStackEntryCount() > 0) {
+                if (getFragmentManager().getBackStackEntryCount() > 0) {
                     getFragmentManager().popBackStack();
                 }
                 hideItemListFragment();
