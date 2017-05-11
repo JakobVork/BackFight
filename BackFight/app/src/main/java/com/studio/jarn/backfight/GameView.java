@@ -388,9 +388,12 @@ public void onDrawPz(Canvas canvas) {
                 }
                 }
 
-                tuple.y = moveToTile(tileX, tileY);
-                tuple.x.SelectPlayer();
-                mSelectedObject = null;
+                Coordinates movedTo = moveToTile(tileX, tileY);
+                if (movedTo != null) {
+                    tuple.y = movedTo;
+                    tuple.x.SelectPlayer();
+                    mSelectedObject = null;
+                }
             }
 
             //Select or DeSelect object
