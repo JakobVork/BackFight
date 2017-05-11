@@ -36,7 +36,7 @@
             android:theme="@style/FullscreenMenuTheme"/>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings_Activity.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
