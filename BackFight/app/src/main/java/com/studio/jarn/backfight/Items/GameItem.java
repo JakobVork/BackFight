@@ -1,0 +1,18 @@
+package com.studio.jarn.backfight.Items;
+
+public class GameItem {
+
+    public String Title;
+    public String Description;
+    public int Image;
+    public long Id;
+    private static long sNextId = 0;
+
+    public GameItem(String title, String description, int img) {
+        this.Id = sNextId;
+        sNextId++; // TODO : Find a better why. I've tried to use UUID, but when there's a problem with the adapter.
+        this.Title = title;
+        this.Description = description;
+        this.Image = img;
+    }
+}

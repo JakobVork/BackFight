@@ -1,10 +1,12 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.LoadGame_Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import com.studio.jarn.backfight.R;
 
 public class LoadGameActivity extends AppCompatActivity {
 

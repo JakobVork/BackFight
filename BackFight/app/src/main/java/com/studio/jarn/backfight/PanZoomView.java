@@ -90,109 +90,108 @@ protected void onDrawPz (Canvas canvas) {
 @Override
 public boolean onTouchEvent (MotionEvent e) {
 
-// Let the ScaleGestureDetector inspect all events.
-mScaleDetector.onTouchEvent(e);
+    // Let the ScaleGestureDetector inspect all events.
+    mScaleDetector.onTouchEvent(e);
 
-// for a description for the use of MotionEvent.ACTION_MASK: http://stackoverflow.com/questions/16464187/the-difference-of-using-motionevent-getaction-method
-switch (e.getAction() & MotionEvent.ACTION_MASK) {
-    case MotionEvent.ACTION_DOWN: {
-        final float x = e.getX();
-        final float y = e.getY();
+    // for a description for the use of MotionEvent.ACTION_MASK: http://stackoverflow.com/questions/16464187/the-difference-of-using-motionevent-getaction-method
+    switch (e.getAction() & MotionEvent.ACTION_MASK) {
+        case MotionEvent.ACTION_DOWN: {
+            final float x = e.getX();
+            final float y = e.getY();
 
-        mIsMove = false;            // Assume action is a click until the scroll threshold is met.
+            mIsMove = false;            // Assume action is a click until the scroll threshold is met.
 
-        mLastTouchX = x;
-        mLastTouchY = y;
-        mActivePointerId = e.getPointerId(0);
-        if (mSupportsOnTouchDown) {
-            onTouchDown(x, y);
-        }
-        if (mSupportsOnTouchUp) {
-            mInitialTouchX = x;
-            mInitialTouchY = y;
-            mDoTouchUp = true;
-        }
-        break;
-    }
-
-    case MotionEvent.ACTION_MOVE: {
-        final int pointerIndex = e.findPointerIndex(mActivePointerId);
-        final float x = e.getX(pointerIndex);
-        final float y = e.getY(pointerIndex);
-
-        if (!mIsMove && (Math.abs(mInitialTouchX - x) > SCROLL_THRESHOLD
-                || Math.abs(mInitialTouchY - y) > SCROLL_THRESHOLD)) {
-            mIsMove = true;
-        }
-
-        // Only move if the view supports panning and
-        // ScaleGestureDetector isn't processing a gesture.
-        boolean scalingInProgress = mScaleDetector.isInProgress();
-        if (mSupportsPan && !scalingInProgress) {
-            if (mIsMove) {
-                final float dx = x - mLastTouchX;
-                final float dy = y - mLastTouchY;
-
-                mPosX += dx;
-                mPosY += dy;
-
-                invalidate();
+            mLastTouchX = x;
+            mLastTouchY = y;
+            mActivePointerId = e.getPointerId(0);
+            if (mSupportsOnTouchDown) {
+                onTouchDown(x, y);
             }
+            if (mSupportsOnTouchUp) {
+                mInitialTouchX = x;
+                mInitialTouchY = y;
+                mDoTouchUp = true;
+            }
+            break;
         }
 
-        mLastTouchX = x;
-        mLastTouchY = y;
+        case MotionEvent.ACTION_MOVE: {
+            final int pointerIndex = e.findPointerIndex(mActivePointerId);
+            final float x = e.getX(pointerIndex);
+            final float y = e.getY(pointerIndex);
 
-        break;
-    }
+            if (!mIsMove && (Math.abs(mInitialTouchX - x) > SCROLL_THRESHOLD
+                    || Math.abs(mInitialTouchY - y) > SCROLL_THRESHOLD)) {
+                mIsMove = true;
+            }
 
-    case MotionEvent.ACTION_UP: {
-        if (mIsMove) {
-            mHandlingTouchUp = false;
-            mDoTouchUp = false;
-        } else {
-            mActivePointerId = INVALID_POINTER_ID;
-            if (mSupportsOnTouchUp && mDoTouchUp) {
-                final float x = e.getX();
-                final float y = e.getY();
-                try {
-                    mHandlingTouchUp = true;
-                    onTouchUp(mInitialTouchX, mInitialTouchY, x, y);
-                } finally {
-                    mHandlingTouchUp = false;
+            // Only move if the view supports panning and
+            // ScaleGestureDetector isn't processing a gesture.
+            boolean scalingInProgress = mScaleDetector.isInProgress();
+            if (mSupportsPan && !scalingInProgress) {
+                if (mIsMove) {
+                    final float dx = x - mLastTouchX;
+                    final float dy = y - mLastTouchY;
+
+                    mPosX += dx;
+                    mPosY += dy;
+
+                    invalidate();
                 }
-                mDoTouchUp = false;
             }
+
+            mLastTouchX = x;
+            mLastTouchY = y;
+
+            break;
         }
-        break;
-    }
 
-    case MotionEvent.ACTION_CANCEL: {
-        mActivePointerId = INVALID_POINTER_ID;
-        break;
-    }
-
-    case MotionEvent.ACTION_POINTER_UP: {
-        final int pointerIndex = (e.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
-                >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final int pointerId = e.getPointerId(pointerIndex);
-        if (pointerId == mActivePointerId) {
-            // This was our active pointer going up. Choose a new
-            // active pointer and adjust accordingly.
-            final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mLastTouchX = e.getX(newPointerIndex);
-            mLastTouchY = e.getY(newPointerIndex);
-            mActivePointerId = e.getPointerId(newPointerIndex);
+        case MotionEvent.ACTION_UP: {
+            if (mIsMove) {
+                mHandlingTouchUp = false;
+                mDoTouchUp = false;
+            } else {
+                mActivePointerId = INVALID_POINTER_ID;
+                if (mSupportsOnTouchUp && mDoTouchUp) {
+                    final float x = e.getX();
+                    final float y = e.getY();
+                    try {
+                        mHandlingTouchUp = true;
+                        onTouchUp(mInitialTouchX, mInitialTouchY, x, y);
+                    } finally {
+                        mHandlingTouchUp = false;
+                    }
+                    mDoTouchUp = false;
+                }
+            }
+            break;
         }
-        break;
+
+        case MotionEvent.ACTION_CANCEL: {
+            mActivePointerId = INVALID_POINTER_ID;
+            break;
+        }
+
+        case MotionEvent.ACTION_POINTER_UP: {
+            final int pointerIndex = (e.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
+                    >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+            final int pointerId = e.getPointerId(pointerIndex);
+            if (pointerId == mActivePointerId) {
+                // This was our active pointer going up. Choose a new
+                // active pointer and adjust accordingly.
+                final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                mLastTouchX = e.getX(newPointerIndex);
+                mLastTouchY = e.getY(newPointerIndex);
+                mActivePointerId = e.getPointerId(newPointerIndex);
+            }
+            break;
+        }
     }
-}
 
 
-
-this.performClick ();           // Do this to get rid of warning message.
+    this.performClick();           // Do this to get rid of warning message.
                                 // Not sure what it does.
-return true;
+    return true;
 }
 
 @Override

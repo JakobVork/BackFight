@@ -8,17 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.studio.jarn.backfight.Items.gameItem;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemWeapon;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ItemsAndStatsFragment extends Fragment {
 
     private OnItemSelectedListener mListener;
 
-    private ArrayList<gameItem> mItemList;
+    private ArrayList<GameItem> mItemList;
     private ListView mItemListView;
+    private final static String sJsonItemsString = "sJsonItemsString";
 
     public ItemsAndStatsFragment() {
     }
@@ -26,6 +29,25 @@ public class ItemsAndStatsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            String jsonItems = getArguments().getString(sJsonItemsString);
+            Type listType = new TypeToken<ArrayList<ItemWeapon>>(){}.getType();
+            mItemList = new Gson().fromJson(jsonItems, listType);
+        }
+    }
+
+    public static ItemsAndStatsFragment newInstance(ArrayList<GameItem> items) {
+        if(items != null) {
+            ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
+            Bundle args = new Bundle();
+            String jsonArray = new Gson().toJson(items);
+            args.putString(sJsonItemsString, jsonArray);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        return null;
     }
 
     @Override
@@ -33,10 +55,6 @@ public class ItemsAndStatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_items_and_stats, container, false);
-
-        mItemList = new ArrayList<>();
-        mItemList.add(new gameItem("gameItem", "Test sword", R.drawable.item_sword));
-        mItemList.add(new gameItem("gameItem", "Test sword", R.drawable.item_breastplate));
 
         final ItemAdaptor adapter = new ItemAdaptor(getActivity(), mItemList);
         mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
@@ -69,6 +87,6 @@ public class ItemsAndStatsFragment extends Fragment {
     }
 
     interface OnItemSelectedListener {
-        void onItemSelected(gameItem item);
+        void onItemSelected(GameItem item);
     }
 }

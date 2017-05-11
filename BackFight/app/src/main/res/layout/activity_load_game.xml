@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grid_background"
-    tools:context="com.studio.jarn.backfight.LoadGameActivity">
+    tools:context="com.studio.jarn.backfight.LoadGame_Activity.LoadGameActivity">
 
     <Button
         android:id="@+id/activity_loadGame_btn_back"
