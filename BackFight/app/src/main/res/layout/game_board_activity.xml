@@ -29,7 +29,7 @@
         tools:layout_editor_absoluteY="0dp" />
 
     <ImageView
-        android:id="@+id/game_board_activity_btn_hide_items"
+        android:id="@+id/game_board_activity_iv_hide_items"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginRight="0dp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/game_board_activity_btn_show_items"
+        android:id="@+id/game_board_activity_iv_show_items"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginRight="0dp"

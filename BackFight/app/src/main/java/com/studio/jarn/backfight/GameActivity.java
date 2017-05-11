@@ -52,8 +52,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
     private void setupItemFragment() {
 
-        mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_btn_hide_items);
-        mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_btn_show_items);
+        mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_iv_hide_items);
+        mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_iv_show_items);
         hideItemListFragment();
 
         mIvItemFragmentHide.setOnClickListener(new View.OnClickListener() {
