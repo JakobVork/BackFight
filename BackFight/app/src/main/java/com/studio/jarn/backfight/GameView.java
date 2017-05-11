@@ -364,8 +364,7 @@ public void onDrawPz(Canvas canvas) {
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Click is outside map: do nothing
-        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
-            return;
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight)) return;
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
@@ -385,7 +384,7 @@ public void onDrawPz(Canvas canvas) {
 
                         invalidate();
                         return;
-                }
+                    }
                 }
 
                 Coordinates movedTo = moveToTile(tileX, tileY);
