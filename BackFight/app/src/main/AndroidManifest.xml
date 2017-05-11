@@ -46,7 +46,7 @@
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".LoadGameActivity"
+            android:name=".LoadGame_Activity.LoadGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
