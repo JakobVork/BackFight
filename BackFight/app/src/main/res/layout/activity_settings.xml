@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grid_background"
-    tools:context="com.studio.jarn.backfight.SettingsActivity">
+    tools:context="com.studio.jarn.backfight.Settings_Activity.SettingsActivity">
 
     <Button
         android:id="@+id/activity_settings_btn_back"
