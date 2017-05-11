@@ -40,8 +40,8 @@ public class fragment_item_details extends Fragment {
             mTitle = getArguments().getString(mTitleString);
             mDescription = getArguments().getString(mDescriptionString);
             mImage = getArguments().getInt(mImageString, 0);
-            mDmgMin= getArguments().getInt(mDmgMinString, 0);
-            mDmgMax= getArguments().getInt(mDmgMaxString, 0);
+            mDmgMin = getArguments().getInt(mDmgMinString, 0);
+            mDmgMax = getArguments().getInt(mDmgMaxString, 0);
         }
     }
 
