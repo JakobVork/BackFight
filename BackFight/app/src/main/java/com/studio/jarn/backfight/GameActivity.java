@@ -7,11 +7,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-
+import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.studio.jarn.backfight.Items.gameItem;
-
+import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemFactory;
+import com.studio.jarn.backfight.Items.ItemWeapon;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,13 +27,16 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     private static int sGridSize = 16;
-    private static boolean isHidden = true;
     private final Tile wallTile = new Tile(Tile.Types.Wall);
     private final Tile floorTile = new Tile(Tile.Types.WoodenFloor);
     private final List<Integer> checkedList = new ArrayList<>();
     Fragment itemsAndStatsFragment;
+    Fragment itemsAndStatsFragmentDetailed;
     private Tile[][] mGrid;
     private int TileConnectivityCollectionNrCounter = 0;
+
+    private ImageView mIvItemFragmentShow;
+    private ImageView mIvItemFragmentHide;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,32 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         if (i != null) {
             setupGameView(i);
         }
+
+        setupItemFragment();
+    }
+
+    private void setupItemFragment() {
+
+        mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_btn_hide_items);
+        mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_btn_show_items);
+        hideItemListFragment();
+
+        mIvItemFragmentHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getFragmentManager().getBackStackEntryCount() > 0) {
+                    getFragmentManager().popBackStack();
+                }
+                hideItemListFragment();
+            }
+        });
+
+        mIvItemFragmentShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemListFragment();
+            }
+        });
     }
 
     private void setupGameView(Intent i) {
@@ -54,11 +84,11 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             if (host) {
 
                 //Casting to List example: http://stackoverflow.com/questions/5813434/trouble-with-gson-serializing-an-arraylist-of-pojos
-                Type listOfTestObject = new TypeToken<List<Player>>() {
+                Type playerListType = new TypeToken<List<Player>>() {
                 }.getType();
 
                 String playerListInJson = i.getStringExtra(getString(R.string.EXTRA_PLAYERLIST));
-                List<Player> playerList = new Gson().fromJson(playerListInJson, listOfTestObject);
+                List<Player> playerList = new Gson().fromJson(playerListInJson, playerListType);
 
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
@@ -83,29 +113,43 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    public void switchItemListFragment(View view) {
-        if (isHidden) {
-            showItemListFragment();
-            isHidden = false;
-        } else {
-            hideItemListFragment();
-            isHidden = true;
-        }
-    }
-
     private void showItemListFragment() {
+        mIvItemFragmentShow.setVisibility(View.GONE);
+        mIvItemFragmentHide.setVisibility(View.VISIBLE);
+
+        ArrayList<GameItem> items = new ArrayList<GameItem>();
+        ItemFactory fac = new ItemFactory(getApplicationContext());
+        items.add(fac.Weapons.AxeMajor());
+        ItemsAndStatsFragment.newInstance(items);
+
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment == null) {
-            itemsAndStatsFragment = new ItemsAndStatsFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
-            ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
-            ft.commit();
+            // TODO: Use correct items instead of hardcoded.
+            ItemFactory itemFac = new ItemFactory(getApplicationContext());
+            ArrayList<GameItem> itemList = new ArrayList<>();
+
+            GameItem item = itemFac.Weapons.SwordSimple();
+            itemList.add(item);
+            item = itemFac.Weapons.SwordFlame();
+            itemList.add(item);
+            item = itemFac.Weapons.AxeMajor();
+            itemList.add(item);
+            item = itemFac.Weapons.Scepter();
+            itemList.add(item);
+
+            itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList);
         }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
+        ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+        ft.commit();
     }
 
     private void hideItemListFragment() {
+        mIvItemFragmentShow.setVisibility(View.VISIBLE);
+        mIvItemFragmentHide.setVisibility(View.GONE);
+
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -369,7 +413,13 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     @Override
-    public void onItemSelected(gameItem item) {
+    public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance((ItemWeapon) item);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

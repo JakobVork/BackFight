@@ -13,11 +13,11 @@
         android:layout_weight="1"
         android:background="@color/grid_background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <android.support.constraint.Guideline
         android:id="@+id/game_board_activity_gl_fragment"
@@ -28,14 +28,36 @@
         tools:layout_editor_absoluteX="444dp"
         tools:layout_editor_absoluteY="0dp" />
 
+    <ImageView
+        android:id="@+id/game_board_activity_btn_hide_items"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/arrow_right_icon"
+        app:layout_constraintRight_toLeftOf="@+id/game_board_activity_gl_fragment"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/game_board_activity_btn_show_items"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/arrow_left_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/game_board_activity_items_and_stats_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/game_board_activity_gl_fragment"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

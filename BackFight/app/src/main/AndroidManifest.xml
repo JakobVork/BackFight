@@ -34,7 +34,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme"/>
-
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -54,7 +53,8 @@
             android:name=".NewGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
-            android:theme="@style/FullscreenMenuTheme" />
+            android:theme="@style/FullscreenMenuTheme">
+        </activity>
         <activity
             android:name=".LobbyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
