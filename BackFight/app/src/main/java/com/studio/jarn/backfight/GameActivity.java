@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
 import com.studio.jarn.backfight.Items.ItemWeapon;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +24,6 @@ import java.util.Random;
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
 {
-    static final String DATABASE_POSTFIX_GRID = "Grid";
-    static final String DATABASE_POSTFIX_PLAYERS = "PlayerList";
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     private static int sGridSize = 16;
@@ -75,7 +75,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void setupGameView(Intent i) {
-        String UUID = i.getStringExtra(getString(R.string.EXTRA_UUID));
+        String Uuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
         sGridSize = i.getIntExtra(getString(R.string.EXTRA_GRIDSIZE), sDefaultGridSize);
 
@@ -96,19 +96,19 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID + DATABASE_POSTFIX_GRID);
+                gv.setupFirebase(Uuid);
 
                 //addPlayers();
                 gv.initHostGrid(mGrid);
-                gv.setPlayerListener(UUID + DATABASE_POSTFIX_PLAYERS);
+                gv.setPlayerListener();
                 gv.initAddPlayers(playerList);
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setUuidStartup(UUID + DATABASE_POSTFIX_GRID);
+                gv.setupFirebase(Uuid);
                 gv.initClientGrid();
 
-                gv.setPlayerListener(UUID + DATABASE_POSTFIX_PLAYERS);
+                gv.setPlayerListener();
             }
         }
     }
@@ -117,7 +117,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmentHide.setVisibility(View.VISIBLE);
 
-        ArrayList<GameItem> items = new ArrayList<GameItem>();
+        ArrayList<GameItem> items = new ArrayList<>();
         ItemFactory fac = new ItemFactory(getApplicationContext());
         items.add(fac.Weapons.AxeMajor());
         ItemsAndStatsFragment.newInstance(items);
