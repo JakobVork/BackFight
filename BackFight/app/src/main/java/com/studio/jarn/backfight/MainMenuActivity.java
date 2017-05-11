@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.studio.jarn.backfight.LoadGame_Activity.LoadGameActivity;
+import com.studio.jarn.backfight.Rules_Activity.RulesActivity;
+import com.studio.jarn.backfight.Settings_Activity.SettingsActivity;
+
 public class MainMenuActivity extends AppCompatActivity {
 
     Button mBtnNewGame;

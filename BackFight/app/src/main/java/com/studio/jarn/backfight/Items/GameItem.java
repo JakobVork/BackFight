@@ -2,11 +2,11 @@ package com.studio.jarn.backfight.Items;
 
 public class GameItem {
 
+    private static long sNextId = 0;
     public String Title;
     public String Description;
     public int Image;
     public long Id;
-    private static long sNextId = 0;
 
     public GameItem(String title, String description, int img) {
         this.Id = sNextId;

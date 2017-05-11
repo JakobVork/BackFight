@@ -8,37 +8,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ItemsAndStatsFragment extends Fragment {
 
+    private final static String sJsonItemsString = "sJsonItemsString";
     private OnItemSelectedListener mListener;
-
     private ArrayList<GameItem> mItemList;
     private ListView mItemListView;
-    private final static String sJsonItemsString = "sJsonItemsString";
 
     public ItemsAndStatsFragment() {
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            String jsonItems = getArguments().getString(sJsonItemsString);
-            Type listType = new TypeToken<ArrayList<ItemWeapon>>(){}.getType();
-            mItemList = new Gson().fromJson(jsonItems, listType);
-        }
-    }
-
     public static ItemsAndStatsFragment newInstance(ArrayList<GameItem> items) {
-        if(items != null) {
+        if (items != null) {
             ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
             Bundle args = new Bundle();
             String jsonArray = new Gson().toJson(items);
@@ -48,6 +38,18 @@ public class ItemsAndStatsFragment extends Fragment {
         }
 
         return null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            String jsonItems = getArguments().getString(sJsonItemsString);
+            Type listType = new TypeToken<ArrayList<ItemWeapon>>() {
+            }.getType();
+            mItemList = new Gson().fromJson(jsonItems, listType);
+        }
     }
 
     @Override

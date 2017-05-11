@@ -35,17 +35,17 @@
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme"/>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings_Activity.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".RulesActivity"
+            android:name=".Rules_Activity.RulesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".LoadGameActivity"
+            android:name=".LoadGame_Activity.LoadGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
@@ -53,8 +53,7 @@
             android:name=".NewGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
-            android:theme="@style/FullscreenMenuTheme">
-        </activity>
+            android:theme="@style/FullscreenMenuTheme"></activity>
         <activity
             android:name=".LobbyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
