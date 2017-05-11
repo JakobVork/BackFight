@@ -4,11 +4,33 @@ import android.content.Context;
 
 import com.studio.jarn.backfight.R;
 
+import java.util.Random;
+
 public class Weapons {
     private Context mContext;
 
     Weapons(Context context){
         mContext = context;
+    }
+
+    public GameItem getRandomWeapon() {
+        Random rnd = new Random();
+        switch (rnd.nextInt(7)){
+            case 0:
+                return SwordDual();
+            case 1:
+                return SwordScimitar();
+            case 2:
+                return SwordMagical();
+            case 3:
+                return Axe();
+            case 4:
+                return AxeMajor();
+            case 5:
+                return SwordFlame();
+            default:
+                return SwordSimple();
+        }
     }
 
     public GameItem SwordSimple() {

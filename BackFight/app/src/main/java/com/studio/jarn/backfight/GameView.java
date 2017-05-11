@@ -17,10 +17,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -51,7 +54,8 @@ public class GameView extends PanZoomView implements GameTouchListener
     private Tile[][] mGrid;
     //TODO Player should be GameObject
     private ArrayList<Tuple<Player, Coordinates>> mGameObjectList = new ArrayList<>();
-    private int mGridSizeWidthAndHeight;
+    private ArrayList<Tuple<GameItem, Coordinates>> mGameItemList = new ArrayList<>();
+    private int mGridSize;
     private int mSquaresViewedAtStartup;
     private String mUuid;
     private DatabaseReference databaseReference;
@@ -97,8 +101,8 @@ public class GameView extends PanZoomView implements GameTouchListener
         int coordinatesCounter = 0;
         ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates = new ArrayList<>();
         outerLoop:
-        for (int row = 0; row < mGridSizeWidthAndHeight; row++) {
-            for (int column = 0; column < mGridSizeWidthAndHeight; column++) {
+        for (int row = 0; row < mGridSize; row++) {
+            for (int column = 0; column < mGridSize; column++) {
                 if (mGrid[row][column].CanBePassed) {
                     for (Player player : players) {
                         playersWithCoordinates.add(new Tuple<>(player, new Coordinates(column, row, coordinatesCounter++, 0)));
@@ -118,7 +122,7 @@ public class GameView extends PanZoomView implements GameTouchListener
 
 public void setGridSize(int newValue)
 {
-   mGridSizeWidthAndHeight = newValue;
+   mGridSize = newValue;
 }
 
 public void setViewSizeAtStartup(int newValue)
@@ -149,9 +153,9 @@ public void drawOnCanvas (Canvas canvas) {
 
     RectF dest1 = mDestRectF;
     float dx, dy = 0;
-    for (int j = 0; j < mGridSizeWidthAndHeight; j++) {
+    for (int j = 0; j < mGridSize; j++) {
        dx = 0;
-       for (int i = 0; i < mGridSizeWidthAndHeight; i++) {
+       for (int i = 0; i < mGridSize; i++) {
            dest1.offsetTo(dx, dy);
 
            switch (mGrid[j][i].Type) {
@@ -174,7 +178,11 @@ public void drawOnCanvas (Canvas canvas) {
     private void myDraw(Canvas canvas) {
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
-    }
+        }
+
+        for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.Image), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+        }
     }
 
 /**
@@ -205,14 +213,14 @@ public void onDrawPz(Canvas canvas) {
     // The canvas is centered in the view so half of what
     // remains to be displayed can be used to calculate the
     // origin offset values.
-    mMaxCanvasWidth  = mGridSizeWidthAndHeight * mSquareWidth;
-    mMaxCanvasHeight = mGridSizeWidthAndHeight * mSquareHeight;
+    mMaxCanvasWidth  = mGridSize * mSquareWidth;
+    mMaxCanvasHeight = mGridSize * mSquareHeight;
     mHalfMaxCanvasWidth  = mMaxCanvasWidth / 2.0f;
     mHalfMaxCanvasHeight = mMaxCanvasHeight / 2.0f;
 
-    float totalOffscreenSquaresX = mGridSizeWidthAndHeight - numSquaresAlongX;
+    float totalOffscreenSquaresX = mGridSize - numSquaresAlongX;
     if (totalOffscreenSquaresX < 0f) totalOffscreenSquaresX = 0f;
-    float totalOffscreenSquaresY = mGridSizeWidthAndHeight - numSquaresAlongY;
+    float totalOffscreenSquaresY = mGridSize - numSquaresAlongY;
     if (totalOffscreenSquaresY < 0f) totalOffscreenSquaresY = 0f;
     mOriginOffsetX = 0;//totalOffscreenSquaresX / 2.0f * mSquareWidth;
     mOriginOffsetY = 0;//totalOffscreenSquaresY / 2.0f * mSquareHeight;
@@ -238,7 +246,7 @@ public void onDrawPz(Canvas canvas) {
 
     // Set up the grid  and grid selection variables.
     if (mGrid == null)
-        mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
+        mGrid = new Tile[mGridSize][mGridSize];
 
     // Set up the rectangles we use for drawing, if not done already.
     // Set width and height to be used for the rectangle to be drawn.
@@ -298,9 +306,9 @@ public void onDrawPz(Canvas canvas) {
                 if (dataSnapshot.getValue() == null) return;
 
                 int sizeOfArrayOnFirebase = Iterables.size(dataSnapshot.getChildren());
-                if (mGridSizeWidthAndHeight != sizeOfArrayOnFirebase) {
-                    mGridSizeWidthAndHeight = sizeOfArrayOnFirebase;
-                    mGrid = new Tile[mGridSizeWidthAndHeight][mGridSizeWidthAndHeight];
+                if (mGridSize != sizeOfArrayOnFirebase) {
+                    mGridSize = sizeOfArrayOnFirebase;
+                    mGrid = new Tile[mGridSize][mGridSize];
                 }
 
 
@@ -401,6 +409,7 @@ public void onDrawPz(Canvas canvas) {
         }
 
         addPlayerListToDb(mGameObjectList); //TODo
+
         //Render map
         invalidate();
     }
@@ -483,5 +492,35 @@ public void onDrawPz(Canvas canvas) {
             }
         });
     }
+
+    public void spawnItems(int numberOfItems) {
+        Random rnd = new Random();
+        ItemFactory fac = new ItemFactory(getContext());
+        int i = 0;
+
+        // Continue untill all items are spawned
+        while (i < numberOfItems) {
+            int coordX = rnd.nextInt(mGridSize);
+            int coordY = rnd.nextInt(mGridSize);
+
+            // Check if tile is passable, else just roll again.
+            if(tileIsPassable(coordX, coordY)) {
+                GameItem item = fac.Weapons.getRandomWeapon();
+                spawnItemOnTile(item ,coordX, coordY);
+                i++;
+            }
+        }
+
+        invalidate();
+    }
+
+    public void spawnItemOnTile(GameItem item, int x, int y) {
+        mGameItemList.add(new Tuple<>(item, new Coordinates(x, y, 1, 1)));
+    }
+
+    private boolean tileIsPassable(int x, int y) {
+        return mGrid[y][x].CanBePassed;
+    }
+
 } // end class
   
