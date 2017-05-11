@@ -34,6 +34,8 @@ public class GameView extends PanZoomView implements GameTouchListener
     protected float mFocusX;
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
+    Boolean onlyOnce = true;
+    FirebaseDatabase database;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -55,6 +57,7 @@ public class GameView extends PanZoomView implements GameTouchListener
     private DatabaseReference databaseReference;
     private Player mSelectedObject;
     private int mTileDivision = 4;
+    private String mUuidPlayers;
 
 
 
@@ -105,9 +108,9 @@ public class GameView extends PanZoomView implements GameTouchListener
                     addPlayerListToDb(playersWithCoordinates);
 
                     break outerLoop;
+                }
             }
         }
-    }
     }
 
     private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
@@ -308,7 +311,7 @@ public void onDrawPz(Canvas canvas) {
                     for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
                         column++;
                         mGrid[row][column] = postSnapshot1.getValue(Tile.class);
-                }
+                    }
                     column = -1;
                 }
                 invalidate();
@@ -361,7 +364,8 @@ public void onDrawPz(Canvas canvas) {
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Click is outside map: do nothing
-        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth/mSquareWidth) || tileY >= (mMaxCanvasHeight/mSquareHeight)) return;
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
+            return;
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
@@ -374,7 +378,7 @@ public void onDrawPz(Canvas canvas) {
                         tuple1.x.SelectPlayer();
                         mSelectedObject = tuple1.x;
 
-                        if (tuple.x.equals(tuple1.x)){
+                        if (tuple.x.equals(tuple1.x)) {
                             tuple.x.SelectPlayer();
                             mSelectedObject = null;
                         }
@@ -390,8 +394,8 @@ public void onDrawPz(Canvas canvas) {
             }
 
             //Select or DeSelect object
-            if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY){
-                if (!tuple.x.isSelected()){
+            if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
+                if (!tuple.x.isSelected()) {
                     tuple.x.SelectPlayer();
                     if (mSelectedObject != null) mSelectedObject.SelectPlayer();
                     mSelectedObject = tuple.x;
@@ -455,10 +459,8 @@ public void onDrawPz(Canvas canvas) {
         return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight * objectCoordinates.placementOnTileY / mTileDivision);
     }
 
-    private void moveToTile(int x, int y, Coordinates objectCoord) {
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
     private Coordinates moveToTile(int tileX, int tileY) {
-        ArrayList<Tuple<Player, Coordinates>> onTile = new ArrayList<Tuple<Player, Coordinates>>();
+        ArrayList<Tuple<Player, Coordinates>> onTile = new ArrayList<>();
 
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);

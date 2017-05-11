@@ -1,7 +1,6 @@
 package com.studio.jarn.backfight;
 
 import android.os.Bundle;
-import android.renderscript.Script;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,43 +9,27 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 
 public class fragment_item_details extends Fragment {
-
-    public fragment_item_details() {
-        // Required empty public constructor
-    }
-
-    private String mTitle;
-    private String mDescription;
-    private int mImage;
-    private int mDmgMin;
-    private int mDmgMax;
-
 
     private static final String mTitleString = "TitleString";
     private static final String mDescriptionString = "DescriptionString";
     private static final String mImageString = "ImageString";
     private static final String mDmgMinString = "DmgMinString";
     private static final String mDmgMaxString = "DmgMaxString";
+    private String mTitle;
+    private String mDescription;
+    private int mImage;
+    private int mDmgMin;
+    private int mDmgMax;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mTitle = getArguments().getString(mTitleString);
-            mDescription = getArguments().getString(mDescriptionString);
-            mImage = getArguments().getInt(mImageString, 0);
-            mDmgMin = getArguments().getInt(mDmgMinString, 0);
-            mDmgMax = getArguments().getInt(mDmgMaxString, 0);
-        }
+    public fragment_item_details() {
+        // Required empty public constructor
     }
 
     public static fragment_item_details newInstance(ItemWeapon weapon) {
-        if(weapon == null) {
+        if (weapon == null) {
             return null;
         }
 
@@ -59,6 +42,19 @@ public class fragment_item_details extends Fragment {
         args.putInt(mDmgMaxString, weapon.DmgMax);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mTitle = getArguments().getString(mTitleString);
+            mDescription = getArguments().getString(mDescriptionString);
+            mImage = getArguments().getInt(mImageString, 0);
+            mDmgMin = getArguments().getInt(mDmgMinString, 0);
+            mDmgMax = getArguments().getInt(mDmgMaxString, 0);
+        }
     }
 
     @Override
