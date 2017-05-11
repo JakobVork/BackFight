@@ -21,7 +21,7 @@ public class ItemsAndStatsFragment extends Fragment {
 
     private ArrayList<GameItem> mItemList;
     private ListView mItemListView;
-    private final static String jsonItemsString = "jsonItemsString";
+    private final static String sJsonItemsString = "sJsonItemsString";
 
     public ItemsAndStatsFragment() {
     }
@@ -31,7 +31,7 @@ public class ItemsAndStatsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            String jsonItems = getArguments().getString(jsonItemsString);
+            String jsonItems = getArguments().getString(sJsonItemsString);
             Type listType = new TypeToken<ArrayList<ItemWeapon>>(){}.getType();
             mItemList = new Gson().fromJson(jsonItems, listType);
         }
@@ -42,7 +42,7 @@ public class ItemsAndStatsFragment extends Fragment {
             ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
             Bundle args = new Bundle();
             String jsonArray = new Gson().toJson(items);
-            args.putString(jsonItemsString, jsonArray);
+            args.putString(sJsonItemsString, jsonArray);
             fragment.setArguments(args);
             return fragment;
         }
