@@ -1,12 +1,13 @@
 package com.studio.jarn.backfight;
 
 
+import java.util.UUID;
 
 class Player {
     String Name;
     int mFigure = 0;
     int mFigureSelected = 0;
-    private boolean mSelected = false;
+    String id = UUID.randomUUID().toString();
 
     Player(int Figure, int FigureSelected, String name) {
         mFigure = Figure;
@@ -16,18 +17,5 @@ class Player {
 
     //Needed for casting from Firebase
     Player() {
-    }
-
-    void SelectPlayer() {
-        mSelected = !mSelected;
-    }
-
-    int getFigure() {
-        if (mSelected) return mFigureSelected;
-        else return mFigure;
-    }
-
-    boolean isSelected() {
-        return mSelected;
     }
 }

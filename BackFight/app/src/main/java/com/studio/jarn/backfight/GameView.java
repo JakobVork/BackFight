@@ -175,8 +175,17 @@ public void drawOnCanvas (Canvas canvas) {
 
     private void myDraw(Canvas canvas) {
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
-    }
+            if (mSelectedObject == null){
+                canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigure), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+            } else {
+                if (tuple.x.id.equals(mSelectedObject.id)){
+                    canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigureSelected), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+                } else {
+                    canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigure), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+                }
+            }
+
+        }
     }
 
 /**
@@ -370,38 +379,33 @@ public void onDrawPz(Canvas canvas) {
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             //Move selected object
-            if (tuple.x.equals(mSelectedObject)) {
-                for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
-                    if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
-                        mSelectedObject.SelectPlayer();
-                        tuple1.x.SelectPlayer();
-                        mSelectedObject = tuple1.x;
+            if(mSelectedObject != null){
+                if (tuple.x.id.equals(mSelectedObject.id)) {
+                    for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
+                        if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
+                            mSelectedObject = tuple1.x;
 
-                        if (tuple.x.equals(tuple1.x)) {
-                            tuple.x.SelectPlayer();
-                            mSelectedObject = null;
+                            if (tuple.x.equals(tuple1.x)) {
+                                mSelectedObject = null;
+                            }
+
+                            invalidate();
+                            return;
                         }
-
-                        invalidate();
-                        return;
                     }
-                }
 
-                Coordinates movedTo = moveToTile(tileX, tileY);
-                if (movedTo != null) {
-                    tuple.y = movedTo;
-                    tuple.x.SelectPlayer();
-                    mSelectedObject = null;
+                    Coordinates movedTo = moveToTile(tileX, tileY);
+                    if (movedTo != null) {
+                        tuple.y = movedTo;
+                        mSelectedObject = null;
+                    }
                 }
             }
 
+
             //Select or DeSelect object
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
-                if (!tuple.x.isSelected()) {
-                    tuple.x.SelectPlayer();
-                    if (mSelectedObject != null) mSelectedObject.SelectPlayer();
-                    mSelectedObject = tuple.x;
-                }
+                mSelectedObject = tuple.x;
             }
 
 
