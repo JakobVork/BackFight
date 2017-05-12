@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -14,23 +13,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.google.common.primitives.Ints;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class LobbyActivity extends AppCompatActivity {
+public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
-    static final String DATABASE_POSTFIX_STARTGAME = "StartGame";
-    static final String DATABASE_POSTFIX_RADIOGROUP = "RadioGroup";
-    static final String DATABASE_POSTFIX_NUMBERPICKER = "NumberPicker";
     Button mBtnBack;
     Button mBtnStart;
     TextView mTvId;
@@ -39,11 +29,10 @@ public class LobbyActivity extends AppCompatActivity {
     RadioButton mRbMaze;
     NumberPicker mNpGridSize;
     PlayerAdapter mPlayerAdapter;
-    List<Player> listOfPlayersCurrentlyInGame = new ArrayList<>();
+    List<Player> mListOfPlayersCurrentlyInGame = new ArrayList<>();
     String mGameId;
     RadioGroup mRg;
-    FirebaseDatabase database;
-    DatabaseReference mDatabaseReference;
+    FirebaseHelper mFirebaseHelper;
     Intent intent;
     boolean host;
 
@@ -59,7 +48,7 @@ public class LobbyActivity extends AppCompatActivity {
         setNumberPicker();
         getValuesFromIntent();
 
-        database = FirebaseDatabase.getInstance();
+        mFirebaseHelper = new FirebaseHelper(this);
 
         if (host) setupHost();
         else setupClient();
@@ -77,36 +66,32 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void setupClient() {
+        mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
+        mFirebaseHelper.setStandardKey(mGameId);
+        //TODO needs to be extracted from SharedPrefs
+        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+        mFirebaseHelper.setupStartGameListener();
+        mFirebaseHelper.setupWidgetsListener();
+
         mBtnStart.setVisibility(View.GONE);
         mNpGridSize.setEnabled(false);
-
         mRbDefault.setEnabled(false);
         mRbMaze.setEnabled(false);
-        mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
         mTvId.setText(mGameId);
-
-        mDatabaseReference = database.getReference(mGameId);
-        //TODO needs to be extracted from SharedPrefs
-        mDatabaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
-
-        setupStartGameListener();
 
         setupListView();
 
-        syncWhenChangingControllers();
     }
 
     private void setupHost() {
         mGameId = UUID.randomUUID().toString().substring(30);
-        mTvId.setText(mGameId);
-
-        mDatabaseReference = database.getReference(mGameId);
-        //TODO needs to be extracted from SharedPrefs
-        mDatabaseReference.push().setValue(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
-
+        mFirebaseHelper.setStandardKey(mGameId);
         setupListView();
         setupRadioGroupListener();
-        updateNumberPickerOnDb(15); //Set 15 as default on db
+        mFirebaseHelper.setNumberPicker(15); //Set 15 as default on db
+        mTvId.setText(mGameId);
+        //TODO needs to be extracted from SharedPrefs
+        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
     }
 
     private void getValuesFromIntent() {
@@ -114,107 +99,38 @@ public class LobbyActivity extends AppCompatActivity {
         host = intent.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
     }
 
-    private void setupStartGameListener() {
-        //Setup listener to listen when the game starts
-        String gameIdRadioButtonSelected = mGameId + DATABASE_POSTFIX_STARTGAME;
-        mDatabaseReference = database.getReference(gameIdRadioButtonSelected);
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    startGameClient();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w("", "Failed to read value.", databaseError.toException());
-            }
-        });
-
-    }
-
     private void setupRadioGroupListener() {
 
         mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                updateGridTypeOnDb(mRg.indexOfChild(findViewById(mRg.getCheckedRadioButtonId())));
+                mFirebaseHelper.setGridType((mRg.indexOfChild(findViewById(mRg.getCheckedRadioButtonId()))));
             }
         });
-        updateGridTypeOnDb(0); //Set default as default on db
-    }
-
-    private void syncWhenChangingControllers() {
-        String gameIdNumberPicker = mGameId + DATABASE_POSTFIX_NUMBERPICKER;
-        mDatabaseReference = database.getReference(gameIdNumberPicker);
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    mNpGridSize.setValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w("", "Failed to read value.", databaseError.toException());
-            }
-        });
-
-        String gameIdButtonSelected = mGameId + DATABASE_POSTFIX_RADIOGROUP;
-        mDatabaseReference = database.getReference(gameIdButtonSelected);
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ((RadioButton) mRg.getChildAt((Ints.checkedCast(((long) dataSnapshot.getValue()))))).setChecked(true);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w("", "Failed to read value.", databaseError.toException());
-            }
-        });
+        mFirebaseHelper.setGridType(0);//Set default as default on db
     }
 
     private void setupListView() {
-        ArrayList<Player> playerList = new ArrayList<Player>() {
-        };
-        // Create the adapter to convert the array to views
+        ArrayList<Player> playerList = new ArrayList<>();
         mPlayerAdapter = new PlayerAdapter(this, playerList);
-        // Attach the adapter to a ListView
-
         mLvPlayers.setAdapter(mPlayerAdapter);
-        mDatabaseReference = database.getReference(mGameId);
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Player> playerList = new ArrayList<Player>() {
-                };
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    playerList.add(postSnapshot.getValue(Player.class));
-                }
-                listOfPlayersCurrentlyInGame.clear();
-                for (Player player : playerList) {
-                    listOfPlayersCurrentlyInGame.add(player);
-                }
-
-                mPlayerAdapter.clear();
-                mPlayerAdapter.addAll(playerList);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w("", "Failed to read value.", databaseError.toException());
-            }
-        });
+        mFirebaseHelper.setListViewListener();
     }
 
+    @Override
+    public void setPlayerList(ArrayList<Player> playerList) {
+        mListOfPlayersCurrentlyInGame.clear();
+        for (Player player : playerList) {
+            mListOfPlayersCurrentlyInGame.add(player);
+        }
+        mPlayerAdapter.clear();
+        mPlayerAdapter.addAll(playerList);
+    }
+
+    @Override
+    public void setNumberPickerValue(int value) {
+        mNpGridSize.setValue(value);
+    }
 
     private void setNumberPicker() {
         mNpGridSize.setMaxValue(30);
@@ -224,15 +140,9 @@ public class LobbyActivity extends AppCompatActivity {
         mNpGridSize.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                updateNumberPickerOnDb(newVal);
+                mFirebaseHelper.setNumberPicker(newVal);
             }
         });
-    }
-
-    private void updateNumberPickerOnDb(int value) {
-        String gameIdNumberPicker = mGameId + DATABASE_POSTFIX_NUMBERPICKER;
-        mDatabaseReference = database.getReference(gameIdNumberPicker);
-        mDatabaseReference.setValue(value);
     }
 
     private void setOnClickListeners() {
@@ -253,34 +163,27 @@ public class LobbyActivity extends AppCompatActivity {
 
     // Starts the game
     private void startGameHost() {
+        if (mListOfPlayersCurrentlyInGame.size() == 0) return;
+
         Intent StartGameIntent = new Intent(this, GameActivity.class);
-
-        if (listOfPlayersCurrentlyInGame.size() == 0)
-            return;
-        String jsonPlayerList = new Gson().toJson(listOfPlayersCurrentlyInGame);
+        String jsonPlayerList = new Gson().toJson(mListOfPlayersCurrentlyInGame);
         StartGameIntent.putExtra(getString(R.string.EXTRA_PLAYERLIST), jsonPlayerList);
-
         StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), mGameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
-
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDSIZE), mNpGridSize.getValue());
-        GridType gridType = gridTypeSelector();
-        StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridType);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridTypeSelector());
 
-        //Updating the StartGame key to other players know the game has started!!!
-        String gameStartGame = mGameId + DATABASE_POSTFIX_STARTGAME;
-        mDatabaseReference = database.getReference(gameStartGame);
-        mDatabaseReference.setValue(true);
-
+        mFirebaseHelper.setStartGame();
         startActivity(StartGameIntent);
     }
 
-    private void startGameClient() {
+    public void startGameClient() {
         Intent StartGameIntent = new Intent(this, GameActivity.class);
         StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), mGameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), false);
         startActivity(StartGameIntent);
     }
+
 
     private GridType gridTypeSelector() {
         switch (mRg.getCheckedRadioButtonId()) {
@@ -292,13 +195,10 @@ public class LobbyActivity extends AppCompatActivity {
         return null;
     }
 
-    private void updateGridTypeOnDb(int value) {
-        String gameIdRadioButtonSelected = mGameId + DATABASE_POSTFIX_RADIOGROUP;
-        mDatabaseReference = database.getReference(gameIdRadioButtonSelected);
-        mDatabaseReference.setValue(value);
+    @Override
+    public void setRadioGroupButton(int value) {
+        ((RadioButton) mRg.getChildAt(value)).setChecked(true);
     }
-
-
 
     // Go back to main menu
     private void backToNewGame() {

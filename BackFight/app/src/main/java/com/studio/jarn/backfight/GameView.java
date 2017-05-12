@@ -8,15 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 
-import com.google.common.collect.Iterables;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
 
@@ -30,19 +22,17 @@ import java.util.List;
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
 
-public class GameView extends PanZoomView implements GameTouchListener
+public class GameView extends PanZoomView implements GameTouchListener, GameViewListener
 {
-
     protected float mFocusX;
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
-    Boolean onlyOnce = true;
-    FirebaseDatabase database;
+    boolean onlyOnce = true;
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
     // Variables that control placement and translation of the canvas.
-    // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
+// Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
@@ -59,12 +49,9 @@ public class GameView extends PanZoomView implements GameTouchListener
     private ArrayList<Tuple<GameItem, Coordinates>> mGameItemList = new ArrayList<>();
     private int mGridSize;
     private int mSquaresViewedAtStartup;
-    private String mUuid;
-    private DatabaseReference databaseReference;
+    private FirebaseHelper mFirebaseHelper;
     private Player mSelectedObject;
     private int mTileDivision = 4;
-    private String mUuidPlayers;
-
 
     public GameView(Context context) {
         super(context);
@@ -92,12 +79,12 @@ public class GameView extends PanZoomView implements GameTouchListener
     //TODO should be implemented correctly
     public void addGameObjects() {
 /*        mGameObjectList.add(new Tuple<>();
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-    invalidate();*/
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
+mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
+invalidate();*/
     }
 
     public void initAddPlayers(List<Player> players) {
@@ -113,70 +100,68 @@ public class GameView extends PanZoomView implements GameTouchListener
                     addPlayerListToDb(playersWithCoordinates);
 
                     break outerLoop;
-                }
             }
         }
     }
-
-    private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        databaseReference = database.getReference(mUuidPlayers);
-        databaseReference.setValue(playersWithCoordinates);
     }
 
-public void setGridSize(int newValue)
-{
-    mGridSize = newValue;
-}
+    private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
+        mFirebaseHelper.setPlayerList(playersWithCoordinates);
+    }
 
-public void setViewSizeAtStartup(int newValue)
-{
-   mSquaresViewedAtStartup = newValue;
-}
+    public void setGridSize(int newValue) {
+        mGridSize = newValue;
+    }
 
-    public void setUuidStartup(String uuid) {
-        mUuid = uuid;
+    public void setViewSizeAtStartup(int newValue) {
+        mSquaresViewedAtStartup = newValue;
+    }
+
+    public void setupFirebase(String uuid) {
+        mFirebaseHelper = new FirebaseHelper(this);
+        mFirebaseHelper.setStandardKey(uuid);
     }
 
     //Todo: remove hardcoded Players
-public void drawOnCanvas (Canvas canvas) {
+    public void drawOnCanvas(Canvas canvas) {
 
-    Paint paint = new Paint();
+        Paint paint = new Paint();
 
-    Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
-    Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
+        Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
+        Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
 
-    //
-    // Draw squares to fill the grid.
-    //
+        //
+        // Draw squares to fill the grid.
+        //
 
-    //Check to see if there has been added an array to mGrid
-    if (mGrid[0][0] == null) {
-        return;
-    }
+        //Check to see if there has been added an array to mGrid
+        if (mGrid[0][0] == null) {
+            return;
+        }
 
-    RectF dest1 = mDestRectF;
-    float dx, dy = 0;
-    for (int j = 0; j < mGridSize; j++) {
-       dx = 0;
-        for (int i = 0; i < mGridSize; i++) {
-           dest1.offsetTo(dx, dy);
+        RectF dest1 = mDestRectF;
+        float dx, dy = 0;
+        for (int j = 0; j < mGridSize; j++) {
+            dx = 0;
+            for (int i = 0; i < mGridSize; i++) {
+                dest1.offsetTo(dx, dy);
 
-           switch (mGrid[j][i].Type) {
-               case Wall: {
-                   canvas.drawBitmap(bm_wall, null, dest1, paint);
-                   break;
-               }
-               case WoodenFloor: {
-                   canvas.drawBitmap(bm_floor, null, dest1, paint);
-                   break;
-               }
+                switch (mGrid[j][i].Type) {
+                    case Wall: {
+                        canvas.drawBitmap(bm_wall, null, dest1, paint);
+                        break;
+                    }
+                    case WoodenFloor: {
+                        canvas.drawBitmap(bm_floor, null, dest1, paint);
+                        break;
+                    }
            }
-        dx = dx + mSquareWidth;
-       }
-       dy = dy + mSquareHeight;
+                dx = dx + mSquareWidth;
+            }
+            dy = dy + mSquareHeight;
+        }
+        myDraw(canvas);
     }
-    myDraw(canvas);
-}
 
     private void myDraw(Canvas canvas) {
 
@@ -193,25 +178,25 @@ public void drawOnCanvas (Canvas canvas) {
         }
     }
 
-/**
- * onDrawPz
- * This method is copied from here http://www.wglxy.com/android-tutorials/android-zoomable-game-board
- */
+    /**
+     * onDrawPz
+     * This method is copied from here http://www.wglxy.com/android-tutorials/android-zoomable-game-board
+     */
 
-@Override
-public void onDrawPz(Canvas canvas) {
+    @Override
+    public void onDrawPz(Canvas canvas) {
 
-    canvas.save();
+        canvas.save();
 
-    // Get the width and height of the view.
-    int viewH = getHeight (), viewW = getWidth ();
+        // Get the width and height of the view.
+        int viewH = getHeight(), viewW = getWidth();
 
-    boolean isLandscape = (viewW > viewH);
-    float shortestWidth = isLandscape ? viewH : viewW;
+        boolean isLandscape = (viewW > viewH);
+        float shortestWidth = isLandscape ? viewH : viewW;
 
-    // Set width and height to be used for the squares.
-    mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
-    mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
+        // Set width and height to be used for the squares.
+        mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
+        mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
 
     //Used for scaling objects to fit tiles.
     mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
@@ -226,64 +211,66 @@ public void onDrawPz(Canvas canvas) {
     // The canvas is centered in the view so half of what
     // remains to be displayed can be used to calculate the
     // origin offset values.
-    mMaxCanvasWidth = mGridSize * mSquareWidth;
+    mMaxCanvasWidth  = mGridSize * mSquareWidth;
     mMaxCanvasHeight = mGridSize * mSquareHeight;
     mHalfMaxCanvasWidth  = mMaxCanvasWidth / 2.0f;
     mHalfMaxCanvasHeight = mMaxCanvasHeight / 2.0f;
 
-    float totalOffscreenSquaresX = mGridSize - numSquaresAlongX;
-    if (totalOffscreenSquaresX < 0f) totalOffscreenSquaresX = 0f;
-    float totalOffscreenSquaresY = mGridSize - numSquaresAlongY;
-    if (totalOffscreenSquaresY < 0f) totalOffscreenSquaresY = 0f;
-    mOriginOffsetX = 0;//totalOffscreenSquaresX / 2.0f * mSquareWidth;
-    mOriginOffsetY = 0;//totalOffscreenSquaresY / 2.0f * mSquareHeight;
+        float totalOffscreenSquaresX = mGridSize - numSquaresAlongX;
+        if (totalOffscreenSquaresX < 0f) totalOffscreenSquaresX = 0f;
+        float totalOffscreenSquaresY = mGridSize - numSquaresAlongY;
+        if (totalOffscreenSquaresY < 0f) totalOffscreenSquaresY = 0f;
+        mOriginOffsetX = 0;//totalOffscreenSquaresX / 2.0f * mSquareWidth;
+        mOriginOffsetY = 0;//totalOffscreenSquaresY / 2.0f * mSquareHeight;
 
-    // The canvas is translated by the amount we have
-    // scrolled and the standard amount to move the origin
-    // of the canvas up and left so the region is centered
-    // in the view. (Note: mPosX and mPosY are defined in PanZoomView.)
-    float x, y;
-    mPosX0 = mOriginOffsetX;
-    mPosY0 = mOriginOffsetY;
-    mPosY0 = mOriginOffsetY;
-    x = mPosX - mPosX0;
-    y = mPosY - mPosY0;
-    canvas.translate (x, y);
+        // The canvas is translated by the amount we have
+        // scrolled and the standard amount to move the origin
+        // of the canvas up and left so the region is centered
+        // in the view. (Note: mPosX and mPosY are defined in PanZoomView.)
+        float x, y;
+        mPosX0 = mOriginOffsetX;
+        mPosY0 = mOriginOffsetY;
+        mPosY0 = mOriginOffsetY;
+        x = mPosX - mPosX0;
+        y = mPosY - mPosY0;
+        canvas.translate(x, y);
 
-    // The focus point for zooming is the center of the
-    // displayable region. That point is defined by half
-    // the canvas width and height.
-    mFocusX = mHalfMaxCanvasWidth;
-    mFocusY = mHalfMaxCanvasHeight;
-    canvas.scale (mScaleFactor, mScaleFactor, mFocusX, mFocusY);
+        // The focus point for zooming is the center of the
+        // displayable region. That point is defined by half
+        // the canvas width and height.
+        mFocusX = mHalfMaxCanvasWidth;
+        mFocusY = mHalfMaxCanvasHeight;
+        canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
 
-    // Set up the grid  and grid selection variables.
-    if (mGrid == null)
-        mGrid = new Tile[mGridSize][mGridSize];
+        // Set up the grid  and grid selection variables.
+        if (mGrid == null)
+            mGrid = new Tile[mGridSize][mGridSize];
 
-    // Set up the rectangles we use for drawing, if not done already.
-    // Set width and height to be used for the rectangle to be drawn.
-    Rect dest = mDestRect;
-    if (dest == null) {
-       int ih = (int) Math.floor (mSquareHeight);
-       int iw = (int) Math.floor (mSquareWidth);
-       dest = new Rect (0, 0, iw, ih);
-       mDestRect = dest;
+        // Set up the rectangles we use for drawing, if not done already.
+        // Set width and height to be used for the rectangle to be drawn.
+        Rect dest = mDestRect;
+        if (dest == null) {
+            int ih = (int) Math.floor(mSquareHeight);
+            int iw = (int) Math.floor(mSquareWidth);
+            dest = new Rect(0, 0, iw, ih);
+            mDestRect = dest;
+        }
+        RectF dest1 = mDestRectF;
+        if (dest1 == null) {
+            dest1 = new RectF();
+            dest1.left = dest.left;
+            dest1.top = dest.top;
+            dest1.right = mSquareWidth;
+            dest1.bottom = mSquareHeight;
+            mDestRectF = dest1;
+        }
+
+        // Do the drawing operation for the view.
+        drawOnCanvas(canvas);
+
+        canvas.restore();
+
     }
-    RectF dest1 = mDestRectF;
-    if (dest1 == null) {
-       dest1 = new RectF ();
-       dest1.left = dest.left; dest1.top = dest.top;
-       dest1.right = mSquareWidth; dest1.bottom = mSquareHeight;
-       mDestRectF = dest1;
-    }
-
-    // Do the drawing operation for the view.
-    drawOnCanvas (canvas);
-
-    canvas.restore();
-
-}
 
     @Override
     protected void setupToDraw(Context context, AttributeSet attrs, int defStyle) {
@@ -295,53 +282,33 @@ public void onDrawPz(Canvas canvas) {
         if (mGrid == null)
             mGrid = grid;
 
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference(mUuid);
-        setupOnDataChange();
+        mFirebaseHelper.setupGridListener();
         updateGrid(grid);
     }
 
     public void initClientGrid() {
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference(mUuid);
-        setupOnDataChange();
+        mFirebaseHelper.setupGridListener();
     }
 
-    private void setupOnDataChange() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                int row = -1;
-                int column = -1;
+    @Override
+    public void setGrid(int sizeOfArrayOnFirebase, Tile[][] grid) {
+        if (mGridSize != sizeOfArrayOnFirebase) {
+            mGridSize = sizeOfArrayOnFirebase;
+            mGrid = new Tile[mGridSize][mGridSize];
+        }
+        mGrid = grid;
+        invalidate();
+    }
 
-                if (dataSnapshot.getValue() == null) return;
+    public void setPlayerListener() {
+        mFirebaseHelper.setPlayerListListener();
+    }
 
-                int sizeOfArrayOnFirebase = Iterables.size(dataSnapshot.getChildren());
-                if (mGridSize != sizeOfArrayOnFirebase) {
-                    mGridSize = sizeOfArrayOnFirebase;
-                    mGrid = new Tile[mGridSize][mGridSize];
-                }
-
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    row++;
-                    for (DataSnapshot postSnapshot1 : postSnapshot.getChildren()) {
-                        column++;
-                        mGrid[row][column] = postSnapshot1.getValue(Tile.class);
-                    }
-                    column = -1;
-                }
-                invalidate();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("", "Failed to read value.", error.toException());
-            }
-        });
+    @Override
+    public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
+        mGameObjectList.clear();
+        mGameObjectList = playerList;
+        invalidate();
     }
 
     public void updateGrid(Tile grid[][]) {
@@ -350,7 +317,7 @@ public void onDrawPz(Canvas canvas) {
         for (Tile[] aMGrid : grid) {
             list.add(Arrays.asList(aMGrid));
         }
-        databaseReference.setValue(list);
+        mFirebaseHelper.setGrid(list);
     }
 
     public void onTouchDown(float downX, float downY) {
@@ -404,7 +371,7 @@ public void onDrawPz(Canvas canvas) {
 
                         invalidate();
                         return;
-                    }
+                }
                 }
 
                 Coordinates movedTo = moveToTile(tileX, tileY);
@@ -488,12 +455,12 @@ public void onDrawPz(Canvas canvas) {
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
-        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
-            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-        }
-        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
-            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-        }*/
+    /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
+        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+    }
+    for(Tuple<Item, Coordinates> tuple : mGameObjectList){
+        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+    }*/
 
         if (onTile.size() == (mTileDivision * mTileDivision)) return null;
 
@@ -510,30 +477,6 @@ public void onDrawPz(Canvas canvas) {
         }
 
         return null;
-    }
-
-    public void setPlayerListener(String uuidPlayers) {
-        mUuidPlayers = uuidPlayers;
-        databaseReference = database.getReference(mUuidPlayers);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mGameObjectList.clear();
-
-                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
-                };
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    mGameObjectList.add(postSnapshot.getValue(genericTypeIndicator));
-                }
-                invalidate();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w("", "Failed to read value.", databaseError.toException());
-            }
-        });
     }
 
     public void spawnItems(int numberOfItems) {
