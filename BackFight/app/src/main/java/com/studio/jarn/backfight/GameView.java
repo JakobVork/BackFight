@@ -166,7 +166,7 @@ invalidate();*/
 
     private void myDraw(Canvas canvas) {
         //Used for scaling objects to fit tiles.
-        if (mScalingValuesCalculated) {
+        if (!mScalingValuesCalculated) {
             mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
             mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
             mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
