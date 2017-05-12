@@ -38,6 +38,9 @@ public class GameView extends PanZoomView implements GameTouchListener
     protected GameTouchListener mTouchListener;
     Boolean onlyOnce = true;
     FirebaseDatabase database;
+    int mObjectMarginValue;
+    int mObjectWidthValue;
+    int mObjectHeightValue;
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -176,20 +179,17 @@ public void drawOnCanvas (Canvas canvas) {
 }
 
     private void myDraw(Canvas canvas) {
-        int marginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
-        int widthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
-        int heightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
 
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
-            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, widthValue, heightValue, true);
-            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + marginValue, getYCoordFromObjectPlacement(tuple.y) + marginValue, null);
+            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.Image);
-            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, widthValue, heightValue, true);
-            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + marginValue, getYCoordFromObjectPlacement(tuple.y) + marginValue, null);
+            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
         }
     }
 
@@ -212,6 +212,11 @@ public void onDrawPz(Canvas canvas) {
     // Set width and height to be used for the squares.
     mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
     mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
+
+    //Used for scaling objects to fit tiles.
+    mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
+    mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
+    mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
 
     float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
     float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
