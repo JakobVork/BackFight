@@ -23,6 +23,10 @@
     <string name="lobby_maze">Maze</string>
     <string name="rules_search">Search rules</string>
     <string name="rules_rulesDetails">Click on a rule to view the details</string>
+    <string name="settings_profileName">Name:</string>
+    <string name="settings_hint">Put in your name here</string>
+    <string name="settings_avatarImg">Avatar Image:</string>
+    <string name="settings_clickOnImg">Click on the image to change</string>
 
     <string name="EXTRA_PLAYERLIST">com.jarn.extra.playerlist</string>
     <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
