@@ -1,6 +1,8 @@
 package com.studio.jarn.backfight;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -10,9 +12,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 public class SplashActivity extends AppCompatActivity {
     // Welcome screen is there in 4000 milliseconds = 4 seconds
-    private static int SPLASH_TIME_OUT = 6000;
+    private static int sSplash_time_out = 6000;
+    private static String sUuid = "Phone UUID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +30,14 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+    // make a unique key for each phone
     private void makeUUID() {
-
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        if (sharedPref.getString(sUuid, "").equals("")) {
+            SharedPreferences.Editor settingsSPEditor = sharedPref.edit();
+            settingsSPEditor.putString(sUuid, UUID.randomUUID().toString());
+            settingsSPEditor.apply();
+        }
     }
 
     private void StartAnimation() {
@@ -46,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(MainMenuIntent);
                 finish();
             }
-        },SPLASH_TIME_OUT);
+        }, sSplash_time_out);
     }
 
     private void hideActionBar() {
