@@ -13,13 +13,19 @@ import android.widget.TextView;
 public class SplashActivity extends AppCompatActivity {
     // Welcome screen is there in 4000 milliseconds = 4 seconds
     private static int SPLASH_TIME_OUT = 6000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         hideActionBar();
         makeDelayBeforeMainStarts();
+        makeUUID();
         StartAnimation();
+
+    }
+
+    private void makeUUID() {
 
     }
 
