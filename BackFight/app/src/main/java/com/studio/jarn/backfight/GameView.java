@@ -28,6 +28,9 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
     boolean onlyOnce = true;
+    int mObjectMarginValue;
+    int mObjectWidthValue;
+    int mObjectHeightValue;
     // Variables that control placement and translation of the canvas.
 // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -49,7 +52,6 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private FirebaseHelper mFirebaseHelper;
     private Player mSelectedObject;
     private int mTileDivision = 4;
-
 
     public GameView(Context context) {
         super(context);
@@ -162,12 +164,17 @@ invalidate();*/
     }
 
     private void myDraw(Canvas canvas) {
+
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.getFigure()), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
+            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.Image), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.Image);
+            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
         }
     }
 
@@ -191,18 +198,23 @@ invalidate();*/
         mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
         mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
 
-        float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
-        float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
+    //Used for scaling objects to fit tiles.
+    mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
+    mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
+    mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
 
-        // We start out knowing how many squares will be displayed
-        // along a side and how many along the whole canvas.
-        // The canvas is centered in the view so half of what
-        // remains to be displayed can be used to calculate the
-        // origin offset values.
-        mMaxCanvasWidth = mGridSize * mSquareWidth;
-        mMaxCanvasHeight = mGridSize * mSquareHeight;
-        mHalfMaxCanvasWidth = mMaxCanvasWidth / 2.0f;
-        mHalfMaxCanvasHeight = mMaxCanvasHeight / 2.0f;
+    float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
+    float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
+
+    // We start out knowing how many squares will be displayed
+    // along a side and how many along the whole canvas.
+    // The canvas is centered in the view so half of what
+    // remains to be displayed can be used to calculate the
+    // origin offset values.
+    mMaxCanvasWidth  = mGridSize * mSquareWidth;
+    mMaxCanvasHeight = mGridSize * mSquareHeight;
+    mHalfMaxCanvasWidth  = mMaxCanvasWidth / 2.0f;
+    mHalfMaxCanvasHeight = mMaxCanvasHeight / 2.0f;
 
         float totalOffscreenSquaresX = mGridSize - numSquaresAlongX;
         if (totalOffscreenSquaresX < 0f) totalOffscreenSquaresX = 0f;
