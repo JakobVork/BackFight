@@ -29,10 +29,10 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
     RadioButton mRbMaze;
     NumberPicker mNpGridSize;
     PlayerAdapter mPlayerAdapter;
-    List<Player> listOfPlayersCurrentlyInGame = new ArrayList<>();
+    List<Player> mListOfPlayersCurrentlyInGame = new ArrayList<>();
     String mGameId;
     RadioGroup mRg;
-    FirebaseHelper firebaseHelper;
+    FirebaseHelper mFirebaseHelper;
     Intent intent;
     boolean host;
 
@@ -48,7 +48,7 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         setNumberPicker();
         getValuesFromIntent();
 
-        firebaseHelper = new FirebaseHelper(this);
+        mFirebaseHelper = new FirebaseHelper(this);
 
         if (host) setupHost();
         else setupClient();
@@ -67,11 +67,11 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
     private void setupClient() {
         mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
-        firebaseHelper.setStandardKey(mGameId);
+        mFirebaseHelper.setStandardKey(mGameId);
         //TODO needs to be extracted from SharedPrefs
-        firebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
-        firebaseHelper.setupStartGameListener();
-        firebaseHelper.setupWidgetsListener();
+        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+        mFirebaseHelper.setupStartGameListener();
+        mFirebaseHelper.setupWidgetsListener();
 
         mBtnStart.setVisibility(View.GONE);
         mNpGridSize.setEnabled(false);
@@ -85,13 +85,13 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
     private void setupHost() {
         mGameId = UUID.randomUUID().toString().substring(30);
-        firebaseHelper.setStandardKey(mGameId);
+        mFirebaseHelper.setStandardKey(mGameId);
         setupListView();
         setupRadioGroupListener();
-        firebaseHelper.setNumberPicker(15); //Set 15 as default on db
+        mFirebaseHelper.setNumberPicker(15); //Set 15 as default on db
         mTvId.setText(mGameId);
         //TODO needs to be extracted from SharedPrefs
-        firebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
+        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
     }
 
     private void getValuesFromIntent() {
@@ -104,24 +104,24 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                firebaseHelper.setGridType((mRg.indexOfChild(findViewById(mRg.getCheckedRadioButtonId()))));
+                mFirebaseHelper.setGridType((mRg.indexOfChild(findViewById(mRg.getCheckedRadioButtonId()))));
             }
         });
-        firebaseHelper.setGridType(0);//Set default as default on db
+        mFirebaseHelper.setGridType(0);//Set default as default on db
     }
 
     private void setupListView() {
         ArrayList<Player> playerList = new ArrayList<>();
         mPlayerAdapter = new PlayerAdapter(this, playerList);
         mLvPlayers.setAdapter(mPlayerAdapter);
-        firebaseHelper.setListViewListener();
+        mFirebaseHelper.setListViewListener();
     }
 
     @Override
     public void setPlayerList(ArrayList<Player> playerList) {
-        listOfPlayersCurrentlyInGame.clear();
+        mListOfPlayersCurrentlyInGame.clear();
         for (Player player : playerList) {
-            listOfPlayersCurrentlyInGame.add(player);
+            mListOfPlayersCurrentlyInGame.add(player);
         }
         mPlayerAdapter.clear();
         mPlayerAdapter.addAll(playerList);
@@ -140,7 +140,7 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         mNpGridSize.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                firebaseHelper.setNumberPicker(newVal);
+                mFirebaseHelper.setNumberPicker(newVal);
             }
         });
     }
@@ -163,17 +163,17 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
     // Starts the game
     private void startGameHost() {
-        if (listOfPlayersCurrentlyInGame.size() == 0) return;
+        if (mListOfPlayersCurrentlyInGame.size() == 0) return;
 
         Intent StartGameIntent = new Intent(this, GameActivity.class);
-        String jsonPlayerList = new Gson().toJson(listOfPlayersCurrentlyInGame);
+        String jsonPlayerList = new Gson().toJson(mListOfPlayersCurrentlyInGame);
         StartGameIntent.putExtra(getString(R.string.EXTRA_PLAYERLIST), jsonPlayerList);
         StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), mGameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), true);
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDSIZE), mNpGridSize.getValue());
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridTypeSelector());
 
-        firebaseHelper.setStartGame();
+        mFirebaseHelper.setStartGame();
         startActivity(StartGameIntent);
     }
 

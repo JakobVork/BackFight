@@ -46,7 +46,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private ArrayList<Tuple<GameItem, Coordinates>> mGameItemList = new ArrayList<>();
     private int mGridSize;
     private int mSquaresViewedAtStartup;
-    private FirebaseHelper firebaseHelper;
+    private FirebaseHelper mFirebaseHelper;
     private Player mSelectedObject;
     private int mTileDivision = 4;
 
@@ -104,7 +104,7 @@ invalidate();*/
     }
 
     private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        firebaseHelper.setPlayerList(playersWithCoordinates);
+        mFirebaseHelper.setPlayerList(playersWithCoordinates);
     }
 
     public void setGridSize(int newValue) {
@@ -116,8 +116,8 @@ invalidate();*/
     }
 
     public void setupFirebase(String uuid) {
-        firebaseHelper = new FirebaseHelper(this);
-        firebaseHelper.setStandardKey(uuid);
+        mFirebaseHelper = new FirebaseHelper(this);
+        mFirebaseHelper.setStandardKey(uuid);
     }
 
     //Todo: remove hardcoded Players
@@ -270,12 +270,12 @@ invalidate();*/
         if (mGrid == null)
             mGrid = grid;
 
-        firebaseHelper.setupGridListener();
+        mFirebaseHelper.setupGridListener();
         updateGrid(grid);
     }
 
     public void initClientGrid() {
-        firebaseHelper.setupGridListener();
+        mFirebaseHelper.setupGridListener();
     }
 
     @Override
@@ -289,7 +289,7 @@ invalidate();*/
     }
 
     public void setPlayerListener() {
-        firebaseHelper.setPlayerListListener();
+        mFirebaseHelper.setPlayerListListener();
     }
 
     @Override
@@ -305,7 +305,7 @@ invalidate();*/
         for (Tile[] aMGrid : grid) {
             list.add(Arrays.asList(aMGrid));
         }
-        firebaseHelper.setGrid(list);
+        mFirebaseHelper.setGrid(list);
     }
 
     public void onTouchDown(float downX, float downY) {

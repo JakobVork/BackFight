@@ -18,7 +18,7 @@ public class NewGameActivity extends AppCompatActivity implements NewGameListene
     Button mBtnCreate;
     Button mBtnJoin;
     String mDialogText;
-    FirebaseHelper firebaseHelper;
+    FirebaseHelper mFirebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class NewGameActivity extends AppCompatActivity implements NewGameListene
         hideActionBar();
         initButtons();
 
-        firebaseHelper = new FirebaseHelper(this);
+        mFirebaseHelper = new FirebaseHelper(this);
     }
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
@@ -79,7 +79,7 @@ public class NewGameActivity extends AppCompatActivity implements NewGameListene
         builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                firebaseHelper.validateIfGameExist(input.getText().toString());
+                mFirebaseHelper.validateIfGameExist(input.getText().toString());
 
             }
         });
@@ -114,7 +114,7 @@ public class NewGameActivity extends AppCompatActivity implements NewGameListene
     }
 
     @Override
-    public void onTest(boolean test, String input) {
+    public void gameExist(boolean test, String input) {
         if (test) {
             Intent lobbyIntent = new Intent(NewGameActivity.this, LobbyActivity.class);
             lobbyIntent.putExtra(getString(R.string.EXTRA_HOST), false);

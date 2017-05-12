@@ -34,8 +34,7 @@ class FirebaseHelper {
     private NewGameListener mNewGameListener;
     private LobbyListener mLobbyListener;
     private GameViewListener mGameViewListener;
-    //mNewGameListener
-    private String dialogInput;
+    private String mDialogInput;
 
     FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
@@ -73,16 +72,16 @@ class FirebaseHelper {
 
     //NewGameListener
     void validateIfGameExist(String input) {
-        dialogInput = input;
+        mDialogInput = input;
 
-        DatabaseReference databaseReference = mDatabase.getReference(dialogInput);
+        DatabaseReference databaseReference = mDatabase.getReference(mDialogInput);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mNewGameListener.onTest(true, dialogInput);
+                    mNewGameListener.gameExist(true, mDialogInput);
                 } else {
-                    mNewGameListener.onTest(false, dialogInput);
+                    mNewGameListener.gameExist(false, mDialogInput);
                 }
             }
 

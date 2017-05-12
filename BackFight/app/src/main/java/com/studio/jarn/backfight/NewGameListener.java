@@ -1,5 +1,5 @@
 package com.studio.jarn.backfight;
 
 interface NewGameListener {
-    void onTest(boolean test, String input);
+    void gameExist(boolean test, String input);
 }
