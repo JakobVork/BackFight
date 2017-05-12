@@ -20,7 +20,7 @@ class Coordinates {
         this.placementOnTileY = placementOnTileY;
     }
 
-    public static Coordinates getRandom(int GridSize) {
+    static Coordinates getRandom(int GridSize) {
         int x = rnd.nextInt(GridSize);
         int y = rnd.nextInt(GridSize);
 

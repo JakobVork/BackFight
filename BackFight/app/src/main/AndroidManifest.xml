@@ -53,7 +53,7 @@
             android:name=".NewGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
-            android:theme="@style/FullscreenMenuTheme"></activity>
+            android:theme="@style/FullscreenMenuTheme" />
         <activity
             android:name=".LobbyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
