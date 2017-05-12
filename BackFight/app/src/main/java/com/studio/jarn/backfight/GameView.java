@@ -241,8 +241,7 @@ public void onDrawPz(Canvas canvas) {
     // The focus point for zooming is the center of the
     // displayable region. That point is defined by half
     // the canvas width and height.
-    mFocusX = mHalfMaxCanvasWidth;
-    mFocusY = mHalfMaxCanvasHeight;
+    //setting focus values in onTouch, making it more precise :) still does not work perfect
     canvas.scale (mScaleFactor, mScaleFactor, mFocusX, mFocusY);
 
     // Set up the grid  and grid selection variables.
@@ -342,6 +341,8 @@ public void onDrawPz(Canvas canvas) {
     }
 
     public void onTouchDown(float downX, float downY) {
+        mFocusX = downX;
+        mFocusY = downY;
         GameTouchListener listener = getTouchListener();
         if (listener == null) return;
         listener.onTouchDown();
