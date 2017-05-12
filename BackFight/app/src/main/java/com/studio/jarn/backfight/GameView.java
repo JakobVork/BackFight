@@ -321,6 +321,8 @@ invalidate();*/
     }
 
     public void onTouchDown(float downX, float downY) {
+        mFocusX = downX;
+        mFocusY = downY;
         GameTouchListener listener = getTouchListener();
         if (listener == null) return;
         listener.onTouchDown();
