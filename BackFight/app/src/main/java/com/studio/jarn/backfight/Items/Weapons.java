@@ -15,7 +15,7 @@ public class Weapons {
 
     public GameItem getRandomWeapon() {
         Random rnd = new Random();
-        switch (rnd.nextInt(7)){
+        switch (rnd.nextInt(7)) {
             case 0:
                 return SwordDual();
             case 1:
