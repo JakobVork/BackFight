@@ -24,8 +24,8 @@ import java.util.List;
 
 public class GameView extends PanZoomView implements GameTouchListener, GameViewListener
 {
-    protected float mFocusX;
-    protected float mFocusY;
+    protected float mFocusX = 1000; //default value
+    protected float mFocusY = 1000; //default value
     protected GameTouchListener mTouchListener;
     boolean onlyOnce = true;
     int mObjectMarginValue;
@@ -52,6 +52,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private FirebaseHelper mFirebaseHelper;
     private Player mSelectedObject;
     private int mTileDivision = 4;
+    private boolean mScalingValuesCalculated = false;
 
     public GameView(Context context) {
         super(context);
@@ -164,6 +165,13 @@ invalidate();*/
     }
 
     private void myDraw(Canvas canvas) {
+        //Used for scaling objects to fit tiles.
+        if (mScalingValuesCalculated) {
+            mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
+            mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
+            mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
+            mScalingValuesCalculated = true;
+        }
 
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
@@ -197,11 +205,6 @@ invalidate();*/
         // Set width and height to be used for the squares.
         mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
         mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
-
-    //Used for scaling objects to fit tiles.
-    mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
-    mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
-    mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
 
     float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
     float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
@@ -238,8 +241,6 @@ invalidate();*/
         // The focus point for zooming is the center of the
         // displayable region. That point is defined by half
         // the canvas width and height.
-        mFocusX = mHalfMaxCanvasWidth;
-        mFocusY = mHalfMaxCanvasHeight;
         canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
 
         // Set up the grid  and grid selection variables.
