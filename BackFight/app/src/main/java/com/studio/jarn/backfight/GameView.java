@@ -53,7 +53,6 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private Player mSelectedObject;
     private int mTileDivision = 4;
     private boolean mScalingValuesCalculated = false;
-    private int TESTROUND = 1;
 
     public GameView(Context context) {
         super(context);
@@ -174,22 +173,23 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
             mScalingValuesCalculated = true;
         }
 
-        //TODO FIX!!!!
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-            if (mSelectedObject == null){
-                canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigure), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+
+            if (mSelectedObject == null) {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigure);
+                Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+                canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
             } else {
-                if (tuple.x.id.equals(mSelectedObject.id)){
-                    canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigureSelected), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+                if (tuple.x.id.equals(mSelectedObject.id)) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigureSelected);
+                    Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+                    canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
                 } else {
-                    canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigure), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigure);
+                    Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+                    canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
                 }
             }
-
-        }
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
-            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
-            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
@@ -300,6 +300,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
             mGrid = grid;
 
         mFirebaseHelper.setupGridListener();
+        mFirebaseHelper.increaseRoundCount();
         updateGrid(grid);
     }
 
@@ -317,8 +318,9 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         invalidate();
     }
 
-    public void setPlayerListener() {
+    public void setListeners() {
         mFirebaseHelper.setPlayerListListener();
+        mFirebaseHelper.setRoundCountListener(getContext());
     }
 
     @Override
@@ -330,9 +332,8 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
 
     @Override
     public void startMonsterTurn() {
-        ((GameActivity) getContext()).setRound(++TESTROUND);
-        ((GameActivity) getContext()).setActionCounter(3);
-        //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //TODO!!
+        ((GameActivity) getContext()).setMonsterDialog();
     }
 
     public void updateGrid(Tile grid[][]) {
@@ -376,13 +377,14 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Click is outside map: do nothing
-        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight)) return;
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
+            return;
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             //Move selected object
-            if(mSelectedObject != null){
+            if (mSelectedObject != null) {
                 if (tuple.x.id.equals(mSelectedObject.id)) {
                     for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
                         if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
@@ -397,22 +399,18 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                         }
                     }
 
-                Coordinates movedTo = moveToTile(tileX, tileY);
-                if (movedTo != null && tuple.x.takeAction(getContext())) {
-                    tuple.y = movedTo;
-                    mSelectedObject = null;
+                    Coordinates movedTo = moveToTile(tileX, tileY);
+                    if (movedTo != null && tuple.x.takeAction(getContext())) {
+                        tuple.y = movedTo;
+                        mSelectedObject = null;
+                    }
                 }
             }
-
-
             //Select or DeSelect object
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
                 mSelectedObject = tuple.x;
             }
-
-
         }
-
         addPlayerListToDb(mGameObjectList); //TODo
 
         //Render map

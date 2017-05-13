@@ -12,6 +12,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ class FirebaseHelper {
     private static final String sDatabasePostfixStartGame = "StartGame";
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
+    private static final String sDatabasePostfixRoundCount = "RoundCount";
+    GameActivity test;
     private FirebaseDatabase mDatabase;
     private String mGameId;
     private String mGameIdRadio;
@@ -34,7 +38,10 @@ class FirebaseHelper {
     private NewGameListener mNewGameListener;
     private LobbyListener mLobbyListener;
     private GameViewListener mGameViewListener;
+    private GameActivityListener mGameActivityListener;
     private String mDialogInput;
+    private String mGameIdRoundCount;
+
 
     FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
@@ -68,6 +75,7 @@ class FirebaseHelper {
         mGameIdNumberPicker = gameId + sDatabasePostfixNumberPicker;
         mGameIdGrid = gameId + sDatabasePostfixGrid;
         mGameIdPlayers = gameId + sDatabasePostfixPlayers;
+        mGameIdRoundCount = gameId + sDatabasePostfixRoundCount;
     }
 
     //NewGameListener
@@ -180,7 +188,8 @@ class FirebaseHelper {
 
     //GameViewListener
     void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
+        //Check if users has used all their turns, and if they have start monster turn
+        mDatabase.getReference(mGameIdPlayers).setValue(allTurnsUsed(playersWithCoordinates));
     }
 
     void setupGridListener() {
@@ -230,8 +239,6 @@ class FirebaseHelper {
                     playerList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
                 mGameViewListener.setPlayerList(playerList);
-
-                allTurnsUsed(playerList);
             }
 
             @Override
@@ -242,15 +249,65 @@ class FirebaseHelper {
         });
     }
 
-    private void allTurnsUsed(ArrayList<Tuple<Player, Coordinates>> playerList) {
+    private ArrayList<Tuple<Player, Coordinates>> allTurnsUsed(ArrayList<Tuple<Player, Coordinates>> playerList) {
         for (Tuple<Player, Coordinates> player : playerList) {
-            if (player.x.actionsRemaning > 0) return;
+            if (player.x.actionsRemaning > 0) return playerList;
         }
+
         mGameViewListener.startMonsterTurn();
+
         for (Tuple<Player, Coordinates> player : playerList) {
             player.x.actionsRemaning = 3;
         }
-        setPlayerList(playerList);
+        increaseRoundCount();
+
+        return playerList;
+    }
+
+    void increaseRoundCount() {
+        //http://stackoverflow.com/questions/40405181/firebase-database-increment-an-int
+        mDatabase.getReference(mGameIdRoundCount).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Long value = mutableData.getValue(Long.class);
+                if (value == null) {
+                    mutableData.setValue(1);
+                } else {
+                    mutableData.setValue(value + 1);
+                }
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d("", "transaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    void setRoundCountListener(Context context) {
+        if (context instanceof GameActivityListener) {
+            mGameActivityListener = (GameActivityListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement Listener");
+        }
+
+        mDatabase.getReference(mGameIdRoundCount).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    mGameActivityListener.setRound(dataSnapshot.getValue(int.class));
+                    mGameActivityListener.setActionCounter(3);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 
 

@@ -1,10 +1,12 @@
 package com.studio.jarn.backfight;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, GameActivityListener
 {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
@@ -107,7 +109,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 //addPlayers();
                 gv.initHostGrid(mGrid);
-                gv.setPlayerListener();
+                gv.setListeners();
                 gv.initAddPlayers(playerList);
 
                 // Spawn items
@@ -118,7 +120,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.setupFirebase(Uuid);
                 gv.initClientGrid();
 
-                gv.setPlayerListener();
+                gv.setListeners();
             }
         }
     }
@@ -168,7 +170,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             ft.commit();
         }
     }
-    
+
     public void setActionCounter(int count) {
         String actionCounterText = getString(R.string.game_actionCount) + String.valueOf(count);
         btnActionCounter.setText(actionCounterText);
@@ -227,5 +229,19 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
         ft.addToBackStack(null);
         ft.commit();
+    }
+
+    //ToDo for testing purpose
+    public void setMonsterDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Monster");
+        alertDialog.setMessage("Monster turn :)");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }
