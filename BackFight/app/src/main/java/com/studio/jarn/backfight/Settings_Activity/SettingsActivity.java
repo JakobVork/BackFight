@@ -9,14 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.studio.jarn.backfight.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static String sProfileNameSP = "Profile Name";
-    private static String sAvatarImgNumberSP = "Avatar Image number";
-    private static String sAvatarImgPathSP = "Avatar Image Path";
+    public static String PROFILE_NAME_SP = "Profile Name";
+    public static String AVATAR_IMAGE_SP = "Avatar Image number";
     Button mBtnBack;
     Button mBtnSave;
     EditText mProfileName;
@@ -28,18 +28,18 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         hideActionBar();
-        initViews();
+        initWidgets();
         getSavedSettings();
     }
 
     private void getSavedSettings() {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        mProfileName.setText(sharedPref.getString(sProfileNameSP, ""));
-        mViewPager.setCurrentItem(sharedPref.getInt(sAvatarImgNumberSP, 0));
+        SharedPreferences sharedPref = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+        mProfileName.setText(sharedPref.getString(PROFILE_NAME_SP, ""));
+        mViewPager.setCurrentItem(sharedPref.getInt(AVATAR_IMAGE_SP, 0));
     }
 
-    // Find the buttons in the layoutfile and call to make OnClickListener on them
-    private void initViews() {
+    // Find the buttons in the layout file and call to make OnClickListener on them
+    private void initWidgets() {
         mBtnBack = (Button) findViewById(R.id.activity_settings_btn_back);
         mBtnSave = (Button) findViewById(R.id.activity_settings_btn_save);
         mViewPager = (ViewPager) findViewById(R.id.activity_settings_vp_image);
@@ -76,16 +76,20 @@ public class SettingsActivity extends AppCompatActivity {
 
     // Saves settings and go to main menu
     private void saveSettings() {
-        SharedPreferences settingsSP = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor settingsSPEditor = settingsSP.edit();
+        SharedPreferences settingsSp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor settingsSpEditor = settingsSp.edit();
         int CurrentView = mViewPager.getCurrentItem();
 
         //saves the position and image path and the profile name
-        settingsSPEditor.putString(sProfileNameSP, mProfileName.getText().toString());
-        settingsSPEditor.putInt(sAvatarImgNumberSP, CurrentView);
-        settingsSPEditor.putString(sAvatarImgPathSP, mCustomPagerAdapter.getResourcePath(CurrentView));
-        settingsSPEditor.apply();
-        backToMainMenu();
+        String profileName = mProfileName.getText().toString();
+        if (!profileName.equals("")) {
+            settingsSpEditor.putString(PROFILE_NAME_SP, profileName);
+            settingsSpEditor.putInt(AVATAR_IMAGE_SP, CurrentView);
+            settingsSpEditor.apply();
+            backToMainMenu();
+        } else {
+            Toast.makeText(this, R.string.settings_invalidProfileName, Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Go back to main menu

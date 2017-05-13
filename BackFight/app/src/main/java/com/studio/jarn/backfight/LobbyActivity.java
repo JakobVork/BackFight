@@ -1,6 +1,8 @@
 package com.studio.jarn.backfight;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
@@ -18,6 +20,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SP;
+import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.PROFILE_NAME_SP;
 
 public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
@@ -68,8 +73,10 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
     private void setupClient() {
         mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
         mFirebaseHelper.setStandardKey(mGameId);
-        //TODO needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+
+        SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+        //TODO selected img needs to be extracted from SharedPrefs
+        mFirebaseHelper.addPlayerToDb(new Player(sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32), R.drawable.player32selected, sp.getString(PROFILE_NAME_SP, "")));
         mFirebaseHelper.setupStartGameListener();
         mFirebaseHelper.setupWidgetsListener();
 
@@ -90,8 +97,10 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         setupRadioGroupListener();
         mFirebaseHelper.setNumberPicker(15); //Set 15 as default on db
         mTvId.setText(mGameId);
-        //TODO needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
+
+        SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+        //TODO selected img needs to be extracted from SharedPrefs
+        mFirebaseHelper.addPlayerToDb(new Player(sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32), R.drawable.player32selected, sp.getString(PROFILE_NAME_SP, "")));
     }
 
     private void getValuesFromIntent() {

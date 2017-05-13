@@ -30,7 +30,6 @@ class CustomPagerAdapter extends PagerAdapter {
     //TODO get real avatars
     private void getAvatars() {
         mResources = new int[]{R.drawable.player32, R.drawable.item_arrow_flaming, R.drawable.monster_mauler, R.drawable.item_arrow_flaming, R.drawable.monster_mauler};
-        mResourcesPath = new String[]{"R.drawable.player32", "R.drawable.item_arrow_flaming", "R.drawable.monster_mauler", "R.drawable.item_arrow_flaming", "R.drawable.monster_mauler"};
     }
 
     @Override
@@ -62,11 +61,5 @@ class CustomPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((LinearLayout) object);
-    }
-
-    String getResourcePath(int number) {
-
-        return mResourcesPath[number];
-
     }
 }

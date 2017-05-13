@@ -3,12 +3,15 @@
 
     <string name="all_back">Back</string>
     <string name="all_icon">Icon</string>
+    <string name="all_sp_name">LOCAL_STORE</string>
     <string name="mainMenu_newGame">New Game</string>
     <string name="mainMenu_loadGame">Load Game</string>
     <string name="mainMenu_rules">Rules</string>
     <string name="mainMenu_settings">Settings</string>
     <string name="mainMenu_exit">Exit</string>
-    <string name="settings_save">Save</string>
+    <string name="mainMenu_dialogMessage">What is your profile name?</string>
+    <string name="mainMenu_dialogBtnPositive">OK</string>
+    <string name="mainMenu_dialogTitle">Profile name</string>
     <string name="newGame_load">Load</string>
     <string name="newGame_create">Create</string>
     <string name="newGame_join">Join</string>
@@ -27,6 +30,8 @@
     <string name="settings_hint">Put in your name here</string>
     <string name="settings_avatarImg">Avatar Image:</string>
     <string name="settings_clickOnImg">Click on the image to change</string>
+    <string name="settings_save">Save</string>
+    <string name="settings_invalidProfileName">Invalid profile name </string>
 
     <string name="EXTRA_PLAYERLIST">com.jarn.extra.playerlist</string>
     <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
@@ -45,7 +50,7 @@
     <string name="item_sword_magical_title">Al Samirs Sword</string>
     <string name="item_sword_magical_description">The Sword of Al Samir is forged in the elver castle. It possess\' some fragments from the mightly dragon Phlamir.</string>
     <string name="item_scepter_title">Scepter</string>
-    <string name="item_scepter_description">It might be royal, but it\'s not effecient.</string>
+    <string name="item_scepter_description">It might be royal, but it\'s not efficient.</string>
     <string name="item_axe_title">Battle Axe</string>
     <string name="item_axe_description">No tree nor monster can stop you now</string>
     <string name="item_axe_major_title">Battle Axe Of Lionheart</string>
