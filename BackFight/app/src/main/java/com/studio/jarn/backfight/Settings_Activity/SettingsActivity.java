@@ -16,7 +16,8 @@ import com.studio.jarn.backfight.R;
 public class SettingsActivity extends AppCompatActivity {
 
     public static String PROFILE_NAME_SP = "Profile Name";
-    public static String AVATAR_IMAGE_SP = "Avatar Image number";
+    public static String AVATAR_IMAGE_SP = "Avatar Image";
+    public static String AVATAR_IMAGE_NUMBER_SP = "Avatar Image Number";
     Button mBtnBack;
     Button mBtnSave;
     EditText mProfileName;
@@ -35,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void getSavedSettings() {
         SharedPreferences sharedPref = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         mProfileName.setText(sharedPref.getString(PROFILE_NAME_SP, ""));
-        mViewPager.setCurrentItem(sharedPref.getInt(AVATAR_IMAGE_SP, 0));
+        mViewPager.setCurrentItem(sharedPref.getInt(AVATAR_IMAGE_NUMBER_SP, 0));
     }
 
     // Find the buttons in the layout file and call to make OnClickListener on them
@@ -54,6 +55,8 @@ public class SettingsActivity extends AppCompatActivity {
         mViewPager.setAdapter(mCustomPagerAdapter);
         mViewPager.setClipChildren(false);
         mViewPager.setOffscreenPageLimit(mCustomPagerAdapter.getCount());
+
+        //TODO remove hardcoded
         mViewPager.setPageMargin(-200);
     }
 
@@ -78,13 +81,14 @@ public class SettingsActivity extends AppCompatActivity {
     private void saveSettings() {
         SharedPreferences settingsSp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor settingsSpEditor = settingsSp.edit();
-        int CurrentView = mViewPager.getCurrentItem();
+        int currentView = mViewPager.getCurrentItem();
 
         //saves the position and image path and the profile name
         String profileName = mProfileName.getText().toString();
         if (!profileName.equals("")) {
             settingsSpEditor.putString(PROFILE_NAME_SP, profileName);
-            settingsSpEditor.putInt(AVATAR_IMAGE_SP, CurrentView);
+            settingsSpEditor.putInt(AVATAR_IMAGE_NUMBER_SP, currentView);
+            settingsSpEditor.putInt(AVATAR_IMAGE_SP, mCustomPagerAdapter.getResource(currentView));
             settingsSpEditor.apply();
             backToMainMenu();
         } else {

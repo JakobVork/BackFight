@@ -76,7 +76,9 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         //TODO selected img needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32), R.drawable.player32selected, sp.getString(PROFILE_NAME_SP, "")));
+        int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
+        String PlayerName = sp.getString(PROFILE_NAME_SP, "");
+        mFirebaseHelper.addPlayerToDb(new Player(Image, R.drawable.player32selected, PlayerName));
         mFirebaseHelper.setupStartGameListener();
         mFirebaseHelper.setupWidgetsListener();
 
@@ -99,8 +101,10 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         mTvId.setText(mGameId);
 
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+        int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
+        String PlayerName = sp.getString(PROFILE_NAME_SP, "");
         //TODO selected img needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32), R.drawable.player32selected, sp.getString(PROFILE_NAME_SP, "")));
+        mFirebaseHelper.addPlayerToDb(new Player(Image, R.drawable.player32selected, PlayerName));
     }
 
     private void getValuesFromIntent() {

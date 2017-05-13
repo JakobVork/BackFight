@@ -15,7 +15,6 @@ class CustomPagerAdapter extends PagerAdapter {
 
 
     private int[] mResources;
-    private String[] mResourcesPath;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private ImageView mImageView;
@@ -29,7 +28,11 @@ class CustomPagerAdapter extends PagerAdapter {
 
     //TODO get real avatars
     private void getAvatars() {
-        mResources = new int[]{R.drawable.player32, R.drawable.item_arrow_flaming, R.drawable.monster_mauler, R.drawable.item_arrow_flaming, R.drawable.monster_mauler};
+        mResources = new int[]{R.drawable.player32, R.drawable.item_arrow_flaming, R.drawable.monster_mauler, R.drawable.item_axe_major, R.drawable.monster_sleeping_dragon};
+    }
+
+    int getResource(int number) {
+        return mResources[number];
     }
 
     @Override
