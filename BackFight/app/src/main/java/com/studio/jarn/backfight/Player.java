@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 
+import java.util.UUID;
 import android.content.Context;
 
 class Player {
@@ -9,6 +10,7 @@ class Player {
     int mFigureSelected = 0;
     int actionsRemaning = 3;
     private boolean mSelected = false;
+    String id = UUID.randomUUID().toString();
 
     Player(int Figure, int FigureSelected, String name) {
         mFigure = Figure;

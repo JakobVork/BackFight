@@ -32,7 +32,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     int mObjectWidthValue;
     int mObjectHeightValue;
     // Variables that control placement and translation of the canvas.
-// Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
+    // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
@@ -81,12 +81,12 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     //TODO should be implemented correctly
     public void addGameObjects() {
 /*        mGameObjectList.add(new Tuple<>();
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-invalidate();*/
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
+    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
+    invalidate();*/
     }
 
     public void initAddPlayers(List<Player> players) {
@@ -102,9 +102,9 @@ invalidate();*/
                     addPlayerListToDb(playersWithCoordinates);
 
                     break outerLoop;
+                }
             }
         }
-    }
     }
 
     private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
@@ -174,7 +174,19 @@ invalidate();*/
             mScalingValuesCalculated = true;
         }
 
+        //TODO FIX!!!!
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+            if (mSelectedObject == null){
+                canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigure), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+            } else {
+                if (tuple.x.id.equals(mSelectedObject.id)){
+                    canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigureSelected), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+                } else {
+                    canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), tuple.x.mFigure), getXCoordFromObjectPlacement(tuple.y), getYCoordFromObjectPlacement(tuple.y), null);
+                }
+            }
+
+        }
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
             Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
             canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
@@ -364,45 +376,38 @@ invalidate();*/
     public void onTouchUp(int tileX, int tileY, int placementX, int placementY) {
 
         //Click is outside map: do nothing
-        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
-            return;
+        if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight)) return;
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             //Move selected object
-            if (tuple.x.equals(mSelectedObject)) {
-                for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
-                    if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
-                        mSelectedObject.SelectPlayer();
-                        tuple1.x.SelectPlayer();
-                        mSelectedObject = tuple1.x;
+            if(mSelectedObject != null){
+                if (tuple.x.id.equals(mSelectedObject.id)) {
+                    for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
+                        if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
+                            mSelectedObject = tuple1.x;
 
-                        if (tuple.x.equals(tuple1.x)) {
-                            tuple.x.SelectPlayer();
-                            mSelectedObject = null;
+                            if (tuple.x.equals(tuple1.x)) {
+                                mSelectedObject = null;
+                            }
+
+                            invalidate();
+                            return;
                         }
-
-                        invalidate();
-                        return;
-                }
-                }
+                    }
 
                 Coordinates movedTo = moveToTile(tileX, tileY);
                 if (movedTo != null && tuple.x.takeAction(getContext())) {
                     tuple.y = movedTo;
-                    tuple.x.SelectPlayer();
                     mSelectedObject = null;
                 }
             }
 
+
             //Select or DeSelect object
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
-                if (!tuple.x.isSelected()) {
-                    tuple.x.SelectPlayer();
-                    if (mSelectedObject != null) mSelectedObject.SelectPlayer();
-                    mSelectedObject = tuple.x;
-                }
+                mSelectedObject = tuple.x;
             }
 
 
@@ -469,12 +474,12 @@ invalidate();*/
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
-    /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
-        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-    }
-    for(Tuple<Item, Coordinates> tuple : mGameObjectList){
-        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-    }*/
+        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }
+        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }*/
 
         if (onTile.size() == (mTileDivision * mTileDivision)) return null;
 
