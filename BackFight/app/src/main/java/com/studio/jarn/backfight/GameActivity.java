@@ -111,6 +111,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 gv.setPlayerListener();
             }
+
+            gv.setItemListener();
         }
     }
 

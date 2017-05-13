@@ -87,6 +87,10 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         mFirebaseHelper.setPlayerList(playersWithCoordinates);
     }
 
+    private void addItemListToDb(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
+        mFirebaseHelper.setItemList(itemsWithCoordinates);
+    }
+
     public void setGridSize(int newValue) {
         mGridSize = newValue;
     }
@@ -282,10 +286,21 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         mFirebaseHelper.setPlayerListListener();
     }
 
+    public void setItemListener() {
+        mFirebaseHelper.setItemListListener();
+    }
+
     @Override
     public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
         mGameObjectList.clear();
         mGameObjectList = playerList;
+        invalidate();
+    }
+
+    @Override
+    public void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemList) {
+        mGameItemList.clear();
+        mGameItemList = itemList;
         invalidate();
     }
 
@@ -370,6 +385,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                     if (itemListToShow == null) {
                         itemListToShow = new ArrayList<GameItem>();
                     }
+                    ((GameActivity) getContext()).hideItemListFragment();
                     ((GameActivity) getContext()).showItemListFragment(itemListToShow);
                 }
             }
@@ -475,6 +491,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
             }
         }
 
+        addItemListToDb(mGameItemList);
         invalidate();
     }
 

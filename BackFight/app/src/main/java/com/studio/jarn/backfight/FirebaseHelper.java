@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.studio.jarn.backfight.Items.GameItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ class FirebaseHelper {
 
     private static final String sDatabasePostfixGrid = "Grid";
     private static final String sDatabasePostfixPlayers = "PlayerList";
+    private static final String sDatabasePostfixItems = "ItemList";
     private static final String sDatabasePostfixStartGame = "StartGame";
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
@@ -31,6 +33,7 @@ class FirebaseHelper {
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
+    private String mGameIdItems;
     private NewGameListener mNewGameListener;
     private LobbyListener mLobbyListener;
     private GameViewListener mGameViewListener;
@@ -68,6 +71,7 @@ class FirebaseHelper {
         mGameIdNumberPicker = gameId + sDatabasePostfixNumberPicker;
         mGameIdGrid = gameId + sDatabasePostfixGrid;
         mGameIdPlayers = gameId + sDatabasePostfixPlayers;
+        mGameIdItems = gameId + sDatabasePostfixItems;
     }
 
     //NewGameListener
@@ -243,5 +247,34 @@ class FirebaseHelper {
 
     void setGrid(List<List<Tile>> list) {
         mDatabase.getReference(mGameIdGrid).setValue(list);
+    }
+
+
+    void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
+        mDatabase.getReference(mGameIdItems).setValue(itemsWithCoordinates);
+    }
+
+    void setItemListListener() {
+        mDatabase.getReference(mGameIdItems).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<>();
+
+                GenericTypeIndicator<Tuple<GameItem, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<GameItem, Coordinates>>() {
+                };
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    itemList.add(postSnapshot.getValue(genericTypeIndicator));
+                }
+                mGameViewListener.setItemList(itemList);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 }
