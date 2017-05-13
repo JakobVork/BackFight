@@ -67,7 +67,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             @Override
             public void onClick(View v) {
                 GameView gv = (GameView) findViewById(R.id.boardview);
-                showItemListFragment(gv.getPlayerItemList());
+                showItemListFragment(gv.getPlayerItemList(), gv.getPlayerName());
             }
         });
     }
@@ -116,17 +116,19 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    public void showItemListFragment(List<GameItem> itemList) {
+    public void showItemListFragment(List<GameItem> itemList, String name) {
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmentHide.setVisibility(View.VISIBLE);
 
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        if (itemsAndStatsFragment == null) {
-            // TODO: Use correct items instead of hardcoded.
 
-            itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList);
-        }
+        // Need to create a new every time, since the current fragment might be for another user
+        // Need to ensure that this doesn't create a memory leak in some sort? <-- I don't think so
+        // Might need to keep it in detailed fragment, if player has selected a item? <-- A lot
+        // harder, since it also depends on who it is etc.
+        itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList, name);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
         ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);

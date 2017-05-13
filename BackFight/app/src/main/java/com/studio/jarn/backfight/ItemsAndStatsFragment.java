@@ -2,12 +2,14 @@ package com.studio.jarn.backfight;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.renderscript.Script;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,19 +23,23 @@ import java.util.List;
 public class ItemsAndStatsFragment extends Fragment {
 
     private final static String sJsonItemsString = "sJsonItemsString";
+    private final static String sNameString = "sNameString";
     private OnItemSelectedListener mListener;
     private ArrayList<GameItem> mItemList;
+    private String mName;
+    private TextView mTvName;
     private ListView mItemListView;
 
     public ItemsAndStatsFragment() {
     }
 
-    public static ItemsAndStatsFragment newInstance(List<GameItem> items) {
+    public static ItemsAndStatsFragment newInstance(List<GameItem> items,  String name) {
         if (items != null) {
             ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
             Bundle args = new Bundle();
             String jsonArray = new Gson().toJson(items);
             args.putString(sJsonItemsString, jsonArray);
+            args.putString(sNameString, name);
             fragment.setArguments(args);
             return fragment;
         }
@@ -50,6 +56,7 @@ public class ItemsAndStatsFragment extends Fragment {
             Type listType = new TypeToken<ArrayList<ItemWeapon>>() {
             }.getType();
             mItemList = new Gson().fromJson(jsonItems, listType);
+            mName = getArguments().getString(sNameString);
         }
     }
 
@@ -68,6 +75,9 @@ public class ItemsAndStatsFragment extends Fragment {
                 mListener.onItemSelected(mItemList.get(position));
             }
         });
+
+        mTvName = (TextView) view.findViewById(R.id.fragment_item_tv_name);
+        mTvName.setText(mName);
 
         return view;
     }

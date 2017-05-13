@@ -386,7 +386,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                         itemListToShow = new ArrayList<GameItem>();
                     }
                     ((GameActivity) getContext()).hideItemListFragment();
-                    ((GameActivity) getContext()).showItemListFragment(itemListToShow);
+                    ((GameActivity) getContext()).showItemListFragment(itemListToShow, tuple.x.Name);
                 }
             }
         }
@@ -515,7 +515,15 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
             LocalPlayerItems = new ArrayList<GameItem>();
         }
 
+        for (int i = 0; i < 10; i++) {
+            LocalPlayerItems.add(new ItemFactory(getContext()).Weapons.getRandomWeapon());
+        }
+
         return LocalPlayerItems;
+    }
+
+    public String getPlayerName() {
+        return "AndersHost"; //TODO: return actual player name.
     }
 } // end class
   
