@@ -114,7 +114,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    private void showItemListFragment(List<GameItem> itemList) {
+    public void showItemListFragment(List<GameItem> itemList) {
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmentHide.setVisibility(View.VISIBLE);
 
@@ -131,7 +131,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         ft.commit();
     }
 
-    private void hideItemListFragment() {
+    public void hideItemListFragment() {
         mIvItemFragmentShow.setVisibility(View.VISIBLE);
         mIvItemFragmentHide.setVisibility(View.GONE);
 
@@ -143,24 +143,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             ft.commit();
         }
     }
-
-/*    //ToDO Needs implementation
-    public void addPlayers() {
-        List<Player> players = new ArrayList<>();
-        players.add(new Player(R.drawable.player32, "Pernille"));
-
-        Random random = new Random();
-
-        while (true) {
-            int random1 = random.nextInt(sGridSize - 1);
-            int random2 = random.nextInt(sGridSize - 1);
-
-            if (mGrid[random1][random2].CanBePassed) {
-                mGrid[random1][random2].Players = players;
-                break;
-            }
-        }
-    }*/
 
     private void setupMyGrid(GridType gridType)
     {

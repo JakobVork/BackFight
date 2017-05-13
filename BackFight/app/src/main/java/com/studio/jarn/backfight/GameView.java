@@ -8,8 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.ImageView;
 
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
@@ -29,7 +27,6 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     protected float mFocusX;
     protected float mFocusY;
     protected GameTouchListener mTouchListener;
-    boolean onlyOnce = true;
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
@@ -55,18 +52,8 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private Player mSelectedObject;
     private int mTileDivision = 4;
 
-    public GameView(Context context) {
-        super(context);
-        setTouchListener(this);
-    }
-
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTouchListener(this);
-    }
-
-    public GameView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
         setTouchListener(this);
     }
 
@@ -76,17 +63,6 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
 
     public void setTouchListener(GameTouchListener newListener) {
         mTouchListener = newListener;
-    }
-
-    //TODO should be implemented correctly
-    public void addGameObjects() {
-/*        mGameObjectList.add(new Tuple<>();
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
-mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-invalidate();*/
     }
 
     public void initAddPlayers(List<Player> players) {
@@ -162,10 +138,10 @@ invalidate();*/
             }
             dy = dy + mSquareHeight;
         }
-        myDraw(canvas);
+        drawMapObjects(canvas);
     }
 
-    private void myDraw(Canvas canvas) {
+    private void drawMapObjects(Canvas canvas) {
 
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
@@ -331,11 +307,6 @@ invalidate();*/
     }
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        if (onlyOnce) {
-            addGameObjects();
-            onlyOnce = false;
-        }
-
         //Calculate the coordinates pressed on the map
         Coordinates map = getTileFromPixelValue(upX, upY);
 
@@ -375,7 +346,7 @@ invalidate();*/
 
                         invalidate();
                         return;
-                }
+                    }
                 }
 
                 Coordinates movedTo = moveToTile(tileX, tileY);
@@ -388,17 +359,23 @@ invalidate();*/
 
             //Select or DeSelect object
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
-                if (!tuple.x.isSelected()) {
-                    tuple.x.SelectPlayer();
-                    if (mSelectedObject != null) mSelectedObject.SelectPlayer();
-                    mSelectedObject = tuple.x;
+                if (tuple.x.Name.equals("AndersHost")) {
+                    if (!tuple.x.isSelected()) {
+                        tuple.x.SelectPlayer();
+                        if (mSelectedObject != null) mSelectedObject.SelectPlayer();
+                        mSelectedObject = tuple.x;
+                    }
+                } else {
+                    List<GameItem> itemListToShow = tuple.x.PlayerItems;
+                    if (itemListToShow == null) {
+                        itemListToShow = new ArrayList<GameItem>();
+                    }
+                    ((GameActivity) getContext()).showItemListFragment(itemListToShow);
                 }
             }
-
-
         }
 
-        addPlayerListToDb(mGameObjectList); //TODo
+        addPlayerListToDb(mGameObjectList);
 
         //Render map
         invalidate();
