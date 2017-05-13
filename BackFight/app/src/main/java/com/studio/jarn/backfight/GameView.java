@@ -510,13 +510,18 @@ invalidate();*/
     }
 
     public List<GameItem> getPlayerItemList() {
-        List<GameItem> t = mGameObjectList.get(0).x.PlayerItems; // TODO: Figure out how to get the localPlayer.
-        Log.d("test", "getPlayerItemList: ");
-        if(t == null) {
-            t = new ArrayList<GameItem>();
+        List<GameItem> LocalPlayerItems = null;
+        for (Tuple<Player, Coordinates> tuple:mGameObjectList) {
+            if(tuple.x.Name.equals("AndersHost")) { // TODO: Use local UUID for player instead.
+                LocalPlayerItems = tuple.x.PlayerItems;
+            }
         }
 
-        return t;
+        if(LocalPlayerItems == null) {
+            LocalPlayerItems = new ArrayList<GameItem>();
+        }
+
+        return LocalPlayerItems;
     }
 } // end class
   
