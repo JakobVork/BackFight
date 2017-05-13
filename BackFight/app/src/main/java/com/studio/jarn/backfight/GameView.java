@@ -319,6 +319,7 @@ invalidate();*/
     @Override
     public void startMonsterTurn() {
         ((GameActivity) getContext()).setRound(++TESTROUND);
+        ((GameActivity) getContext()).setActionCounter(3);
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 

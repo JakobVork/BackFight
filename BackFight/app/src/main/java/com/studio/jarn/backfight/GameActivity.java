@@ -48,6 +48,12 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
 
         setupItemFragment();
+        setupDefaultText();
+    }
+
+    private void setupDefaultText() {
+        setActionCounter(3);
+        setRound(1);
     }
 
     private void setupItemFragment() {
@@ -165,11 +171,13 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
     //TODO changed strings to be externalized
     public void setActionCounter(int count) {
-        btnActionCounter.setText("Action count left: " + String.valueOf(count));
+        String actionCounterText = getString(R.string.game_actionCount) + String.valueOf(count);
+        btnActionCounter.setText(actionCounterText);
     }
 
     public void setRound(int count) {
-        btnRound.setText("Round count: " + String.valueOf(count));
+        String roundText = getString(R.string.game_roundCounter) + String.valueOf(count);
+        btnRound.setText(roundText);
     }
 
 
