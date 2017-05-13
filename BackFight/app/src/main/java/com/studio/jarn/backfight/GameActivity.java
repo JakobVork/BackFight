@@ -168,8 +168,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             ft.commit();
         }
     }
-
-    //TODO changed strings to be externalized
+    
     public void setActionCounter(int count) {
         String actionCounterText = getString(R.string.game_actionCount) + String.valueOf(count);
         btnActionCounter.setText(actionCounterText);
