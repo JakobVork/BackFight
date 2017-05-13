@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class LobbyActivity extends AppCompatActivity implements LobbyListener {
+public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyListener {
 
     Button mBtnBack;
     Button mBtnStart;

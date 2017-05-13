@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, GameActivityListener
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener
 {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;

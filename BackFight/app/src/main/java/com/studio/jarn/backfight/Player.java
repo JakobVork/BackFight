@@ -2,6 +2,7 @@ package com.studio.jarn.backfight;
 
 
 import android.content.Context;
+import android.view.View;
 
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ class Player {
     String Name;
     int mFigure = 0;
     int mFigureSelected = 0;
-    int actionsRemaning = 3;
+    int actionsRemaining = 3;
     String id = UUID.randomUUID().toString();
 
     Player(int Figure, int FigureSelected, String name) {
@@ -22,17 +23,19 @@ class Player {
     Player() {
     }
 
-    boolean takeAction(Context context) {
-        if (actionsRemaning-- <= 0)
-            return false;
-        if (context instanceof GameActivityListener) {
-            GameActivityListener gameActivityListener = (GameActivityListener) context;
-            gameActivityListener.setActionCounter(actionsRemaning);
-            return true;
+    boolean canTakeAction() {
+        return actionsRemaining > 0;
+    }
 
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement Listener");
-        }
+    void takeAction(Context context, View view) {
+        FirebaseGameActivityListener firebaseGameActivityListener;
+        PlayerGameViewListener playerGameViewListener;
+        actionsRemaining--;
+
+        firebaseGameActivityListener = (FirebaseGameActivityListener) context;
+        playerGameViewListener = (PlayerGameViewListener) view;
+        firebaseGameActivityListener.setActionCounter(actionsRemaining);
+        if (actionsRemaining <= 0)
+            playerGameViewListener.actionTaken();
     }
 }

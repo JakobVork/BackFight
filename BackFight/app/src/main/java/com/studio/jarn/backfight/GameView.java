@@ -22,7 +22,7 @@ import java.util.List;
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
 
-public class GameView extends PanZoomView implements GameTouchListener, GameViewListener
+public class GameView extends PanZoomView implements GameTouchListener, FirebaseGameViewListener, PlayerGameViewListener
 {
     protected float mFocusX = 1000; //default value
     protected float mFocusY = 1000; //default value
@@ -98,16 +98,11 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                     for (Player player : players) {
                         playersWithCoordinates.add(new Tuple<>(player, new Coordinates(column, row, coordinatesCounter++, 0)));
                     }
-                    addPlayerListToDb(playersWithCoordinates);
-
+                    mFirebaseHelper.setPlayerList(playersWithCoordinates);
                     break outerLoop;
                 }
             }
         }
-    }
-
-    private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        mFirebaseHelper.setPlayerList(playersWithCoordinates);
     }
 
     public void setGridSize(int newValue) {
@@ -330,10 +325,30 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         invalidate();
     }
 
-    @Override
     public void startMonsterTurn() {
         //TODO!!
         ((GameActivity) getContext()).setMonsterDialog();
+    }
+
+    @Override
+    public void actionTaken() {
+        //Check if all players have used their turns
+        for (Tuple<Player, Coordinates> player : mGameObjectList) {
+            if (player.x.actionsRemaining > 0) return;
+        }
+        nextRound();
+    }
+
+    private void nextRound() {
+        startMonsterTurn();
+        resetPlayerActions();
+        mFirebaseHelper.increaseRoundCount();
+    }
+
+    private void resetPlayerActions() {
+        for (Tuple<Player, Coordinates> player : mGameObjectList) {
+            player.x.actionsRemaining = 3;
+        }
     }
 
     public void updateGrid(Tile grid[][]) {
@@ -398,12 +413,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                             return;
                         }
                     }
-
-                    Coordinates movedTo = moveToTile(tileX, tileY);
-                    if (movedTo != null && tuple.x.takeAction(getContext())) {
-                        tuple.y = movedTo;
-                        mSelectedObject = null;
-                    }
+                    movePlayer(tuple, tileX, tileY);
                 }
             }
             //Select or DeSelect object
@@ -411,10 +421,19 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                 mSelectedObject = tuple.x;
             }
         }
-        addPlayerListToDb(mGameObjectList); //TODo
+        mFirebaseHelper.setPlayerList(mGameObjectList);
 
         //Render map
         invalidate();
+    }
+
+    private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
+        Coordinates movedTo = moveToTile(tileX, tileY);
+        if (movedTo != null && tuple.x.canTakeAction()) {
+            tuple.y = movedTo;
+            mSelectedObject = null;
+            tuple.x.takeAction(getContext(), this);
+        }
     }
 
     @Override

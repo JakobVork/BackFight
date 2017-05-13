@@ -35,10 +35,10 @@ class FirebaseHelper {
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
-    private NewGameListener mNewGameListener;
-    private LobbyListener mLobbyListener;
-    private GameViewListener mGameViewListener;
-    private GameActivityListener mGameActivityListener;
+    private FirebaseNewGameListener mFirebaseNewGameListener;
+    private FirebaseLobbyListener mFirebaseLobbyListener;
+    private FirebaseGameViewListener mFirebaseGameViewListener;
+    private FirebaseGameActivityListener mFirebaseGameActivityListener;
     private String mDialogInput;
     private String mGameIdRoundCount;
 
@@ -46,10 +46,10 @@ class FirebaseHelper {
     FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
 
-        if (context instanceof NewGameListener) {
-            mNewGameListener = (NewGameListener) context;
-        } else if (context instanceof LobbyListener) {
-            mLobbyListener = (LobbyListener) context;
+        if (context instanceof FirebaseNewGameListener) {
+            mFirebaseNewGameListener = (FirebaseNewGameListener) context;
+        } else if (context instanceof FirebaseLobbyListener) {
+            mFirebaseLobbyListener = (FirebaseLobbyListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement Listener");
@@ -59,8 +59,8 @@ class FirebaseHelper {
     FirebaseHelper(View view) {
         mDatabase = FirebaseDatabase.getInstance();
 
-        if (view instanceof GameViewListener) {
-            mGameViewListener = (GameViewListener) view;
+        if (view instanceof FirebaseGameViewListener) {
+            mFirebaseGameViewListener = (FirebaseGameViewListener) view;
         } else {
             throw new RuntimeException(view.toString()
                     + " must implement Listener");
@@ -78,7 +78,7 @@ class FirebaseHelper {
         mGameIdRoundCount = gameId + sDatabasePostfixRoundCount;
     }
 
-    //NewGameListener
+    //FirebaseNewGameListener
     void validateIfGameExist(String input) {
         mDialogInput = input;
 
@@ -87,9 +87,9 @@ class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mNewGameListener.gameExist(true, mDialogInput);
+                    mFirebaseNewGameListener.gameExist(true, mDialogInput);
                 } else {
-                    mNewGameListener.gameExist(false, mDialogInput);
+                    mFirebaseNewGameListener.gameExist(false, mDialogInput);
                 }
             }
 
@@ -101,7 +101,7 @@ class FirebaseHelper {
     }
 
 
-    //mLobbyListener
+    //mFirebaseLobbyListener
     void addPlayerToDb(Player player) {
         mDatabase.getReference(mGameId).push().setValue(player);
     }
@@ -111,7 +111,7 @@ class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mLobbyListener.startGameClient();
+                    mFirebaseLobbyListener.startGameClient();
                 }
             }
 
@@ -128,7 +128,7 @@ class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mLobbyListener.setNumberPickerValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
+                    mFirebaseLobbyListener.setNumberPickerValue(Ints.checkedCast(((long) dataSnapshot.getValue())));
                 }
             }
 
@@ -142,7 +142,7 @@ class FirebaseHelper {
         mDatabase.getReference(mGameIdRadio).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mLobbyListener.setRadioGroupButton((Ints.checkedCast(((long) dataSnapshot.getValue()))));
+                mFirebaseLobbyListener.setRadioGroupButton((Ints.checkedCast(((long) dataSnapshot.getValue()))));
             }
 
             @Override
@@ -162,7 +162,7 @@ class FirebaseHelper {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
-                mLobbyListener.setPlayerList(playerList);
+                mFirebaseLobbyListener.setPlayerList(playerList);
             }
 
             @Override
@@ -186,10 +186,9 @@ class FirebaseHelper {
     }
 
 
-    //GameViewListener
+    //FirebaseGameViewListener
     void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        //Check if users has used all their turns, and if they have start monster turn
-        mDatabase.getReference(mGameIdPlayers).setValue(allTurnsUsed(playersWithCoordinates));
+        mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
     }
 
     void setupGridListener() {
@@ -215,7 +214,7 @@ class FirebaseHelper {
                     }
                     column = -1;
                 }
-                mGameViewListener.setGrid(sizeOfArrayOnFirebase, grid);
+                mFirebaseGameViewListener.setGrid(sizeOfArrayOnFirebase, grid);
             }
 
             @Override
@@ -238,7 +237,7 @@ class FirebaseHelper {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
-                mGameViewListener.setPlayerList(playerList);
+                mFirebaseGameViewListener.setPlayerList(playerList);
             }
 
             @Override
@@ -249,22 +248,7 @@ class FirebaseHelper {
         });
     }
 
-    private ArrayList<Tuple<Player, Coordinates>> allTurnsUsed(ArrayList<Tuple<Player, Coordinates>> playerList) {
-        for (Tuple<Player, Coordinates> player : playerList) {
-            if (player.x.actionsRemaning > 0) return playerList;
-        }
-
-        mGameViewListener.startMonsterTurn();
-
-        for (Tuple<Player, Coordinates> player : playerList) {
-            player.x.actionsRemaning = 3;
-        }
-        increaseRoundCount();
-
-        return playerList;
-    }
-
-    void increaseRoundCount() {
+    public void increaseRoundCount() {
         //http://stackoverflow.com/questions/40405181/firebase-database-increment-an-int
         mDatabase.getReference(mGameIdRoundCount).runTransaction(new Transaction.Handler() {
             @Override
@@ -287,8 +271,8 @@ class FirebaseHelper {
     }
 
     void setRoundCountListener(Context context) {
-        if (context instanceof GameActivityListener) {
-            mGameActivityListener = (GameActivityListener) context;
+        if (context instanceof FirebaseGameActivityListener) {
+            mFirebaseGameActivityListener = (FirebaseGameActivityListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement Listener");
         }
@@ -297,8 +281,8 @@ class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mGameActivityListener.setRound(dataSnapshot.getValue(int.class));
-                    mGameActivityListener.setActionCounter(3);
+                    mFirebaseGameActivityListener.setRound(dataSnapshot.getValue(int.class));
+                    mFirebaseGameActivityListener.setActionCounter(3);
                 }
             }
 

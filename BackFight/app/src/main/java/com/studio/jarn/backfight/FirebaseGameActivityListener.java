@@ -1,7 +1,7 @@
 package com.studio.jarn.backfight;
 
 
-interface GameActivityListener {
+interface FirebaseGameActivityListener {
     void setActionCounter(int actionCounter);
 
     void setRound(int round);

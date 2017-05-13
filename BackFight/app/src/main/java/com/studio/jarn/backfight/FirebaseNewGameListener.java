@@ -1,5 +1,5 @@
 package com.studio.jarn.backfight;
 
-interface NewGameListener {
+interface FirebaseNewGameListener {
     void gameExist(boolean test, String input);
 }
