@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +33,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     Fragment itemsAndStatsFragmentDetailed;
     private Tile[][] mGrid;
 
+    private TextView btnActionCounter;
+    private TextView btnRound;
     private ImageView mIvItemFragmentShow;
     private ImageView mIvItemFragmentHide;
 
@@ -48,7 +51,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void setupItemFragment() {
-
+        btnActionCounter = (TextView) findViewById(R.id.game_board_activity_tv_actionCount);
+        btnRound = (TextView) findViewById(R.id.game_board_activity_tv_round);
         mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_iv_hide_items);
         mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_iv_show_items);
         hideItemListFragment();
@@ -158,6 +162,18 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             ft.commit();
         }
     }
+
+    //TODO changed strings to be externalized
+    public void setActionCounter(int count) {
+        btnActionCounter.setText("Action count left: " + String.valueOf(count));
+    }
+
+    public void setRound(int count) {
+        btnRound.setText("Round count: " + String.valueOf(count));
+    }
+
+
+
 
 /*    //ToDO Needs implementation
     public void addPlayers() {

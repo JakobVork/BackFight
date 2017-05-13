@@ -223,6 +223,7 @@ class FirebaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
+                boolean allPlayerActionsUsed = true;
 
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
@@ -231,6 +232,7 @@ class FirebaseHelper {
                 }
                 mGameViewListener.setPlayerList(playerList);
 
+                allTurnsUsed(playerList);
             }
 
             @Override
@@ -240,6 +242,17 @@ class FirebaseHelper {
             }
         });
     }
+
+    private void allTurnsUsed(ArrayList<Tuple<Player, Coordinates>> playerList) {
+        for (Tuple<Player, Coordinates> player : playerList) {
+            if (player.x.actionsRemaning != 0) return;
+        }
+        mGameViewListener.startMonsterTurn();
+        for (Tuple<Player, Coordinates> player : playerList) {
+            player.x.actionsRemaning = 3;
+        }
+    }
+
 
     void setGrid(List<List<Tile>> list) {
         mDatabase.getReference(mGameIdGrid).setValue(list);

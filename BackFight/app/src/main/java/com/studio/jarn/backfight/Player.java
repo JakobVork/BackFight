@@ -1,11 +1,13 @@
 package com.studio.jarn.backfight;
 
 
+import android.content.Context;
 
 class Player {
     String Name;
     int mFigure = 0;
     int mFigureSelected = 0;
+    int actionsRemaning = 3;
     private boolean mSelected = false;
 
     Player(int Figure, int FigureSelected, String name) {
@@ -16,6 +18,14 @@ class Player {
 
     //Needed for casting from Firebase
     Player() {
+    }
+
+    boolean takeAction(Context context) {
+        if (actionsRemaning-- <= 0)
+            return false;
+        GameActivity gameActivity = (GameActivity) context;
+        gameActivity.setActionCounter(actionsRemaning);
+        return true;
     }
 
     void SelectPlayer() {
@@ -29,5 +39,9 @@ class Player {
 
     boolean isSelected() {
         return mSelected;
+    }
+
+    interface ActionCountListener {
+        void onActionCountUpdated(int actionCountLeft);
     }
 }

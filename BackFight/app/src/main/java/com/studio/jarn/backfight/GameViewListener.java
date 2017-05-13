@@ -7,4 +7,6 @@ interface GameViewListener {
     void setGrid(int sizeOfArrayOnFirebase, Tile[][] grid);
 
     void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList);
+
+    void startMonsterTurn();
 }

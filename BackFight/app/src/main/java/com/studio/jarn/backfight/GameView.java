@@ -53,6 +53,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private Player mSelectedObject;
     private int mTileDivision = 4;
     private boolean mScalingValuesCalculated = false;
+    private int TESTROUND = 1;
 
     public GameView(Context context) {
         super(context);
@@ -241,7 +242,10 @@ invalidate();*/
         // The focus point for zooming is the center of the
         // displayable region. That point is defined by half
         // the canvas width and height.
-        canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
+
+        mFocusX = mHalfMaxCanvasWidth;
+        mFocusY = mHalfMaxCanvasHeight;
+        canvas.scale(mScaleFactor, mScaleFactor/*, mFocusX, mFocusY*/);
 
         // Set up the grid  and grid selection variables.
         if (mGrid == null)
@@ -312,6 +316,12 @@ invalidate();*/
         invalidate();
     }
 
+    @Override
+    public void startMonsterTurn() {
+        ((GameActivity) getContext()).setRound(++TESTROUND);
+        //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+
     public void updateGrid(Tile grid[][]) {
 
         List<List<Tile>> list = new ArrayList<>();
@@ -378,7 +388,7 @@ invalidate();*/
                 }
 
                 Coordinates movedTo = moveToTile(tileX, tileY);
-                if (movedTo != null) {
+                if (movedTo != null && tuple.x.takeAction(getContext())) {
                     tuple.y = movedTo;
                     tuple.x.SelectPlayer();
                     mSelectedObject = null;
