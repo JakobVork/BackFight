@@ -66,7 +66,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmentShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showItemListFragment();
+                GameView gv = (GameView) findViewById(R.id.boardview);
+                showItemListFragment(gv.getPlayerItemList());
             }
         });
     }
@@ -113,30 +114,14 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    private void showItemListFragment() {
+    private void showItemListFragment(List<GameItem> itemList) {
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmentHide.setVisibility(View.VISIBLE);
-
-        ArrayList<GameItem> items = new ArrayList<>();
-        ItemFactory fac = new ItemFactory(getApplicationContext());
-        items.add(fac.Weapons.AxeMajor());
-        ItemsAndStatsFragment.newInstance(items);
 
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
         if (itemsAndStatsFragment == null) {
             // TODO: Use correct items instead of hardcoded.
-            ItemFactory itemFac = new ItemFactory(getApplicationContext());
-            ArrayList<GameItem> itemList = new ArrayList<>();
-
-            GameItem item = itemFac.Weapons.SwordSimple();
-            itemList.add(item);
-            item = itemFac.Weapons.SwordFlame();
-            itemList.add(item);
-            item = itemFac.Weapons.AxeMajor();
-            itemList.add(item);
-            item = itemFac.Weapons.Scepter();
-            itemList.add(item);
 
             itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList);
         }

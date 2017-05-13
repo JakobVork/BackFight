@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.ImageView;
 
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
@@ -507,5 +509,14 @@ invalidate();*/
         return mGrid[coordinates.tileY][coordinates.tileX].CanBePassed;
     }
 
+    public List<GameItem> getPlayerItemList() {
+        List<GameItem> t = mGameObjectList.get(0).x.PlayerItems; // TODO: Figure out how to get the localPlayer.
+        Log.d("test", "getPlayerItemList: ");
+        if(t == null) {
+            t = new ArrayList<GameItem>();
+        }
+
+        return t;
+    }
 } // end class
   

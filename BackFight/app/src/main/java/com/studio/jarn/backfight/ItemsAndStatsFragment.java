@@ -16,6 +16,7 @@ import com.studio.jarn.backfight.Items.ItemWeapon;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemsAndStatsFragment extends Fragment {
 
@@ -27,7 +28,7 @@ public class ItemsAndStatsFragment extends Fragment {
     public ItemsAndStatsFragment() {
     }
 
-    public static ItemsAndStatsFragment newInstance(ArrayList<GameItem> items) {
+    public static ItemsAndStatsFragment newInstance(List<GameItem> items) {
         if (items != null) {
             ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
             Bundle args = new Bundle();
