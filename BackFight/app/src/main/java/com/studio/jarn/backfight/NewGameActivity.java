@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class NewGameActivity extends AppCompatActivity implements NewGameListener {
+public class NewGameActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
     Button mBtnBack;
     Button mBtnCreate;

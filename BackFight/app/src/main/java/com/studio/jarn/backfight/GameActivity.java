@@ -1,13 +1,16 @@
 package com.studio.jarn.backfight;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener
 {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
@@ -32,6 +35,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     Fragment itemsAndStatsFragmentDetailed;
     private Tile[][] mGrid;
 
+    private TextView btnActionCounter;
+    private TextView btnRound;
     private ImageView mIvItemFragmentShow;
     private ImageView mIvItemFragmentHide;
 
@@ -45,10 +50,17 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
 
         setupItemFragment();
+        setupDefaultText();
+    }
+
+    private void setupDefaultText() {
+        setActionCounter(3);
+        setRound(1);
     }
 
     private void setupItemFragment() {
-
+        btnActionCounter = (TextView) findViewById(R.id.game_board_activity_tv_actionCount);
+        btnRound = (TextView) findViewById(R.id.game_board_activity_tv_round);
         mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_iv_hide_items);
         mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_iv_show_items);
         hideItemListFragment();
@@ -97,7 +109,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 //addPlayers();
                 gv.initHostGrid(mGrid);
-                gv.setPlayerListener();
+                gv.setListeners();
                 gv.initAddPlayers(playerList);
 
                 // Spawn items
@@ -108,7 +120,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.setupFirebase(Uuid);
                 gv.initClientGrid();
 
-                gv.setPlayerListener();
+                gv.setListeners();
             }
         }
     }
@@ -159,6 +171,19 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
+    public void setActionCounter(int count) {
+        String actionCounterText = getString(R.string.game_actionCount) + String.valueOf(count);
+        btnActionCounter.setText(actionCounterText);
+    }
+
+    public void setRound(int count) {
+        String roundText = getString(R.string.game_roundCounter) + String.valueOf(count);
+        btnRound.setText(roundText);
+    }
+
+
+
+
 /*    //ToDO Needs implementation
     public void addPlayers() {
         List<Player> players = new ArrayList<>();
@@ -204,5 +229,19 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
         ft.addToBackStack(null);
         ft.commit();
+    }
+
+    //ToDo for testing purpose
+    public void showMonsterDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Monster");
+        alertDialog.setMessage("Monster turn :)");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }
