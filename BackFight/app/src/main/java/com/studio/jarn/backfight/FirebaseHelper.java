@@ -37,14 +37,11 @@ class FirebaseHelper {
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
+    private String mGameIdItems;
     private FirebaseNewGameListener mFirebaseNewGameListener;
     private FirebaseLobbyListener mFirebaseLobbyListener;
     private FirebaseGameViewListener mFirebaseGameViewListener;
     private FirebaseGameActivityListener mFirebaseGameActivityListener;
-    private String mGameIdItems;
-    private NewGameListener mNewGameListener;
-    private LobbyListener mLobbyListener;
-    private GameViewListener mGameViewListener;
     private String mDialogInput;
     private String mGameIdRoundCount;
 
@@ -323,7 +320,7 @@ class FirebaseHelper {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     itemList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
-                mGameViewListener.setItemList(itemList);
+                mFirebaseGameViewListener.setItemList(itemList);
 
             }
 

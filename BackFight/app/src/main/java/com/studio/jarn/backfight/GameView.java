@@ -7,7 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
@@ -404,11 +406,14 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     movePlayer(tuple, tileX, tileY);
                 }
             }
-            //Select or DeSelect object
+
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
+                //Select or DeSelect object
                 if (tuple.x.Name.equals("AndersHost")) {
                     mSelectedObject = tuple.x;
-                } else {
+                }
+                // Selected another player - show items and stats
+                else {
                     List<GameItem> itemListToShow = tuple.x.PlayerItems;
                     if (itemListToShow == null) {
                         itemListToShow = new ArrayList<GameItem>();
@@ -420,8 +425,65 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
         mFirebaseHelper.setPlayerList(mGameObjectList);
 
+
+        // Check for items clicked
+        Tuple<GameItem, Coordinates> mapItem = mapItemClicked(tileX, tileY, placementX, placementY);
+        if(mapItem != null) {
+            pickUpItem(mapItem);
+        }
+
         //Render map
         invalidate();
+    }
+
+    private Tuple<GameItem, Coordinates> mapItemClicked(int tileX, int tileY, int placementX, int placementY) {
+        for (Tuple<GameItem, Coordinates> itemTuple : mGameItemList) {
+            if (itemTuple.y.tileX == tileX && itemTuple.y.tileY == tileY && itemTuple.y.placementOnTileX == placementX && itemTuple.y.placementOnTileY == placementY) {
+                return itemTuple;
+            }
+        }
+        return null;
+    }
+
+    private void pickUpItem(Tuple<GameItem, Coordinates> mapItem) {
+        Log.d("ItemClicked", "onTouchUp: Item on map was clicked. " + mapItem.x.Title);
+
+        // Get item
+        GameItem itemPickedUp = mapItem.x;
+
+        // Remove item from map
+        mGameItemList.remove(mapItem);
+
+        // Add item to players itemlist
+        addItemToPlayer(itemPickedUp, getPlayerName());
+    }
+
+    private void addItemToPlayer(GameItem item, String playerName) {
+        Player player = null;
+        Coordinates playerCoords = null;
+        for (Tuple<Player, Coordinates> playerTuple:mGameObjectList) {
+            if(playerTuple.x.Name.equals(playerName)) {
+                player = playerTuple.x;
+                playerCoords = playerTuple.y;
+            }
+        }
+
+        // Make sure player is found, should never be true.
+        if(player == null || playerCoords == null) {
+            return;
+        }
+
+        // Players item list can be null, due to the way firebase handle empty lists. Therefore a check is made.
+        if(player.PlayerItems == null) {
+            player.PlayerItems = new ArrayList<GameItem>();
+        }
+
+        // Add item to players list
+        player.PlayerItems.add(item);
+
+        // reassign player with new - Since java is by-value we have to remove and add it again.
+        mGameObjectList.remove(player);
+        mGameObjectList.add(new Tuple<>(player, playerCoords));
     }
 
     private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
@@ -549,10 +611,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         if(LocalPlayerItems == null) {
             LocalPlayerItems = new ArrayList<GameItem>();
-        }
-
-        for (int i = 0; i < 10; i++) {
-            LocalPlayerItems.add(new ItemFactory(getContext()).Weapons.getRandomWeapon());
         }
 
         return LocalPlayerItems;
