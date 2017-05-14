@@ -3,7 +3,7 @@ package com.studio.jarn.backfight;
 
 import java.util.ArrayList;
 
-interface LobbyListener {
+interface FirebaseLobbyListener {
     void startGameClient();
 
     void setNumberPickerValue(int value);

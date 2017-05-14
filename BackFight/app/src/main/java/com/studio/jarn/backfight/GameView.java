@@ -22,16 +22,16 @@ import java.util.List;
  * inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
  */
 
-public class GameView extends PanZoomView implements GameTouchListener, GameViewListener
+public class GameView extends PanZoomView implements GameTouchListener, FirebaseGameViewListener, PlayerGameViewListener
 {
-    protected float mFocusX;
-    protected float mFocusY;
+    protected float mFocusX = 1000; //default value
+    protected float mFocusY = 1000; //default value
     protected GameTouchListener mTouchListener;
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
     // Variables that control placement and translation of the canvas.
-// Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
+    // Initial values are for debugging on 480 x 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
     private float mHalfMaxCanvasWidth = 480;
@@ -51,6 +51,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     private FirebaseHelper mFirebaseHelper;
     private Player mSelectedObject;
     private int mTileDivision = 4;
+    private boolean mScalingValuesCalculated = false;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -75,16 +76,11 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                     for (Player player : players) {
                         playersWithCoordinates.add(new Tuple<>(player, new Coordinates(column, row, coordinatesCounter++, 0)));
                     }
-                    addPlayerListToDb(playersWithCoordinates);
-
+                    mFirebaseHelper.setPlayerList(playersWithCoordinates);
                     break outerLoop;
+                }
             }
         }
-    }
-    }
-
-    private void addPlayerListToDb(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
-        mFirebaseHelper.setPlayerList(playersWithCoordinates);
     }
 
     private void addItemListToDb(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
@@ -146,11 +142,31 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
     }
 
     private void drawMapObjects(Canvas canvas) {
+        //Used for scaling objects to fit tiles.
+        if (!mScalingValuesCalculated) {
+            mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
+            mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
+            mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
+            mScalingValuesCalculated = true;
+        }
 
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.getFigure());
-            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
-            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+
+            if (mSelectedObject == null) {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigure);
+                Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+                canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+            } else {
+                if (tuple.x.id.equals(mSelectedObject.id)) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigureSelected);
+                    Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+                    canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+                } else {
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigure);
+                    Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+                    canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+                }
+            }
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
@@ -179,11 +195,6 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         // Set width and height to be used for the squares.
         mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
         mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
-
-    //Used for scaling objects to fit tiles.
-    mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
-    mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
-    mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
 
     float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
     float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
@@ -220,9 +231,10 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         // The focus point for zooming is the center of the
         // displayable region. That point is defined by half
         // the canvas width and height.
+
         mFocusX = mHalfMaxCanvasWidth;
         mFocusY = mHalfMaxCanvasHeight;
-        canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
+        canvas.scale(mScaleFactor, mScaleFactor/*, mFocusX, mFocusY*/);
 
         // Set up the grid  and grid selection variables.
         if (mGrid == null)
@@ -265,6 +277,7 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
             mGrid = grid;
 
         mFirebaseHelper.setupGridListener();
+        mFirebaseHelper.increaseRoundCount();
         updateGrid(grid);
     }
 
@@ -282,8 +295,9 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         invalidate();
     }
 
-    public void setPlayerListener() {
+    public void setListeners() {
         mFirebaseHelper.setPlayerListListener();
+        mFirebaseHelper.setRoundCountListener(getContext());
     }
 
     public void setItemListener() {
@@ -302,6 +316,32 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         mGameItemList.clear();
         mGameItemList = itemList;
         invalidate();
+    }
+
+    public void startMonsterTurn() {
+        //TODO!!
+        ((GameActivity) getContext()).setMonsterDialog();
+    }
+
+    @Override
+    public void actionTaken() {
+        //Check if all players have used their turns
+        for (Tuple<Player, Coordinates> player : mGameObjectList) {
+            if (player.x.actionsRemaining > 0) return;
+        }
+        nextRound();
+    }
+
+    private void nextRound() {
+        startMonsterTurn();
+        resetPlayerActions();
+        mFirebaseHelper.increaseRoundCount();
+    }
+
+    private void resetPlayerActions() {
+        for (Tuple<Player, Coordinates> player : mGameObjectList) {
+            player.x.actionsRemaining = 3;
+        }
     }
 
     public void updateGrid(Tile grid[][]) {
@@ -347,39 +387,27 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             //Move selected object
-            if (tuple.x.equals(mSelectedObject)) {
-                for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
-                    if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
-                        mSelectedObject.SelectPlayer();
-                        tuple1.x.SelectPlayer();
-                        mSelectedObject = tuple1.x;
+            if (mSelectedObject != null) {
+                if (tuple.x.id.equals(mSelectedObject.id)) {
+                    for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
+                        if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
+                            mSelectedObject = tuple1.x;
 
-                        if (tuple.x.equals(tuple1.x)) {
-                            tuple.x.SelectPlayer();
-                            mSelectedObject = null;
+                            if (tuple.x.equals(tuple1.x)) {
+                                mSelectedObject = null;
+                            }
+
+                            invalidate();
+                            return;
                         }
-
-                        invalidate();
-                        return;
                     }
-                }
-
-                Coordinates movedTo = moveToTile(tileX, tileY);
-                if (movedTo != null) {
-                    tuple.y = movedTo;
-                    tuple.x.SelectPlayer();
-                    mSelectedObject = null;
+                    movePlayer(tuple, tileX, tileY);
                 }
             }
-
             //Select or DeSelect object
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY && tuple.y.placementOnTileX == placementX && tuple.y.placementOnTileY == placementY) {
                 if (tuple.x.Name.equals("AndersHost")) {
-                    if (!tuple.x.isSelected()) {
-                        tuple.x.SelectPlayer();
-                        if (mSelectedObject != null) mSelectedObject.SelectPlayer();
-                        mSelectedObject = tuple.x;
-                    }
+                    mSelectedObject = tuple.x;
                 } else {
                     List<GameItem> itemListToShow = tuple.x.PlayerItems;
                     if (itemListToShow == null) {
@@ -390,11 +418,19 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
                 }
             }
         }
-
-        addPlayerListToDb(mGameObjectList);
+        mFirebaseHelper.setPlayerList(mGameObjectList);
 
         //Render map
         invalidate();
+    }
+
+    private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
+        Coordinates movedTo = moveToTile(tileX, tileY);
+        if (movedTo != null && tuple.x.canTakeAction()) {
+            tuple.y = movedTo;
+            mSelectedObject = null;
+            tuple.x.takeAction(getContext(), this);
+        }
     }
 
     @Override
@@ -452,12 +488,12 @@ public class GameView extends PanZoomView implements GameTouchListener, GameView
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
-    /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
-        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-    }
-    for(Tuple<Item, Coordinates> tuple : mGameObjectList){
-        if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-    }*/
+        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }
+        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
+            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
+        }*/
 
         if (onTile.size() == (mTileDivision * mTileDivision)) return null;
 

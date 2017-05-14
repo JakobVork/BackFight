@@ -8,12 +8,17 @@ import com.studio.jarn.backfight.Items.ItemFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.content.Context;
+import android.view.View;
+
+import java.util.UUID;
 
 class Player {
     String Name;
     int mFigure = 0;
     int mFigureSelected = 0;
-    private boolean mSelected = false;
+    int actionsRemaining = 3;
+    String id = UUID.randomUUID().toString();
 
     public List<GameItem> PlayerItems;
 
@@ -29,16 +34,19 @@ class Player {
     Player() {
     }
 
-    void SelectPlayer() {
-        mSelected = !mSelected;
+    boolean canTakeAction() {
+        return actionsRemaining > 0;
     }
 
-    int getFigure() {
-        if (mSelected) return mFigureSelected;
-        else return mFigure;
-    }
+    void takeAction(Context context, View view) {
+        FirebaseGameActivityListener firebaseGameActivityListener;
+        PlayerGameViewListener playerGameViewListener;
+        actionsRemaining--;
 
-    boolean isSelected() {
-        return mSelected;
+        firebaseGameActivityListener = (FirebaseGameActivityListener) context;
+        playerGameViewListener = (PlayerGameViewListener) view;
+        firebaseGameActivityListener.setActionCounter(actionsRemaining);
+        if (actionsRemaining <= 0)
+            playerGameViewListener.actionTaken();
     }
 }
