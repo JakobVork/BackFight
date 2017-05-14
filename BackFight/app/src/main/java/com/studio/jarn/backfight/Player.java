@@ -11,6 +11,7 @@ class Player {
     int mFigure = 0;
     int mFigureSelected = 0;
     int actionsRemaining = 3;
+    int actionsPerTurn = 3;
     String id = UUID.randomUUID().toString();
 
     Player(int Figure, int FigureSelected, String name) {
@@ -28,14 +29,18 @@ class Player {
     }
 
     void takeAction(Context context, View view) {
-        FirebaseGameActivityListener firebaseGameActivityListener;
+        PlayerGameActivityListener playerGameActivityListener;
         PlayerGameViewListener playerGameViewListener;
         actionsRemaining--;
 
-        firebaseGameActivityListener = (FirebaseGameActivityListener) context;
+        playerGameActivityListener = (PlayerGameActivityListener) context;
         playerGameViewListener = (PlayerGameViewListener) view;
-        firebaseGameActivityListener.setActionCounter(actionsRemaining);
+        playerGameActivityListener.setActionCounter(actionsRemaining);
         if (actionsRemaining <= 0)
             playerGameViewListener.actionTaken();
+    }
+
+    void resetActions() {
+        actionsRemaining = actionsPerTurn;
     }
 }

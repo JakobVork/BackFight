@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener
 {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
@@ -232,7 +232,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     //ToDo for testing purpose
-    public void setMonsterDialog() {
+    public void showMonsterDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Monster");
         alertDialog.setMessage("Monster turn :)");

@@ -160,38 +160,39 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void myDraw(Canvas canvas) {
-        //Used for scaling objects to fit tiles.
-        if (!mScalingValuesCalculated) {
-            mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue();
-            mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue();
-            mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();
-            mScalingValuesCalculated = true;
-        }
+
+        setMargins();
 
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-
             if (mSelectedObject == null) {
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigure);
-                Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
-                canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+                scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.mFigure);
             } else {
                 if (tuple.x.id.equals(mSelectedObject.id)) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigureSelected);
-                    Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
-                    canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+                    scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.mFigureSelected);
                 } else {
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.mFigure);
-                    Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
-                    canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+                    scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.mFigure);
                 }
             }
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), tuple.x.Image);
-            Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
-            canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, getYCoordFromObjectPlacement(tuple.y) + mObjectMarginValue, null);
+            scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.Image);
         }
+    }
+
+    private void setMargins() {
+        if (!mScalingValuesCalculated) {
+            mObjectMarginValue = Double.valueOf(mSquareWidth / mTileDivision * 0.05).intValue(); //a 5% margin to the side of the tile.
+            mObjectWidthValue = Double.valueOf(mSquareWidth / mTileDivision * 0.90).intValue(); //Scale image width to 90% size to make room for the 5% margin on both sides.
+            mObjectHeightValue = Double.valueOf(mSquareHeight / mTileDivision * 0.90).intValue();//Scale image height to 90% size to make room for the 5% margin on both sides.
+            mScalingValuesCalculated = true;
+        }
+    }
+
+    void scaleBitmapAndAddToCanvas(Canvas canvas, Coordinates y, int mFigure) {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), mFigure);
+        Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, mObjectWidthValue, mObjectHeightValue, true);
+        canvas.drawBitmap(bitmapScaled, getXCoordFromObjectPlacement(y) + mObjectMarginValue, getYCoordFromObjectPlacement(y) + mObjectMarginValue, null);
     }
 
     /**
@@ -252,6 +253,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         mFocusX = mHalfMaxCanvasWidth;
         mFocusY = mHalfMaxCanvasHeight;
+
+        //TODO This has been commented out to move the focus to the top left corner, this is a temp hotfix for a better zoom experience.
+        //The out commented code is there for the person who needs to fix to know what was there before
         canvas.scale(mScaleFactor, mScaleFactor/*, mFocusX, mFocusY*/);
 
         // Set up the grid  and grid selection variables.
@@ -327,7 +331,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public void startMonsterTurn() {
         //TODO!!
-        ((GameActivity) getContext()).setMonsterDialog();
+        ((GameActivity) getContext()).showMonsterDialog();
     }
 
     @Override
@@ -347,7 +351,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private void resetPlayerActions() {
         for (Tuple<Player, Coordinates> player : mGameObjectList) {
-            player.x.actionsRemaining = 3;
+            player.x.resetActions();
         }
     }
 
@@ -491,12 +495,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
-        /*for(Tuple<Monster, Coordinates> tuple : mGameObjectList){
-            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-        }
-        for(Tuple<Item, Coordinates> tuple : mGameObjectList){
-            if(tuple.y.tileX == toX && tuple.y.tileY == toY) onTile.add(tuple);
-        }*/
 
         if (onTile.size() == (mTileDivision * mTileDivision)) return null;
 
