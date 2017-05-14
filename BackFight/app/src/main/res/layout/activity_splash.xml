@@ -21,7 +21,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.35000002"
-        app:srcCompat="@mipmap/icon" />
+        app:srcCompat="@drawable/backfight_icon_ingame" />
 
     <TextView
         android:id="@+id/activity_splash_tv_title"
