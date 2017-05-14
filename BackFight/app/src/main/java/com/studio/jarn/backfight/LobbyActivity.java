@@ -69,7 +69,7 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
         mFirebaseHelper.setStandardKey(mGameId);
         //TODO needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersClient"));
+        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player_girl_blond_knight, R.drawable.player_girl_blond_knight_selected, "AndersClient"));
         mFirebaseHelper.setupStartGameListener();
         mFirebaseHelper.setupWidgetsListener();
 
@@ -91,7 +91,7 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         mFirebaseHelper.setNumberPicker(15); //Set 15 as default on db
         mTvId.setText(mGameId);
         //TODO needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player32, R.drawable.player32selected, "AndersHost"));
+        mFirebaseHelper.addPlayerToDb(new Player(R.drawable.player_crusader, R.drawable.player_crusader_selected, "AndersHost"));
     }
 
     private void getValuesFromIntent() {
