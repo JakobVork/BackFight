@@ -17,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static String PROFILE_NAME_SP = "Profile Name";
     public static String AVATAR_IMAGE_SP = "Avatar Image";
+    public static String AVATAR_IMAGE_SELECTED_SP = "Avatar Image Selected";
     public static String AVATAR_IMAGE_NUMBER_SP = "Avatar Image Number";
     Button mBtnBack;
     Button mBtnSave;
@@ -88,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (!profileName.equals("")) {
             settingsSpEditor.putString(PROFILE_NAME_SP, profileName);
             settingsSpEditor.putInt(AVATAR_IMAGE_NUMBER_SP, currentView);
+            settingsSpEditor.putInt(AVATAR_IMAGE_SELECTED_SP, mCustomPagerAdapter.getResourceSelected(currentView));
             settingsSpEditor.putInt(AVATAR_IMAGE_SP, mCustomPagerAdapter.getResource(currentView));
             settingsSpEditor.apply();
             backToMainMenu();

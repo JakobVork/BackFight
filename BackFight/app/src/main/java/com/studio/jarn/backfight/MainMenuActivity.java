@@ -19,6 +19,7 @@ import com.studio.jarn.backfight.Settings_Activity.SettingsActivity;
 
 import java.util.UUID;
 
+import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SP;
 import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.PROFILE_NAME_SP;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -79,6 +80,7 @@ public class MainMenuActivity extends AppCompatActivity {
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor settingsSpEditor = sp.edit();
         settingsSpEditor.putString(PHONE_UUID_SP, UUID.randomUUID().toString());
+        settingsSpEditor.putInt(AVATAR_IMAGE_SP, R.drawable.player_crusader);
         settingsSpEditor.putString(PROFILE_NAME_SP, input);
         settingsSpEditor.apply();
     }

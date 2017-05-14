@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
 import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SP;
 import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.PROFILE_NAME_SP;
 
@@ -75,10 +76,10 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
         mFirebaseHelper.setStandardKey(mGameId);
 
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
-        //TODO selected img needs to be extracted from SharedPrefs
         int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
+        int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
         String PlayerName = sp.getString(PROFILE_NAME_SP, "");
-        mFirebaseHelper.addPlayerToDb(new Player(Image, R.drawable.player32selected, PlayerName));
+        mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName));
         mFirebaseHelper.setupStartGameListener();
         mFirebaseHelper.setupWidgetsListener();
 
@@ -102,9 +103,9 @@ public class LobbyActivity extends AppCompatActivity implements LobbyListener {
 
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
+        int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
         String PlayerName = sp.getString(PROFILE_NAME_SP, "");
-        //TODO selected img needs to be extracted from SharedPrefs
-        mFirebaseHelper.addPlayerToDb(new Player(Image, R.drawable.player32selected, PlayerName));
+        mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName));
     }
 
     private void getValuesFromIntent() {
