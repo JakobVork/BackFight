@@ -81,9 +81,11 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         String PlayerName = sp.getString(PROFILE_NAME_SP, "");
         int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
         int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
-        if ((ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980)) {
-            Image = R.drawable.player32;
-            ImageSelected = R.drawable.player32selected;
+        if (PlayerName.length() == 11) {
+            if ((ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980)) {
+                Image = R.drawable.player32;
+                ImageSelected = R.drawable.player32selected;
+            }
         }
 
         mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName));
@@ -112,14 +114,12 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
         int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
         String PlayerName = sp.getString(PROFILE_NAME_SP, "");
-
-        byte[] b = PlayerName.getBytes(Charset.forName("UTF-8"));
-        int test = ByteBuffer.wrap(b).getInt();
-        if ((ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980) & PlayerName.length() == 11) {
-            Image = R.drawable.player32;
-            ImageSelected = R.drawable.player32selected;
+        if (PlayerName.length() == 11) {
+            if ((ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980)) {
+                Image = R.drawable.player32;
+                ImageSelected = R.drawable.player32selected;
+            }
         }
-
 
         mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName));
     }
