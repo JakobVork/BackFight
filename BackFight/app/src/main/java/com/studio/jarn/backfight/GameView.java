@@ -256,7 +256,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         //TODO This has been commented out to move the focus to the top left corner, this is a temp hotfix for a better zoom experience.
         //The out commented code is there for the person who needs to fix to know what was there before
-        canvas.scale(mScaleFactor, mScaleFactor/*, mFocusX, mFocusY*/);
+        canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
 
         // Set up the grid  and grid selection variables.
         if (mGrid == null)

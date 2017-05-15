@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -76,9 +78,14 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         mFirebaseHelper.setStandardKey(mGameId);
 
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+        String PlayerName = sp.getString(PROFILE_NAME_SP, "");
         int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
         int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
-        String PlayerName = sp.getString(PROFILE_NAME_SP, "");
+        if ((ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980)) {
+            Image = R.drawable.player32;
+            ImageSelected = R.drawable.player32selected;
+        }
+
         mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName));
         mFirebaseHelper.setupStartGameListener();
         mFirebaseHelper.setupWidgetsListener();
@@ -105,6 +112,15 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
         int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
         String PlayerName = sp.getString(PROFILE_NAME_SP, "");
+
+        byte[] b = PlayerName.getBytes(Charset.forName("UTF-8"));
+        int test = ByteBuffer.wrap(b).getInt();
+        if ((ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980) & PlayerName.length() == 11) {
+            Image = R.drawable.player32;
+            ImageSelected = R.drawable.player32selected;
+        }
+
+
         mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName));
     }
 

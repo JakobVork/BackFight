@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void getSavedSettings() {
         SharedPreferences sharedPref = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         mProfileName.setText(sharedPref.getString(PROFILE_NAME_SP, ""));
-        mViewPager.setCurrentItem(sharedPref.getInt(AVATAR_IMAGE_NUMBER_SP, 0));
+        mViewPager.setCurrentItem(sharedPref.getInt(AVATAR_IMAGE_NUMBER_SP, R.drawable.player_crusader));
     }
 
     // Find the buttons in the layout file and call to make OnClickListener on them
