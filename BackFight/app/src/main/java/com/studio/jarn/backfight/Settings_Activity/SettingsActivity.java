@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
         mViewPager.setOffscreenPageLimit(mCustomPagerAdapter.getCount());
 
         //TODO remove hardcoded
-        mViewPager.setPageMargin(-200);
+        mViewPager.setPageMargin(-400);
     }
 
     // Make OnClickListener to the buttons
