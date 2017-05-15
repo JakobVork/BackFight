@@ -19,6 +19,7 @@ import com.studio.jarn.backfight.Settings_Activity.SettingsActivity;
 
 import java.util.UUID;
 
+import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
 import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SP;
 import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.PROFILE_NAME_SP;
 
@@ -81,6 +82,7 @@ public class MainMenuActivity extends AppCompatActivity {
         SharedPreferences.Editor settingsSpEditor = sp.edit();
         settingsSpEditor.putString(PHONE_UUID_SP, UUID.randomUUID().toString());
         settingsSpEditor.putInt(AVATAR_IMAGE_SP, R.drawable.player_crusader);
+        settingsSpEditor.putInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player_crusader_selected);
         settingsSpEditor.putString(PROFILE_NAME_SP, input);
         settingsSpEditor.apply();
     }

@@ -26,12 +26,28 @@ class CustomPagerAdapter extends PagerAdapter {
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-
-    //TODO get real avatars
     private void getAvatars() {
-        mResources = new int[]{R.drawable.player_crusader, R.drawable.player_girl_blond_knight, R.drawable.player_girl_brunette_knight, R.drawable.player_golden_knight, R.drawable.player_knight, R.drawable.player_knight2, R.drawable.player_old_man, R.drawable.player_squire};
-        mResourcesSelected = new int[]{R.drawable.player_crusader_selected, R.drawable.player_girl_blond_knight_selected, R.drawable.player_girl_brunette_knight_selected, R.drawable.player_golden_knight_selected, R.drawable.player_knight_seleted, R.drawable.player_knight2_selected, R.drawable.player_old_man_selected, R.drawable.player_squire_seleted};
+        mResources = new int[]{
+                R.drawable.player_crusader,
+                R.drawable.player_girl_blond_knight,
+                R.drawable.player_girl_brunette_knight,
+                R.drawable.player_golden_knight,
+                R.drawable.player_knight,
+                R.drawable.player_knight2,
+                R.drawable.player_old_man,
+                R.drawable.player_squire
+        };
 
+        mResourcesSelected = new int[]{
+                R.drawable.player_crusader_selected,
+                R.drawable.player_girl_blond_knight_selected,
+                R.drawable.player_girl_brunette_knight_selected,
+                R.drawable.player_golden_knight_selected,
+                R.drawable.player_knight_seleted,
+                R.drawable.player_knight2_selected,
+                R.drawable.player_old_man_selected,
+                R.drawable.player_squire_seleted
+        };
     }
 
     int getResourceSelected(int number) {
