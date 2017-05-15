@@ -338,7 +338,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void actionTaken() {
         //Check if all players have used their turns
         for (Tuple<Player, Coordinates> player : mGameObjectList) {
-            if (player.x.actionsRemaining > 0) return;
+            if (player.x.mActionsRemaining > 0) return;
         }
         nextRound();
     }
