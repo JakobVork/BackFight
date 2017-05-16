@@ -335,7 +335,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         GameActivity gameActivity = (GameActivity) getContext();
         gameActivity.showMonsterDialog();
 
-        gameActivity.sendNotification();
+        gameActivity.sendNotificationNewRound();
     }
 
     @Override
