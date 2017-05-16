@@ -25,6 +25,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.studio.jarn.backfight.NotificationIntentService.ACTION_FOO;
+import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_PARAM1;
+import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_PARAM2;
+
 
 public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener
 {
@@ -243,5 +247,14 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                     }
                 });
         alertDialog.show();
+    }
+
+    public void sendNotification() {
+
+        Intent notificationServiceIntet = new Intent(this, NotificationIntentService.class);
+        notificationServiceIntet.setAction(ACTION_FOO);
+        notificationServiceIntet.putExtra(EXTRA_PARAM1, "Test1");
+        notificationServiceIntet.putExtra(EXTRA_PARAM2, "Test2");
+        startService(notificationServiceIntet);
     }
 }
