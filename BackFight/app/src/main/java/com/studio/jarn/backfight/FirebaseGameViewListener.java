@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemWeapon;
 
 import java.util.ArrayList;
 

@@ -11,8 +11,11 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
+import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.Items.Weapons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -423,7 +426,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 }
             }
         }
-        mFirebaseHelper.setPlayerList(mGameObjectList);
 
 
         // Check for items clicked
@@ -431,6 +433,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         if(mapItem != null) {
             pickUpItem(mapItem);
         }
+        mFirebaseHelper.setPlayerList(mGameObjectList);
 
         //Render map
         invalidate();
@@ -459,31 +462,18 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void addItemToPlayer(GameItem item, String playerName) {
-        Player player = null;
-        Coordinates playerCoords = null;
         for (Tuple<Player, Coordinates> playerTuple:mGameObjectList) {
             if(playerTuple.x.Name.equals(playerName)) {
-                player = playerTuple.x;
-                playerCoords = playerTuple.y;
+                // Check if list is null due to the way firebase handles empty lists.
+                if(playerTuple.x.PlayerItems == null)
+                {
+                    playerTuple.x.PlayerItems = new ArrayList<GameItem>();
+                    playerTuple.x.PlayerItems.add(item);
+                } else {
+                    playerTuple.x.PlayerItems.add(item);
+                }
             }
         }
-
-        // Make sure player is found, should never be true.
-        if(player == null || playerCoords == null) {
-            return;
-        }
-
-        // Players item list can be null, due to the way firebase handle empty lists. Therefore a check is made.
-        if(player.PlayerItems == null) {
-            player.PlayerItems = new ArrayList<GameItem>();
-        }
-
-        // Add item to players list
-        player.PlayerItems.add(item);
-
-        // reassign player with new - Since java is by-value we have to remove and add it again.
-        mGameObjectList.remove(player);
-        mGameObjectList.add(new Tuple<>(player, playerCoords));
     }
 
     private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {

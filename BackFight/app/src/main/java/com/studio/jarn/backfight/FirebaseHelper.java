@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 
+import android.content.ClipData;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +16,12 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemWeapon;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -308,20 +313,24 @@ class FirebaseHelper {
         mDatabase.getReference(mGameIdItems).setValue(itemsWithCoordinates);
     }
 
+    Tuple<GameItem, Coordinates> convert(Tuple<ItemWeapon, Coordinates> tuple){
+        return new Tuple<GameItem, Coordinates>(tuple.x, tuple.y);
+    }
+
     void setItemListListener() {
         mDatabase.getReference(mGameIdItems).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                String item = new Gson().toJson(dataSnapshot.getValue());
+                Log.d("Test", item);
 
-                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<>();
-
-                GenericTypeIndicator<Tuple<GameItem, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<GameItem, Coordinates>>() {
-                };
+                GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>>() {};
+                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<Tuple<GameItem, Coordinates>>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    itemList.add(postSnapshot.getValue(genericTypeIndicator));
+                    itemList.add(convert(postSnapshot.getValue(genericTypeIndicator)));
                 }
-                mFirebaseGameViewListener.setItemList(itemList);
 
+                mFirebaseGameViewListener.setItemList(itemList);
             }
 
             @Override
