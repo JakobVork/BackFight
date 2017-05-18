@@ -15,6 +15,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.studio.jarn.backfight.monster.Monster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ class FirebaseHelper {
 
     private static final String sDatabasePostfixGrid = "Grid";
     private static final String sDatabasePostfixPlayers = "PlayerList";
+    private static final String getsDatabasePostfixMonsters = "MonsterList";
     private static final String sDatabasePostfixStartGame = "StartGame";
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
@@ -35,6 +37,7 @@ class FirebaseHelper {
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
+    private String mGameIdMonsters;
     private FirebaseNewGameListener mFirebaseNewGameListener;
     private FirebaseLobbyListener mFirebaseLobbyListener;
     private FirebaseGameViewListener mFirebaseGameViewListener;
@@ -76,6 +79,7 @@ class FirebaseHelper {
         mGameIdGrid = gameId + sDatabasePostfixGrid;
         mGameIdPlayers = gameId + sDatabasePostfixPlayers;
         mGameIdRoundCount = gameId + sDatabasePostfixRoundCount;
+        mGameIdMonsters = gameId + getsDatabasePostfixMonsters;
     }
 
     //FirebaseNewGameListener
@@ -157,12 +161,12 @@ class FirebaseHelper {
         mDatabase.getReference(mGameId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Player> playerList = new ArrayList<Player>() {
-                };
+                ArrayList<Player> playerList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
                 mFirebaseLobbyListener.setPlayerList(playerList);
+
             }
 
             @Override
@@ -172,6 +176,7 @@ class FirebaseHelper {
             }
         });
     }
+
 
     void setNumberPicker(int value) {
         mDatabase.getReference(mGameIdNumberPicker).setValue(value);
@@ -189,6 +194,10 @@ class FirebaseHelper {
     //FirebaseGameViewListener
     void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
         mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
+    }
+
+    void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monstersWithCoordinates) {
+        mDatabase.getReference(mGameIdMonsters).setValue(monstersWithCoordinates);
     }
 
     void setupGridListener() {
@@ -238,6 +247,29 @@ class FirebaseHelper {
                     playerList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
                 mFirebaseGameViewListener.setPlayerList(playerList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
+    void setMonsterListListener() {
+        mDatabase.getReference(mGameIdMonsters).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<Tuple<Monster, Coordinates>> monsterList = new ArrayList<>();
+
+                GenericTypeIndicator<Tuple<Monster, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Monster, Coordinates>>() {
+                };
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    monsterList.add(postSnapshot.getValue(genericTypeIndicator));
+                }
+                mFirebaseGameViewListener.setMonsterList(monsterList);
             }
 
             @Override

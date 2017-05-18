@@ -180,7 +180,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Tuple<Monster, Coordinates> tuple : mMonsterList) {
-            scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.getFigure());
+            scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.mFigure);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
@@ -328,12 +328,20 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void setListeners() {
         mFirebaseHelper.setPlayerListListener();
         mFirebaseHelper.setRoundCountListener(getContext());
+        mFirebaseHelper.setMonsterListListener();
     }
 
     @Override
     public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
         mGameObjectList.clear();
         mGameObjectList = playerList;
+        invalidate();
+    }
+
+    @Override
+    public void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monsterList) {
+        mMonsterList.clear();
+        mMonsterList = monsterList;
         invalidate();
     }
 
@@ -466,6 +474,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 }
             }
         }
+
+        mFirebaseHelper.setMonsterList(mMonsterList);
+
+        //Render map
+        invalidate();
     }
 
     private void attackPlayer(Tuple<Player, Coordinates> player, Tuple<Monster, Coordinates> monster) {
@@ -648,6 +661,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             spawnMonster(0);
         }
         spawnMonster(1);
+
+        mFirebaseHelper.setMonsterList(mMonsterList);
     }
 
     public void spawnItemOnTile(GameItem item, Coordinates coordinates) {

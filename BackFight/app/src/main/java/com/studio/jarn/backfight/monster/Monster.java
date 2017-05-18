@@ -2,9 +2,9 @@ package com.studio.jarn.backfight.monster;
 
 
 public class Monster {
+    public int mFigure;
     private String mName;
     private String mDecription;
-    private int mFigure;
     private int mFigureSelected;
     private int mActionsRemaining;
     private int mActionsPerTurn;
