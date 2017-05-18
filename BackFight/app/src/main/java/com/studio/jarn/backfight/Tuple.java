@@ -1,12 +1,12 @@
 package com.studio.jarn.backfight;
 
 class Tuple<X, Y> {
-    X x;
-    Y y;
+    X mGameObject;
+    Y mCoordinates;
 
-    Tuple(X x, Y y) {
-        this.x = x;
-        this.y = y;
+    Tuple(X mGameObject, Y mCoordinates) {
+        this.mGameObject = mGameObject;
+        this.mCoordinates = mCoordinates;
     }
 
     Tuple() {
