@@ -3,13 +3,13 @@ package com.studio.jarn.backfight.monster;
 
 public class Monster {
     public int mFigure;
-    private String mName;
-    private String mDecription;
-    private int mFigureSelected;
-    private int mActionsRemaining;
-    private int mActionsPerTurn;
-    private int mAttackPower;
-    private int mHitPoints;
+    public String mName;
+    public String mDecription;
+    public int mFigureSelected;
+    public int mActionsRemaining;
+    public int mActionsPerTurn;
+    public int mAttackPower;
+    public int mHitPoints;
 
     Monster(int Figure, int FigureSelected, String name, String decription, int monsterTurn, int hp, int ap) {
         mFigure = Figure;
@@ -24,30 +24,6 @@ public class Monster {
 
     //Needed for casting from Firebase
     Monster() {
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public String getDecription() {
-        return mDecription;
-    }
-
-    public int getFigure() {
-        return mFigure;
-    }
-
-    public int getFigureSelected() {
-        return mFigureSelected;
-    }
-
-    public int getAttackPower() {
-        return mAttackPower;
-    }
-
-    public int getHitPoints() {
-        return mHitPoints;
     }
 
     public boolean canTakeAction() {
