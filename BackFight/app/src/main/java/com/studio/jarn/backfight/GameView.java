@@ -456,13 +456,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
         //Not your own player, and should not be moved
-        if(!tuple.mGameObject.id.equals(mPlayerId)) return;
+        if (!tuple.mGameObject.id.equals(mPlayerId)) return;
         //Moving to the same tile
-        if(tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return;
+        if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return;
         //Click is on an non-passable tile do nothing
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
-        if(!MovementIsMoreThanOneTile(tuple.mCoordinates, tileX, tileY)) {
+        if (!MovementIsMoreThanOneTile(tuple.mCoordinates, tileX, tileY)) {
             Coordinates movedTo = moveToTile(tileX, tileY);
             if (movedTo != null && tuple.mGameObject.canTakeAction()) {
                 tuple.mCoordinates = movedTo;
