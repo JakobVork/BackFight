@@ -27,7 +27,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     protected float mFocusX = 1000; //default value
     protected float mFocusY = 1000; //default value
     protected GameTouchListener mTouchListener;
-    boolean onlyOnce = true;
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
@@ -45,7 +44,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private RectF mDestRectF;
     private Tile[][] mGrid;
     //TODO Player should be GameObject
-    private ArrayList<Tuple<Player, Coordinates>> mGameObjectList = new ArrayList<>();
+    private ArrayList<Tuple<Player, Coordinates>> mGamePlayerList = new ArrayList<>();
     private ArrayList<Tuple<GameItem, Coordinates>> mGameItemList = new ArrayList<>();
     private int mGridSize;
     private int mSquaresViewedAtStartup;
@@ -75,17 +74,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public void setTouchListener(GameTouchListener newListener) {
         mTouchListener = newListener;
-    }
-
-    //TODO should be implemented correctly
-    public void addGameObjects() {
-/*        mGameObjectList.add(new Tuple<>();
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 1, 0, 0)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 0, 1)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Pernille"), new Coordinates(0, 0, 1, 0)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(0, 0, 1, 1)));
-    mGameObjectList.add(new Tuple<>(new Player(R.drawable.player32, R.drawable.player32selected, "Anders"), new Coordinates(1, 0, 0, 0)));
-    invalidate();*/
     }
 
     public void initAddPlayers(List<Player> players) {
@@ -163,7 +151,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         setMargins();
 
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             if (mSelectedObject == null) {
                 scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.mFigure);
             } else {
@@ -324,8 +312,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     @Override
     public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
-        mGameObjectList.clear();
-        mGameObjectList = playerList;
+        mGamePlayerList.clear();
+        mGamePlayerList = playerList;
         invalidate();
     }
 
@@ -337,7 +325,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     @Override
     public void actionTaken() {
         //Check if all players have used their turns
-        for (Tuple<Player, Coordinates> player : mGameObjectList) {
+        for (Tuple<Player, Coordinates> player : mGamePlayerList) {
             if (player.x.mActionsRemaining > 0) return;
         }
         nextRound();
@@ -350,7 +338,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void resetPlayerActions() {
-        for (Tuple<Player, Coordinates> player : mGameObjectList) {
+        for (Tuple<Player, Coordinates> player : mGamePlayerList) {
             player.x.resetActions();
         }
     }
@@ -373,11 +361,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     public void onTouchUp(float downX, float downY, float upX, float upY) {
-        if (onlyOnce) {
-            addGameObjects();
-            onlyOnce = false;
-        }
-
         //Calculate the coordinates pressed on the map
         Coordinates map = getTileFromPixelValue(upX, upY);
 
@@ -401,11 +384,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         if (!mGrid[tileY][tileX].CanBePassed) return;
 
         //Check every object on the map
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             //Move selected object
             if (mSelectedObject != null) {
                 if (tuple.x.id.equals(mSelectedObject.id)) {
-                    for (Tuple<Player, Coordinates> tuple1 : mGameObjectList) {
+                    for (Tuple<Player, Coordinates> tuple1 : mGamePlayerList) {
                         if (tuple1.y.tileX == tileX && tuple1.y.tileY == tileY && tuple1.y.placementOnTileX == placementX && tuple1.y.placementOnTileY == placementY) {
                             mSelectedObject = tuple1.x;
 
@@ -425,7 +408,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 mSelectedObject = tuple.x;
             }
         }
-        mFirebaseHelper.setPlayerList(mGameObjectList);
+        mFirebaseHelper.setPlayerList(mGamePlayerList);
 
         //Render map
         invalidate();
@@ -492,7 +475,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private Coordinates moveToTile(int tileX, int tileY) {
         ArrayList<Tuple<Player, Coordinates>> onTile = new ArrayList<>();
 
-        for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
+        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) onTile.add(tuple);
         }
 
