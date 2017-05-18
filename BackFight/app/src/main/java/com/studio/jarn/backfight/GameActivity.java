@@ -114,6 +114,10 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 // Spawn items
                 gv.spawnItems(10);
+
+                // Spawn monsters
+                gv.spawnStartMonsters(5);
+
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
