@@ -244,6 +244,7 @@ class FirebaseHelper {
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Tuple<Player, Coordinates> test = postSnapshot.getValue(genericTypeIndicator);
                     playerList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
                 mFirebaseGameViewListener.setPlayerList(playerList);
