@@ -49,7 +49,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private int mGridSize;
     private int mSquaresViewedAtStartup;
     private FirebaseHelper mFirebaseHelper;
-    private Player mSelectedObject;
+    private Player mSelectedPlayer;
     private int mTileDivision = 4;
     private boolean mScalingValuesCalculated = false;
     private String mPlayerId;
@@ -159,10 +159,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         setMargins();
 
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
-            if (mSelectedObject == null) {
+            if (mSelectedPlayer == null) {
                 scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
             } else {
-                if (tuple.mGameObject.id.equals(mSelectedObject.id)) {
+                if (tuple.mGameObject.id.equals(mSelectedPlayer.id)) {
                     scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigureSelected);
                 } else {
                     scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
@@ -388,40 +388,70 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         //Click is outside map: do nothing
         if (placementX < 0 || placementY < 0 || tileX >= (mMaxCanvasWidth / mSquareWidth) || tileY >= (mMaxCanvasHeight / mSquareHeight))
             return;
-        //Click is on an non-passable tile do nothing
-        if (!mGrid[tileY][tileX].CanBePassed) return;
 
+        //Set variables to see what handle is done
+        Boolean monsterHandled = false;
+        Boolean playerHandled = HandlePlayerClicked(tileX, tileY, placementX, placementY);
 
+        if(!playerHandled)
+        monsterHandled = HandleMonsterClicked(tileX, tileY, placementX, placementY);
 
-        //Check every object on the map
-        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
-            //Move selected object
-            if (mSelectedObject != null) {
-                if (tuple.mGameObject.id.equals(mSelectedObject.id)) {
-                    for (Tuple<Player, Coordinates> tuple1 : mGamePlayerList) {
-                        if (tuple1.mCoordinates.tileX == tileX && tuple1.mCoordinates.tileY == tileY && tuple1.mCoordinates.placementOnTileX == placementX && tuple1.mCoordinates.placementOnTileY == placementY) {
-                            mSelectedObject = tuple1.mGameObject;
+        if(!playerHandled && !monsterHandled)
+        HandleItemClicked(tileX, tileY, placementX, placementY);
 
-                            if (tuple.mGameObject.equals(tuple1.mGameObject)) {
-                                mSelectedObject = null;
-                            }
-
-                            invalidate();
-                            return;
-                        }
-                    }
-                    movePlayer(tuple, tileX, tileY);
-                }
-            }
-            //Select or DeSelect object
-            if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY && tuple.mCoordinates.placementOnTileX == placementX && tuple.mCoordinates.placementOnTileY == placementY) {
-                mSelectedObject = tuple.mGameObject;
-            }
-        }
         mFirebaseHelper.setPlayerList(mGamePlayerList);
 
         //Render map
         invalidate();
+    }
+
+    private Boolean HandlePlayerClicked(int tileX, int tileY, int placementX, int placementY){
+
+        //Check every object on the map
+        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
+            //Check if a Player is already selected
+            if (mSelectedPlayer != null && tuple.mGameObject.id.equals(mSelectedPlayer.id)) {
+                //Check if a player is clicked
+                for (Tuple<Player, Coordinates> tuple1 : mGamePlayerList) {
+                    if (tuple1.mCoordinates.tileX == tileX && tuple1.mCoordinates.tileY == tileY && tuple1.mCoordinates.placementOnTileX == placementX && tuple1.mCoordinates.placementOnTileY == placementY) {
+                        mSelectedPlayer = tuple1.mGameObject;
+
+                        //Same player: deselect
+                        if (tuple.mGameObject.equals(tuple1.mGameObject)) {
+                            mSelectedPlayer = null;
+                        }
+
+                        //Player related click happened
+                        return true;
+                    }
+                }
+                //TODO Check if Item is clicked (ends with return true)
+                //TODO Check if Monster is clicked (ends with return true)
+
+                movePlayer(tuple, tileX, tileY);
+                return true;
+            }
+
+            //Check if player is clicked and select it
+            if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY && tuple.mCoordinates.placementOnTileX == placementX && tuple.mCoordinates.placementOnTileY == placementY) {
+                mSelectedPlayer = tuple.mGameObject;
+                //Player related click happened
+                return true;
+            }
+        }
+
+        //Nothing player related happened
+        return false;
+    }
+
+    private Boolean HandleMonsterClicked(int tileX, int tileY, int placementX, int placementY){
+        //TODO
+        return false;
+    }
+
+    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY){
+        //TODO
+        return false;
     }
 
     private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
@@ -429,13 +459,27 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         if(!tuple.mGameObject.id.equals(mPlayerId)) return;
         //Moving to the same tile
         if(tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return;
+        //Click is on an non-passable tile do nothing
+        if (!mGrid[tileY][tileX].CanBePassed) return;
 
-        Coordinates movedTo = moveToTile(tileX, tileY);
-        if (movedTo != null && tuple.mGameObject.canTakeAction()) {
-            tuple.mCoordinates = movedTo;
-            mSelectedObject = null;
-            tuple.mGameObject.takeAction(getContext(), this);
+        if(!MovementIsMoreThanOneTile(tuple.mCoordinates, tileX, tileY)) {
+            Coordinates movedTo = moveToTile(tileX, tileY);
+            if (movedTo != null && tuple.mGameObject.canTakeAction()) {
+                tuple.mCoordinates = movedTo;
+                mSelectedPlayer = null;
+                tuple.mGameObject.takeAction(getContext(), this);
+            }
         }
+    }
+
+    private Boolean MovementIsMoreThanOneTile(Coordinates currentPlayerPlacement, int tileX, int tileY) {
+        if (!((currentPlayerPlacement.tileX + 1) == tileX && currentPlayerPlacement.tileY == tileY))
+            if (!((currentPlayerPlacement.tileX) == tileX && (currentPlayerPlacement.tileY + 1) == tileY))
+                if (!((currentPlayerPlacement.tileX) == tileX && (currentPlayerPlacement.tileY - 1) == tileY))
+                    if (!((currentPlayerPlacement.tileX - 1) == tileX && (currentPlayerPlacement.tileY) == tileY))
+                        return true;
+        return false;
+
     }
 
     @Override
