@@ -490,12 +490,14 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private boolean moveSingleMonster(Tuple<Monster, Coordinates> tuple) {
         Random random = new Random();
         int move;
-        Coordinates movedTo = new Coordinates(-1, 0, 0, 0);
+        Coordinates movedTo = null;
+        //50 % chance for moved 1 space forward or backwards
         if (random.nextBoolean())
             move = 1;
         else
             move = -1;
 
+        // 50 % chance to do it at x-axis or y-axis
         if (random.nextBoolean()) {
             if ((tuple.y.tileX + move) < (mMaxCanvasWidth / mSquareWidth) && (tuple.y.tileX + move) > 0)
                 movedTo = moveToTile(tuple.y.tileX + move, tuple.y.tileY);
@@ -505,11 +507,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         if (movedTo != null && tuple.x.canTakeAction()) {
-            if (movedTo.tileX != -1) {
                 tuple.y = movedTo;
                 tuple.x.takeAction();
                 return true;
-            }
         }
 
         return false;
