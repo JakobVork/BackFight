@@ -54,7 +54,6 @@ public class MonsterFactory {
 
         return new Monster(
                 R.drawable.monster_zombieman,
-                R.drawable.monster_zombieman,
                 mContext.getResources().getString(R.string.monster_zombie_name),
                 mContext.getResources().getString(R.string.monster_zombie_description),
                 monsterTurn,
@@ -69,7 +68,6 @@ public class MonsterFactory {
         int monsterTurn = 2;
 
         return new Monster(
-                R.drawable.monster_undead,
                 R.drawable.monster_undead,
                 mContext.getResources().getString(R.string.monster_undead_name),
                 mContext.getResources().getString(R.string.monster_undead_description),
@@ -86,7 +84,6 @@ public class MonsterFactory {
 
         return new Monster(
                 R.drawable.monster_muler,
-                R.drawable.monster_muler,
                 mContext.getResources().getString(R.string.monster_muler_name),
                 mContext.getResources().getString(R.string.monster_muler_description),
                 monsterTurn,
@@ -101,7 +98,6 @@ public class MonsterFactory {
         int monsterTurn = 2;
 
         return new Monster(
-                R.drawable.monster_tauler,
                 R.drawable.monster_tauler,
                 mContext.getResources().getString(R.string.monster_tauler_name),
                 mContext.getResources().getString(R.string.monster_tauler_description),
@@ -118,7 +114,6 @@ public class MonsterFactory {
 
         return new Monster(
                 R.drawable.monster_mauler,
-                R.drawable.monster_mauler,
                 mContext.getResources().getString(R.string.monster_mauler_name),
                 mContext.getResources().getString(R.string.monster_mauler_description),
                 monsterTurn,
@@ -133,7 +128,6 @@ public class MonsterFactory {
         int monsterTurn = 2;
 
         return new Monster(
-                R.drawable.monster_hiss,
                 R.drawable.monster_hiss,
                 mContext.getResources().getString(R.string.monster_hiss_name),
                 mContext.getResources().getString(R.string.monster_hiss_description),
@@ -150,7 +144,6 @@ public class MonsterFactory {
 
         return new Monster(
                 R.drawable.monster_ghost_horse,
-                R.drawable.monster_ghost_horse,
                 mContext.getResources().getString(R.string.monster_ghostHorse_name),
                 mContext.getResources().getString(R.string.monster_ghostHorse_description),
                 monsterTurn,
@@ -165,7 +158,6 @@ public class MonsterFactory {
         int monsterTurn = 2;
 
         return new Monster(
-                R.drawable.monster_3headed,
                 R.drawable.monster_3headed,
                 mContext.getResources().getString(R.string.monster_threeHeaded_name),
                 mContext.getResources().getString(R.string.monster_threeHeaded_description),
