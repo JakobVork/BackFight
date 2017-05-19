@@ -257,6 +257,7 @@ class FirebaseHelper {
         });
     }
 
+
     void setMonsterListListener() {
         mDatabase.getReference(mGameIdMonsters).addValueEventListener(new ValueEventListener() {
             @Override
@@ -281,6 +282,7 @@ class FirebaseHelper {
     }
 
     public void increaseRoundCount() {
+
         //http://stackoverflow.com/questions/40405181/firebase-database-increment-an-int
         mDatabase.getReference(mGameIdRoundCount).runTransaction(new Transaction.Handler() {
             @Override
@@ -316,6 +318,7 @@ class FirebaseHelper {
                     mRound = dataSnapshot.getValue(int.class);
                     mFirebaseGameActivityListener.setRound(mRound);
                     mFirebaseGameActivityListener.setActionCounter(3);
+                    mFirebaseGameActivityListener.sendNotificationNewRound();
                 }
             }
 
