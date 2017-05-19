@@ -175,7 +175,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Tuple<Monster, Coordinates> tuple : mMonsterList) {
-            scaleBitmapAndAddToCanvas(canvas, tuple.y, tuple.x.mFigure);
+            scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
@@ -416,11 +416,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Boolean monsterHandled = false;
         Boolean playerHandled = HandlePlayerClicked(tileX, tileY, placementX, placementY);
 
-        if(!playerHandled)
-        monsterHandled = HandleMonsterClicked(tileX, tileY, placementX, placementY);
+        if (!playerHandled)
+            monsterHandled = HandleMonsterClicked(tileX, tileY, placementX, placementY);
 
-        if(!playerHandled && !monsterHandled)
-        HandleItemClicked(tileX, tileY, placementX, placementY);
+        if (!playerHandled && !monsterHandled)
+            HandleItemClicked(tileX, tileY, placementX, placementY);
 
         mFirebaseHelper.setPlayerList(mGamePlayerList);
 
@@ -428,7 +428,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         invalidate();
     }
 
-    private Boolean HandlePlayerClicked(int tileX, int tileY, int placementX, int placementY){
+    private Boolean HandlePlayerClicked(int tileX, int tileY, int placementX, int placementY) {
 
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
@@ -467,12 +467,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return false;
     }
 
-    private Boolean HandleMonsterClicked(int tileX, int tileY, int placementX, int placementY){
+    private Boolean HandleMonsterClicked(int tileX, int tileY, int placementX, int placementY) {
         //TODO
         return false;
     }
 
-    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY){
+    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY) {
         //TODO
         return false;
     }
@@ -508,13 +508,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void MonsterTurn() {
         //Each monster take turn
         for (Tuple<Monster, Coordinates> monster : mMonsterList) {
-            monster.x.resetActions();
+            monster.mGameObject.resetActions();
             //as long the monster can take turn
-            while (monster.x.canTakeAction()) {
+            while (monster.mGameObject.canTakeAction()) {
                 boolean attacked = false;
                 //check if same spot as player
-                for (Tuple<Player, Coordinates> player : mGameObjectList) {
-                    if (monster.y.tileY == player.y.tileY && monster.y.tileX == player.y.tileX) {
+                for (Tuple<Player, Coordinates> player : mGamePlayerList) {
+                    if (monster.mCoordinates.tileY == player.mCoordinates.tileY && monster.mCoordinates.tileX == player.mCoordinates.tileX) {
                         attackPlayer(player, monster);
                         attacked = true;
                         break;
@@ -536,7 +536,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private void attackPlayer(Tuple<Player, Coordinates> player, Tuple<Monster, Coordinates> monster) {
         //Monster attacks
 
-        monster.x.takeAction();
+        monster.mGameObject.takeAction();
     }
 
     private boolean moveSingleMonster(Tuple<Monster, Coordinates> tuple) {
@@ -551,16 +551,16 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         // 50 % chance to do it at x-axis or y-axis
         if (random.nextBoolean()) {
-            if ((tuple.y.tileX + move) < (mMaxCanvasWidth / mSquareWidth) && (tuple.y.tileX + move) > 0)
-                movedTo = moveToTile(tuple.y.tileX + move, tuple.y.tileY);
+            if ((tuple.mCoordinates.tileX + move) < (mMaxCanvasWidth / mSquareWidth) && (tuple.mCoordinates.tileX + move) > 0)
+                movedTo = moveToTile(tuple.mCoordinates.tileX + move, tuple.mCoordinates.tileY);
         } else {
-            if ((tuple.y.tileY + move) < (mMaxCanvasHeight / mSquareHeight) && (tuple.y.tileY + move) > 0)
-                movedTo = moveToTile(tuple.y.tileX, tuple.y.tileY + move);
+            if ((tuple.mCoordinates.tileY + move) < (mMaxCanvasHeight / mSquareHeight) && (tuple.mCoordinates.tileY + move) > 0)
+                movedTo = moveToTile(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY + move);
         }
         // if check if legal move
-        if (movedTo != null && tuple.x.canTakeAction()) {
-                tuple.y = movedTo;
-                tuple.x.takeAction();
+        if (movedTo != null && tuple.mGameObject.canTakeAction()) {
+            tuple.mCoordinates = movedTo;
+            tuple.mGameObject.takeAction();
                 return true;
         }
 
@@ -622,15 +622,15 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             Coordinates coordinates = Coordinates.getRandom(mGridSize);
             if ((coordinates = moveToTile(coordinates.tileX, coordinates.tileY)) != null) {
                 int awayFromPlayer = 0;
-                for (Tuple<Player, Coordinates> tuple : mGameObjectList) {
-                    if (coordinates.tileX > (tuple.y.tileX) || (tuple.y.tileX) > (coordinates.tileX)) {
-                        if (coordinates.tileY > (tuple.y.tileY) || coordinates.tileY < (tuple.y.tileY)) {
+                for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
+                    if (coordinates.tileX > (tuple.mCoordinates.tileX) || (tuple.mCoordinates.tileX) > (coordinates.tileX)) {
+                        if (coordinates.tileY > (tuple.mCoordinates.tileY) || coordinates.tileY < (tuple.mCoordinates.tileY)) {
                             awayFromPlayer++;
                         }
                     }
                 }
 
-                if (awayFromPlayer == mGameObjectList.size())
+                if (awayFromPlayer == mGamePlayerList.size())
                     return coordinates;
             }
         }
@@ -644,11 +644,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         ArrayList<Tuple<Monster, Coordinates>> monsterOnTile = new ArrayList<>();
 
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
-            if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) onTile.add(tuple);
+            if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY)
+                onTile.add(tuple);
         }
 
         for (Tuple<Monster, Coordinates> tuple : mMonsterList) {
-            if (tuple.y.tileX == tileX && tuple.y.tileY == tileY) monsterOnTile.add(tuple);
+            if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY)
+                monsterOnTile.add(tuple);
         }
 
         if (onTile.size() + monsterOnTile.size() == (mTileDivision * mTileDivision)) return null;
@@ -661,7 +663,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                         placementFree = false;
                 }
                 for (Tuple<Monster, Coordinates> tuple : monsterOnTile) {
-                    if (tuple.y.placementOnTileX == x && tuple.y.placementOnTileY == y)
+                    if (tuple.mCoordinates.placementOnTileX == x && tuple.mCoordinates.placementOnTileY == y)
                         placementFree = false;
                 }
                 if (placementFree) return new Coordinates(tileX, tileY, x, y);
@@ -692,7 +694,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     //Type is a integer for type of monster spawned, 0 is normal, 1 is Elite, 2 is boss
     public void spawnMonster(int type) {
         MonsterFactory fac = new MonsterFactory(getContext());
-        int numberOfPlayers = mGameObjectList.size();
+        int numberOfPlayers = mGamePlayerList.size();
         //find real rounds
         int rounds = mFirebaseHelper.mRound;
 
