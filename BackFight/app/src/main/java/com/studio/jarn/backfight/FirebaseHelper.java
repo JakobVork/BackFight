@@ -29,6 +29,7 @@ class FirebaseHelper {
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
     private static final String sDatabasePostfixRoundCount = "RoundCount";
+    public int mRound = 0;
     GameActivity test;
     private FirebaseDatabase mDatabase;
     private String mGameId;
@@ -44,7 +45,6 @@ class FirebaseHelper {
     private FirebaseGameActivityListener mFirebaseGameActivityListener;
     private String mDialogInput;
     private String mGameIdRoundCount;
-
 
     FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
@@ -241,10 +241,10 @@ class FirebaseHelper {
 
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
 
-                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
+                GenericTypeIndicator<Tuple<Player, Coordinates>> playerGenericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    playerList.add(postSnapshot.getValue(genericTypeIndicator));
+                    playerList.add(postSnapshot.getValue(playerGenericTypeIndicator));
                 }
                 mFirebaseGameViewListener.setPlayerList(playerList);
             }
@@ -264,10 +264,10 @@ class FirebaseHelper {
 
                 ArrayList<Tuple<Monster, Coordinates>> monsterList = new ArrayList<>();
 
-                GenericTypeIndicator<Tuple<Monster, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Monster, Coordinates>>() {
+                GenericTypeIndicator<Tuple<Monster, Coordinates>> monsterGenericTypeIndicator = new GenericTypeIndicator<Tuple<Monster, Coordinates>>() {
                 };
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    monsterList.add(postSnapshot.getValue(genericTypeIndicator));
+                    monsterList.add(postSnapshot.getValue(monsterGenericTypeIndicator));
                 }
                 mFirebaseGameViewListener.setMonsterList(monsterList);
             }
@@ -313,7 +313,8 @@ class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mFirebaseGameActivityListener.setRound(dataSnapshot.getValue(int.class));
+                    mRound = dataSnapshot.getValue(int.class);
+                    mFirebaseGameActivityListener.setRound(mRound);
                     mFirebaseGameActivityListener.setActionCounter(3);
                 }
             }

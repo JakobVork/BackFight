@@ -457,11 +457,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     public void MonsterTurn() {
+        //Each monster take turn
         for (Tuple<Monster, Coordinates> monster : mMonsterList) {
             monster.x.resetActions();
+            //as long the monster can take turn
             while (monster.x.canTakeAction()) {
                 boolean attacked = false;
-
+                //check if same spot as player
                 for (Tuple<Player, Coordinates> player : mGameObjectList) {
                     if (monster.y.tileY == player.y.tileY && monster.y.tileX == player.y.tileX) {
                         attackPlayer(player, monster);
@@ -469,6 +471,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                         break;
                     }
                 }
+                // If not same space as player move
                 if (!attacked) {
                     while (!moveSingleMonster(monster)) ;
                 }
@@ -505,7 +508,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             if ((tuple.y.tileY + move) < (mMaxCanvasHeight / mSquareHeight) && (tuple.y.tileY + move) > 0)
                 movedTo = moveToTile(tuple.y.tileX, tuple.y.tileY + move);
         }
-
+        // if check if legal move
         if (movedTo != null && tuple.x.canTakeAction()) {
                 tuple.y = movedTo;
                 tuple.x.takeAction();
@@ -564,8 +567,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return (mSquareHeight * objectCoordinates.tileY) + (mSquareHeight * objectCoordinates.placementOnTileY / mTileDivision);
     }
 
+    // Get coordinate to Random tile, at least one tile away from a player.
     private Coordinates moveToRandomTile() {
-        while (true) {
+        for (int i = 0; i < 15; i++) {
             Coordinates coordinates = Coordinates.getRandom(mGridSize);
             if ((coordinates = moveToTile(coordinates.tileX, coordinates.tileY)) != null) {
                 int awayFromPlayer = 0;
@@ -581,6 +585,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     return coordinates;
             }
         }
+
+        return null;
     }
 
     private Coordinates moveToTile(int tileX, int tileY) {
@@ -639,23 +645,36 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         MonsterFactory fac = new MonsterFactory(getContext());
         int numberOfPlayers = mGameObjectList.size();
         //find real rounds
-        int rounds = 1;
+        int rounds = mFirebaseHelper.mRound;
+
+
+        Coordinates coordinates = moveToRandomTile();
+        //check if moveToRandomTile have found a tile, if not just find a random coordinate
+        if (coordinates == null) {
+            while (tileIsPassable((coordinates = Coordinates.getRandom(mGridSize)))) {
+            }
+
+        }
 
         switch (type) {
+            // Normal monster
             case 0:
-                spawnMonsterOnTile(fac.getRandomNormalMonster(numberOfPlayers, rounds), moveToRandomTile());
+                spawnMonsterOnTile(fac.getRandomNormalMonster(numberOfPlayers, rounds), coordinates);
                 break;
+            // Epic monster
             case 1:
-                spawnMonsterOnTile(fac.getRandomEliteMonster(numberOfPlayers, rounds), moveToRandomTile());
+                spawnMonsterOnTile(fac.getRandomEliteMonster(numberOfPlayers, rounds), coordinates);
                 break;
+            // Boss monster
             case 2:
-                spawnMonsterOnTile(fac.getRandomBossMonster(numberOfPlayers, rounds), moveToRandomTile());
+                spawnMonsterOnTile(fac.getRandomBossMonster(numberOfPlayers, rounds), coordinates);
                 break;
         }
 
         invalidate();
     }
 
+    // method who spawns monster at start
     public void spawnStartMonsters(int numberOfMonsters) {
         for (int c = 0; c < numberOfMonsters - 1; c++) {
             spawnMonster(0);

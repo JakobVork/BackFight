@@ -60,21 +60,21 @@
 
     <!-- Monsters -->
     <string name="monster_zombie_name">Zombie</string>
-    <string name="monster_zombie_description">Once was a great knight, but not so much anymore</string>
+    <string name="monster_zombie_description">Once was a great knight, but not so much anymore.</string>
     <string name="monster_undead_name">Undead</string>
-    <string name="monster_undead_description">Rose from the dead and still as stupid</string>
+    <string name="monster_undead_description">Rose from the dead and still as stupid.</string>
     <string name="monster_muler_name">Muler</string>
-    <string name="monster_muler_description">Once was a dance master, try to beat it with your moves</string>
+    <string name="monster_muler_description">Once was a dance master, try to beat it with your moves.</string>
     <string name="monster_tauler_name">Tauler</string>
-    <string name="monster_tauler_description">It\'s not sparkling, but it\'s still a vampire</string>
+    <string name="monster_tauler_description">It\'s not sparkling, but it\'s still a vampire.</string>
     <string name="monster_mauler_name">Mauler</string>
-    <string name="monster_mauler_description">It\'s teeth is as sharp as a carrot, but be careful of the claws</string>
+    <string name="monster_mauler_description">It\'s teeth is as sharp as a carrot, but be careful of the claws.</string>
     <string name="monster_hiss_name">Hiss</string>
-    <string name="monster_hiss_description">This little devil has wings, you better run</string>
+    <string name="monster_hiss_description">This little devil has wings, you better run.</string>
     <string name="monster_ghostHorse_name">Ghost horse</string>
-    <string name="monster_ghostHorse_description">You can try to ride it, but you will end up on the floor on your butt </string>
+    <string name="monster_ghostHorse_description">You can try to ride it, but you will end up on the floor on your butt.</string>
     <string name="monster_threeHeaded_name">3 Headed</string>
-    <string name="monster_threeHeaded_description">You think 2 heads is a lot to handle, try to imagine 3 heads</string>
+    <string name="monster_threeHeaded_description">You think 2 heads is a lot to handle, try to imagine 3 heads.</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
