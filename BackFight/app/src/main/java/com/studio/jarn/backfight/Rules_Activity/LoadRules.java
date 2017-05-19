@@ -19,9 +19,14 @@ class LoadRules {
     }
 
     ArrayList<Rules> getRules() {
-
+        getSingleRule("actions");
+        getSingleRule("attack");
         getSingleRule("credits");
+        getSingleRule("hitpoints");
+        getSingleRule("items");
+        getSingleRule("monsters");
         getSingleRule("movement");
+        getSingleRule("round");
         return mRules;
     }
 

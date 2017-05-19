@@ -1,2 +1,5 @@
 Movement
-A player can move 2 tiles once pr turn.
+You can only move your own person adn can move 1 tile per action
+You can use all your actions to move, but if you stand on a field with a monster, you can't move.
+You can't move though walls, except you have an item there say you can do it.
+Moving to a water tile cost 1 action, but leaving it cost 2 actions.
