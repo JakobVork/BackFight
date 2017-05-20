@@ -240,12 +240,22 @@ class FirebaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
-
+                ArrayList<GameItem> itemList = new ArrayList<GameItem>();
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Tuple<Player, Coordinates> test = postSnapshot.getValue(genericTypeIndicator);
-                    playerList.add(postSnapshot.getValue(genericTypeIndicator));
+                for (DataSnapshot playerTuple : dataSnapshot.getChildren()) {
+                    for (DataSnapshot player : playerTuple.getChildren()) {
+                        for (DataSnapshot playerProperties : player.getChildren()) {
+                            for (DataSnapshot playerItems : playerProperties.getChildren()) {
+                                ItemWeapon item = playerItems.getValue(ItemWeapon.class);
+                                itemList.add(item);
+                            }
+                        }
+                    }
+
+                    Tuple<Player, Coordinates> player = playerTuple.getValue(genericTypeIndicator);
+                    player.x.PlayerItems = itemList;
+                    playerList.add(player);
                 }
                 mFirebaseGameViewListener.setPlayerList(playerList);
             }
