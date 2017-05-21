@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 
+import android.content.ClipData;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +16,12 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.Items.ItemWeapon;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +29,7 @@ class FirebaseHelper {
 
     private static final String sDatabasePostfixGrid = "Grid";
     private static final String sDatabasePostfixPlayers = "PlayerList";
+    private static final String sDatabasePostfixItems = "ItemList";
     private static final String sDatabasePostfixStartGame = "StartGame";
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
@@ -35,6 +42,7 @@ class FirebaseHelper {
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
+    private String mGameIdItems;
     private FirebaseNewGameListener mFirebaseNewGameListener;
     private FirebaseLobbyListener mFirebaseLobbyListener;
     private FirebaseGameViewListener mFirebaseGameViewListener;
@@ -75,6 +83,7 @@ class FirebaseHelper {
         mGameIdNumberPicker = gameId + sDatabasePostfixNumberPicker;
         mGameIdGrid = gameId + sDatabasePostfixGrid;
         mGameIdPlayers = gameId + sDatabasePostfixPlayers;
+        mGameIdItems = gameId + sDatabasePostfixItems;
         mGameIdRoundCount = gameId + sDatabasePostfixRoundCount;
     }
 
@@ -231,11 +240,30 @@ class FirebaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
-
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    playerList.add(postSnapshot.getValue(genericTypeIndicator));
+
+                /*
+                 * Because we use inheritance firebase can not handle that the list is of GameItem,
+                 * and that the item can be of ItemWeapon type. Therefore we have go through every
+                 * PlayerTuple -> Player -> ItemList -> Item
+                 * in order to keep all properties. If not, weapons would lose their damage.
+                 */
+
+                for (DataSnapshot playerTuple : dataSnapshot.getChildren()) {
+                    ArrayList<GameItem> itemList = new ArrayList<GameItem>();
+                    for (DataSnapshot player : playerTuple.getChildren()) {
+                        for (DataSnapshot playerProperties : player.getChildren()) {
+                            for (DataSnapshot playerItems : playerProperties.getChildren()) {
+                                ItemWeapon item = playerItems.getValue(ItemWeapon.class);
+                                itemList.add(item);
+                            }
+                        }
+                    }
+
+                    Tuple<Player, Coordinates> player = playerTuple.getValue(genericTypeIndicator);
+                    player.mGameObject.PlayerItems = itemList;
+                    playerList.add(player);
                 }
                 mFirebaseGameViewListener.setPlayerList(playerList);
             }
@@ -298,5 +326,38 @@ class FirebaseHelper {
 
     void setGrid(List<List<Tile>> list) {
         mDatabase.getReference(mGameIdGrid).setValue(list);
+    }
+
+
+    void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
+        mDatabase.getReference(mGameIdItems).setValue(itemsWithCoordinates);
+    }
+
+    Tuple<GameItem, Coordinates> convert(Tuple<ItemWeapon, Coordinates> tuple){
+        return new Tuple<GameItem, Coordinates>(tuple.mGameObject, tuple.mCoordinates);
+    }
+
+    void setItemListListener() {
+        mDatabase.getReference(mGameIdItems).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String item = new Gson().toJson(dataSnapshot.getValue());
+                Log.d("Test", item);
+
+                GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>>() {};
+                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<Tuple<GameItem, Coordinates>>();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    itemList.add(convert(postSnapshot.getValue(genericTypeIndicator)));
+                }
+
+                mFirebaseGameViewListener.setItemList(itemList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 }

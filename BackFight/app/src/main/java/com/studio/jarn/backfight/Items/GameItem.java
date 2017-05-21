@@ -8,6 +8,10 @@ public class GameItem {
     public int Image;
     public long Id;
 
+    public GameItem(){
+
+    }
+
     public GameItem(String title, String description, int img) {
         this.Id = sNextId;
         sNextId++; // TODO : Find a better why. I've tried to use UUID, but when there's a problem with the adapter.

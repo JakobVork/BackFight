@@ -38,8 +38,8 @@ public class fragment_item_details extends Fragment {
         args.putString(mTitleString, weapon.Title);
         args.putString(mDescriptionString, weapon.Description);
         args.putInt(mImageString, weapon.Image);
-        args.putInt(mDmgMinString, weapon.DmgMin);
-        args.putInt(mDmgMaxString, weapon.DmgMax);
+        args.putInt(mDmgMinString, weapon.getDmgMin());
+        args.putInt(mDmgMaxString, weapon.getDmgMax());
         fragment.setArguments(args);
         return fragment;
     }
