@@ -7,6 +7,7 @@ public class ItemWeapon extends GameItem {
     private int DmgMin;
     private int DmgMax;
 
+    // Firebase require a default constructor
     public ItemWeapon() {}
 
     public ItemWeapon(int DmgMin_MinRoll,
