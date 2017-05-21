@@ -242,6 +242,14 @@ class FirebaseHelper {
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
+
+                /*
+                 * Because we use inheritance firebase can not handle that the list is of GameItem,
+                 * and that the item can be of ItemWeapon type. Therefore we have go through every
+                 * PlayerTuple -> Player -> ItemList -> Item
+                 * in order to keep all properties. If not, weapons would lose their damage.
+                 */
+
                 for (DataSnapshot playerTuple : dataSnapshot.getChildren()) {
                     ArrayList<GameItem> itemList = new ArrayList<GameItem>();
                     for (DataSnapshot player : playerTuple.getChildren()) {
