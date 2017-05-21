@@ -473,7 +473,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             if(playerTuple.mGameObject.id.equals(mPlayerId)) {
                 // Check for items clicked
                 Tuple<GameItem, Coordinates> mapItem = mapItemClicked(tileX, tileY, placementX, placementY);
-                if(mapItem != null) { //&& playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY
+                if(mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
                     pickUpItem(mapItem);
                     return true;
                 }
