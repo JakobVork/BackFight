@@ -43,10 +43,10 @@ interface GameTouchListener {
      * Index values are 0 based.
      * Values are between 0 and NumSquaresAlongCanvas-1.
      *
-     * @param downX int - x value of the down action square
-     * @param downY int - y value of the down action square
-     * @param upX   int - x value of the up action square
-     * @param upY   int - y value of the up action square
+     * @param downX int - mGameObject value of the down action square
+     * @param downY int - mCoordinates value of the down action square
+     * @param upX   int - mGameObject value of the up action square
+     * @param upY   int - mCoordinates value of the up action square
      */
 
     void onLongTouchUp(int downX, int downY, int upX, int upY);

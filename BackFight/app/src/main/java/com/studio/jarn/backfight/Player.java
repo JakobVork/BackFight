@@ -12,21 +12,21 @@ import java.util.List;
 import android.content.Context;
 import android.view.View;
 
-import java.util.UUID;
-
 class Player {
-    String Name;
+    String mName;
     int mFigure = 0;
     int mFigureSelected = 0;
-    int actionsRemaining = 3;
-    String id = UUID.randomUUID().toString();
+    int mActionsRemaining = 3;
+    int mActionsPerTurn = 3;
+    String id;
 
     public List<GameItem> PlayerItems;
 
-    Player(int Figure, int FigureSelected, String name) {
+    Player(int Figure, int FigureSelected, String name, String uuid) {
         mFigure = Figure;
-        Name = name;
+        mName = name;
         mFigureSelected = FigureSelected;
+        id = uuid;
 
         PlayerItems = new ArrayList<GameItem>();
     }
@@ -36,18 +36,22 @@ class Player {
     }
 
     boolean canTakeAction() {
-        return actionsRemaining > 0;
+        return mActionsRemaining > 0;
     }
 
     void takeAction(Context context, View view) {
-        FirebaseGameActivityListener firebaseGameActivityListener;
+        PlayerGameActivityListener playerGameActivityListener;
         PlayerGameViewListener playerGameViewListener;
-        actionsRemaining--;
+        mActionsRemaining--;
 
-        firebaseGameActivityListener = (FirebaseGameActivityListener) context;
+        playerGameActivityListener = (PlayerGameActivityListener) context;
         playerGameViewListener = (PlayerGameViewListener) view;
-        firebaseGameActivityListener.setActionCounter(actionsRemaining);
-        if (actionsRemaining <= 0)
+        playerGameActivityListener.setActionCounter(mActionsRemaining);
+        if (mActionsRemaining <= 0)
             playerGameViewListener.actionTaken();
+    }
+
+    void resetActions() {
+        mActionsRemaining = mActionsPerTurn;
     }
 }

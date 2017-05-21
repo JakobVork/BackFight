@@ -12,7 +12,8 @@ import android.widget.TextView;
 
 public class SplashActivity extends AppCompatActivity {
     // Welcome screen is there in 4000 milliseconds = 4 seconds
-    private static int SPLASH_TIME_OUT = 6000;
+    private static int sSplash_time_out = 6000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         StartAnimation();
 
     }
+
 
     private void StartAnimation() {
         ImageView mIcon = (ImageView) findViewById(R.id.activity_splash_img_title);
@@ -40,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(MainMenuIntent);
                 finish();
             }
-        },SPLASH_TIME_OUT);
+        }, sSplash_time_out);
     }
 
     private void hideActionBar() {

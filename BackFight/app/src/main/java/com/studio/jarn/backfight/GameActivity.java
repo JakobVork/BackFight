@@ -25,11 +25,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.studio.jarn.backfight.NotificationIntentService.ACTION_NEWROUND;
+import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_TEXT;
+import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_TITLE;
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener
+
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener
 {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
+    public static boolean isGameActivityVisible = false;
     private static int sGridSize = 16;
     Fragment itemsAndStatsFragment;
     Fragment itemsAndStatsFragmentDetailed;
@@ -85,8 +90,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void setupGameView(Intent i) {
-        String Uuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
-        boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), true);
+        String uuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
+        boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), false);
         sGridSize = i.getIntExtra(getString(R.string.EXTRA_GRIDSIZE), sDefaultGridSize);
 
         GameView gv = (GameView) findViewById(R.id.boardview);
@@ -106,7 +111,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setupFirebase(Uuid);
+                gv.setupFirebase(uuid);
 
                 //addPlayers();
                 gv.initHostGrid(mGrid);
@@ -118,7 +123,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setupFirebase(Uuid);
+                gv.setupFirebase(uuid);
                 gv.initClientGrid();
 
                 gv.setListeners();
@@ -200,7 +205,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     //ToDo for testing purpose
-    public void setMonsterDialog() {
+    public void showMonsterDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Monster");
         alertDialog.setMessage("Monster turn :)");
@@ -211,5 +216,25 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                     }
                 });
         alertDialog.show();
+    }
+
+    public void sendNotificationNewRound() {
+        Intent notificationServiceIntent = new Intent(this, NotificationIntentService.class);
+        notificationServiceIntent.setAction(ACTION_NEWROUND);
+        notificationServiceIntent.putExtra(EXTRA_TITLE, "New Round");
+        notificationServiceIntent.putExtra(EXTRA_TEXT, "A new round has started remember to take your turn :)");
+        startService(notificationServiceIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isGameActivityVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isGameActivityVisible = false;
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,10 +29,11 @@ class PlayerAdapter extends ArrayAdapter<Player> {
         }
         // Lookup view for data population
         TextView tv_name = (TextView) convertView.findViewById(R.id.item_playerclass_tv_name);
+        ImageView iw_image = (ImageView) convertView.findViewById(R.id.item_playerclass_iv_icon);
         // Populate the data into the template view using the data object
         assert PlayerClass != null;
-        tv_name.setText(PlayerClass.Name);
-
+        tv_name.setText(PlayerClass.mName);
+        iw_image.setBackgroundResource(PlayerClass.mFigure);
         // Return the completed view to render on screen
         return convertView;
     }

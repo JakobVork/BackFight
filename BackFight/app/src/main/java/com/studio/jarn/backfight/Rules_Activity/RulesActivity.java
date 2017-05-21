@@ -40,8 +40,6 @@ public class RulesActivity extends AppCompatActivity {
     }
 
     // Set the details for the rule selected
-    // TODO finde en anden måde så den understøtter 15
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onRuleSelected(int position) {
 
         Rules selectedRule = mAdapter.getItem(position);
@@ -50,7 +48,7 @@ public class RulesActivity extends AppCompatActivity {
 
             String temp = "";
             for (int i = 0; i < selectedRule.mRulesDescription.size(); i++) {
-                temp = temp + selectedRule.mRulesDescription.get(i) + System.lineSeparator();
+                temp = temp + selectedRule.mRulesDescription.get(i) + System.getProperty("line.separator");
             }
             mDetails.setText(temp);
         }
