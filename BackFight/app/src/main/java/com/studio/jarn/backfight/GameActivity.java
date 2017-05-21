@@ -105,7 +105,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
-                setupMyGrid(gridType);
+                setupMap(gridType);
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
@@ -173,7 +173,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         btnRound.setText(roundText);
     }
 
-    private void setupMyGrid(GridType gridType) {
+    private void setupMap(GridType gridType) {
         IMapGenerator mapGenerator;
 
         switch (gridType) {
