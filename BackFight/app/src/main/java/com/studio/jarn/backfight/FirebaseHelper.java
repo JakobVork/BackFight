@@ -27,7 +27,6 @@ class FirebaseHelper {
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
     private static final String sDatabasePostfixRoundCount = "RoundCount";
-    GameActivity test;
     private FirebaseDatabase mDatabase;
     private String mGameId;
     private String mGameIdRadio;
@@ -41,11 +40,12 @@ class FirebaseHelper {
     private FirebaseGameActivityListener mFirebaseGameActivityListener;
     private String mDialogInput;
     private String mGameIdRoundCount;
+    private Context mContext;
 
 
     FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
-
+        mContext = context;
         if (context instanceof FirebaseNewGameListener) {
             mFirebaseNewGameListener = (FirebaseNewGameListener) context;
         } else if (context instanceof FirebaseLobbyListener) {
@@ -69,6 +69,8 @@ class FirebaseHelper {
 
 
     void setStandardKey(String gameId) {
+        new SharedPreferencesHelper(mContext).addGameIdToRecentGameIds(gameId);
+
         mGameId = gameId;
         mGameIdRadio = gameId + sDatabasePostfixRadioGroup;
         mGameIdStartGame = gameId + sDatabasePostfixStartGame;

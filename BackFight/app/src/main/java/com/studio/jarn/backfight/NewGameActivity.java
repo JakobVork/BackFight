@@ -1,10 +1,10 @@
 package com.studio.jarn.backfight;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
@@ -73,14 +73,15 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         input.setText(mDialogText);
+        input.setHint(
+                R.string.newGame_dialogHint);
 
         builder.setView(input);
-        builder.setMessage(R.string.newGame_dialogMessage);
+        /*builder.setMessage(R.string.newGame_dialogMessage);*/
         builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mFirebaseHelper.validateIfGameExist(input.getText().toString());
-
             }
         });
         builder.setNegativeButton(R.string.newGame_dialogBtnNegative, new DialogInterface.OnClickListener() {
@@ -89,8 +90,16 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
                 dialog.cancel();
             }
         });
-        builder.show();
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(getBaseContext());
+        final CharSequence[] items = sharedPreferencesHelper.getRecentGameIdsCharSequence();
 
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mFirebaseHelper.validateIfGameExist((items[which]).toString());
+            }
+        });
+        builder.show();
     }
 
 
