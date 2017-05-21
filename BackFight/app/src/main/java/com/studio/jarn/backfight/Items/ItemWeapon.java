@@ -7,7 +7,7 @@ public class ItemWeapon extends GameItem {
     private int DmgMin;
     private int DmgMax;
 
-    public ItemWeapon() {};
+    public ItemWeapon() {}
 
     public ItemWeapon(int DmgMin_MinRoll,
                       int DmgMin_MaxRoll,

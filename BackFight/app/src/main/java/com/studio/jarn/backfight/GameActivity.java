@@ -15,14 +15,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
-import com.studio.jarn.backfight.Items.ItemFactory;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.studio.jarn.backfight.NotificationIntentService.ACTION_NEWROUND;
@@ -30,8 +28,7 @@ import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_TEXT;
 import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_TITLE;
 
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener
-{
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     public static boolean isGameActivityVisible = false;
@@ -45,7 +42,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private ImageView mIvItemFragmentShow;
     private ImageView mIvItemFragmentHide;
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
@@ -175,8 +173,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         btnRound.setText(roundText);
     }
 
-    private void setupMyGrid(GridType gridType)
-    {
+    private void setupMyGrid(GridType gridType) {
         IMapGenerator mapGenerator;
 
         switch (gridType) {
