@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grid_background"
-    tools:context="com.studio.jarn.backfight.NewGameActivity">
+    tools:context="com.studio.jarn.backfight.NewGame.NewGameActivity">
 
     <android.support.constraint.Guideline
         android:id="@+id/activity_mainMenu_gl_vertical"
