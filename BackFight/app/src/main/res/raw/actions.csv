@@ -1,0 +1,9 @@
+Actions
+A player have 3 actions as default, but can get items to change the value.
+Anything you do in this game cost actions and when all players have used there actions, it's the monsters turn. When monsters had their turn all actionpoints are refilled and players can use their turn.
+
+What cost a action:
+    - Movement (Water cost 2 actions to leave)
+    - Pick up item
+    - Attack monster
+    - Try puzzle

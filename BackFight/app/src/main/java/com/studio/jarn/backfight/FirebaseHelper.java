@@ -16,6 +16,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.studio.jarn.backfight.monster.Monster;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
@@ -29,11 +30,13 @@ class FirebaseHelper {
 
     private static final String sDatabasePostfixGrid = "Grid";
     private static final String sDatabasePostfixPlayers = "PlayerList";
+    private static final String getsDatabasePostfixMonsters = "MonsterList";
     private static final String sDatabasePostfixItems = "ItemList";
     private static final String sDatabasePostfixStartGame = "StartGame";
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
     private static final String sDatabasePostfixRoundCount = "RoundCount";
+    public int mRound = 0;
     GameActivity test;
     private FirebaseDatabase mDatabase;
     private String mGameId;
@@ -42,14 +45,15 @@ class FirebaseHelper {
     private String mGameIdNumberPicker;
     private String mGameIdGrid;
     private String mGameIdPlayers;
+    private String mGameIdMonsters;
     private String mGameIdItems;
+
     private FirebaseNewGameListener mFirebaseNewGameListener;
     private FirebaseLobbyListener mFirebaseLobbyListener;
     private FirebaseGameViewListener mFirebaseGameViewListener;
     private FirebaseGameActivityListener mFirebaseGameActivityListener;
     private String mDialogInput;
     private String mGameIdRoundCount;
-
 
     FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
@@ -85,6 +89,7 @@ class FirebaseHelper {
         mGameIdPlayers = gameId + sDatabasePostfixPlayers;
         mGameIdItems = gameId + sDatabasePostfixItems;
         mGameIdRoundCount = gameId + sDatabasePostfixRoundCount;
+        mGameIdMonsters = gameId + getsDatabasePostfixMonsters;
     }
 
     //FirebaseNewGameListener
@@ -166,12 +171,12 @@ class FirebaseHelper {
         mDatabase.getReference(mGameId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Player> playerList = new ArrayList<Player>() {
-                };
+                ArrayList<Player> playerList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
                 mFirebaseLobbyListener.setPlayerList(playerList);
+
             }
 
             @Override
@@ -181,6 +186,7 @@ class FirebaseHelper {
             }
         });
     }
+
 
     void setNumberPicker(int value) {
         mDatabase.getReference(mGameIdNumberPicker).setValue(value);
@@ -198,6 +204,10 @@ class FirebaseHelper {
     //FirebaseGameViewListener
     void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
         mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
+    }
+
+    void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monstersWithCoordinates) {
+        mDatabase.getReference(mGameIdMonsters).setValue(monstersWithCoordinates);
     }
 
     void setupGridListener() {
@@ -240,6 +250,7 @@ class FirebaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
+              
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
 
@@ -264,6 +275,7 @@ class FirebaseHelper {
                     Tuple<Player, Coordinates> player = playerTuple.getValue(genericTypeIndicator);
                     player.mGameObject.PlayerItems = itemList;
                     playerList.add(player);
+
                 }
                 mFirebaseGameViewListener.setPlayerList(playerList);
             }
@@ -276,7 +288,32 @@ class FirebaseHelper {
         });
     }
 
-    void increaseRoundCount() {
+
+    void setMonsterListListener() {
+        mDatabase.getReference(mGameIdMonsters).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<Tuple<Monster, Coordinates>> monsterList = new ArrayList<>();
+
+                GenericTypeIndicator<Tuple<Monster, Coordinates>> monsterGenericTypeIndicator = new GenericTypeIndicator<Tuple<Monster, Coordinates>>() {
+                };
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    monsterList.add(postSnapshot.getValue(monsterGenericTypeIndicator));
+                }
+                mFirebaseGameViewListener.setMonsterList(monsterList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
+    public void increaseRoundCount() {
+
         //http://stackoverflow.com/questions/40405181/firebase-database-increment-an-int
         mDatabase.getReference(mGameIdRoundCount).runTransaction(new Transaction.Handler() {
             @Override
@@ -309,7 +346,8 @@ class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mFirebaseGameActivityListener.setRound(dataSnapshot.getValue(int.class));
+                    mRound = dataSnapshot.getValue(int.class);
+                    mFirebaseGameActivityListener.setRound(mRound);
                     mFirebaseGameActivityListener.setActionCounter(3);
                     mFirebaseGameActivityListener.sendNotificationNewRound();
                 }

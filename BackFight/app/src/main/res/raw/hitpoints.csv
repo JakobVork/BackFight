@@ -1,0 +1,2 @@
+Hit Points
+Players and monsters have Hit Points and if it hits 0 the player or monster is dead. If a player dies the game stops and the players looses. If a monster dies its removed from the board and have a chance to drop an item.

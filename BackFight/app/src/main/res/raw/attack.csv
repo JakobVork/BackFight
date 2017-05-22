@@ -1,0 +1,3 @@
+Attack
+A player can only attack monsters and it can only be done by standing at the same tile as the monster. An attack have a chance to hit and damage the monster by the weapon damage value, monsters can have armor to prevent some damage.
+Monsters attack like players and must be on the same tile as a player before it attacks.
