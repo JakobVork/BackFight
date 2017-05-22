@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.StartScreen;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.studio.jarn.backfight.MainMenuActivity;
+import com.studio.jarn.backfight.R;
 
 public class SplashActivity extends AppCompatActivity {
     // Welcome screen is there in 4000 milliseconds = 4 seconds
