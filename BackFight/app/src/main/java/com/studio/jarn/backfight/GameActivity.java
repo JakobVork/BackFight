@@ -20,6 +20,8 @@ import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
 import com.studio.jarn.backfight.firebase.FirebaseGameActivityListener;
+import com.studio.jarn.backfight.fragment.ItemsAndStatsFragment;
+import com.studio.jarn.backfight.fragment.fragment_item_details;
 import com.studio.jarn.backfight.player.Player;
 import com.studio.jarn.backfight.player.PlayerGameActivityListener;
 
@@ -197,7 +199,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    @Override
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);

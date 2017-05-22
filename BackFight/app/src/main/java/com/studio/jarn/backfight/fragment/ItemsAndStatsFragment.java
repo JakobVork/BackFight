@@ -1,8 +1,7 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.renderscript.Script;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.R;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class ItemsAndStatsFragment extends Fragment {
         mListener = null;
     }
 
-    interface OnItemSelectedListener {
+    public interface OnItemSelectedListener {
         void onItemSelected(GameItem item);
     }
 }

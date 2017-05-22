@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.R;
 
 public class fragment_item_details extends Fragment {
 

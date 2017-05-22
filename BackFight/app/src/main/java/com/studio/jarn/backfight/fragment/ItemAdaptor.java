@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.fragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.studio.jarn.backfight.Items.GameItem;
+import com.studio.jarn.backfight.R;
 
 import java.util.ArrayList;
 
