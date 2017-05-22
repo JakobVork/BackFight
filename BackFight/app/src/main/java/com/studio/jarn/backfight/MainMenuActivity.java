@@ -1,15 +1,19 @@
 package com.studio.jarn.backfight;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -20,6 +24,7 @@ import com.studio.jarn.backfight.Settings.SettingsActivity;
 
 import java.util.UUID;
 
+import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_NUMBER_SP;
 import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
 import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_SP;
 import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_SP;
@@ -61,6 +66,7 @@ public class MainMenuActivity extends AppCompatActivity {
         // Set up the input
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
         builder.setView(input);
         builder.setMessage(R.string.mainMenu_dialogMessage);
@@ -83,6 +89,7 @@ public class MainMenuActivity extends AppCompatActivity {
         SharedPreferences.Editor settingsSpEditor = sp.edit();
         settingsSpEditor.putString(PHONE_UUID_SP, UUID.randomUUID().toString());
         settingsSpEditor.putInt(AVATAR_IMAGE_SP, R.drawable.player_crusader);
+        settingsSpEditor.putInt(AVATAR_IMAGE_NUMBER_SP, 0);
         settingsSpEditor.putInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player_crusader_selected);
         settingsSpEditor.putString(PROFILE_NAME_SP, input);
         settingsSpEditor.apply();
@@ -111,28 +118,28 @@ public class MainMenuActivity extends AppCompatActivity {
         mBtnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openNewGameActivity();
+                openNewGameActivity(v);
             }
         });
 
         mBtnLoadGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openLoadGameActivity();
+                openLoadGameActivity(v);
             }
         });
 
         mBtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openSettingsActivity();
+                openSettingsActivity(v);
             }
         });
 
         mBtnRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRulesActivity();
+                openRulesActivity(v);
             }
         });
 
@@ -151,26 +158,51 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     // Open a new activity to rules
-    private void openRulesActivity() {
+    private void openRulesActivity(View view) {
         Intent RulesIntent = new Intent(this, RulesActivity.class);
-        startActivity(RulesIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bundle bundle;
+            bundle = ActivityOptions.makeThumbnailScaleUpAnimation(view, bitmap, 0, 0).toBundle();
+            startActivity(RulesIntent, bundle);
+        } else
+            startActivity(RulesIntent);
+
     }
 
     // Open a new activity to Settings
-    private void openSettingsActivity() {
+    private void openSettingsActivity(View view) {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bundle bundle;
+            bundle = ActivityOptions.makeThumbnailScaleUpAnimation(view, bitmap, 0, 0).toBundle();
+            startActivity(settingsIntent, bundle);
+        } else
         startActivity(settingsIntent);
     }
 
     // Open a new activity to Load Game
-    private void openLoadGameActivity() {
+    private void openLoadGameActivity(View view) {
         Intent LoadGameIntent = new Intent(this, LoadGameActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bundle bundle;
+            bundle = ActivityOptions.makeThumbnailScaleUpAnimation(view, bitmap, 0, 0).toBundle();
+            startActivity(LoadGameIntent, bundle);
+        } else
         startActivity(LoadGameIntent);
     }
 
     // Open a new activity to New Game
-    private void openNewGameActivity() {
+    private void openNewGameActivity(View view) {
         Intent NewGameIntent = new Intent(this, NewGameActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bundle bundle;
+            bundle = ActivityOptions.makeThumbnailScaleUpAnimation(view, bitmap, 0, 0).toBundle();
+            startActivity(NewGameIntent, bundle);
+        } else
         startActivity(NewGameIntent);
     }
 
