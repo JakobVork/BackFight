@@ -16,13 +16,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.studio.jarn.backfight.Firebase.FirebaseHelper;
+import com.studio.jarn.backfight.Firebase.FirebaseLobbyListener;
+import com.studio.jarn.backfight.Gameboard.GameActivity;
+import com.studio.jarn.backfight.Gameboard.GridType;
+import com.studio.jarn.backfight.Player.Player;
+import com.studio.jarn.backfight.Player.PlayerAdapter;
 import com.studio.jarn.backfight.R;
-import com.studio.jarn.backfight.firebase.FirebaseHelper;
-import com.studio.jarn.backfight.firebase.FirebaseLobbyListener;
-import com.studio.jarn.backfight.gameboard.GameActivity;
-import com.studio.jarn.backfight.gameboard.GridType;
-import com.studio.jarn.backfight.player.Player;
-import com.studio.jarn.backfight.player.PlayerAdapter;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.studio.jarn.backfight.MainMenuActivity.PHONE_UUID_SP;
-import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
-import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SP;
-import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.PROFILE_NAME_SP;
+import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
+import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_SP;
+import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_SP;
 
 public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyListener {
 

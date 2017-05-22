@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gameboard.GameActivity"
+            android:name=".Gameboard.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop"
@@ -35,17 +35,17 @@
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".Settings_Activity.SettingsActivity"
+            android:name=".Settings.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".Rules_Activity.RulesActivity"
+            android:name=".Rules.RulesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".LoadGame_Activity.LoadGameActivity"
+            android:name=".LoadGame.LoadGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />

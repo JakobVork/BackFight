@@ -12,10 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.studio.jarn.backfight.Firebase.FirebaseHelper;
+import com.studio.jarn.backfight.Firebase.FirebaseNewGameListener;
 import com.studio.jarn.backfight.Lobby.LobbyActivity;
 import com.studio.jarn.backfight.R;
-import com.studio.jarn.backfight.firebase.FirebaseHelper;
-import com.studio.jarn.backfight.firebase.FirebaseNewGameListener;
 
 public class NewGameActivity extends AppCompatActivity implements FirebaseNewGameListener {
 

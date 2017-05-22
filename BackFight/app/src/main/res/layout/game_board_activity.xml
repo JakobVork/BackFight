@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <com.studio.jarn.backfight.gameboard.GameView
+    <com.studio.jarn.backfight.Gameboard.GameView
         android:id="@+id/boardview"
         android:layout_width="0dp"
         android:layout_height="0dp"

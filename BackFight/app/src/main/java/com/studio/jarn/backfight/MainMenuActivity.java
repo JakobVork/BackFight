@@ -13,16 +13,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.studio.jarn.backfight.LoadGame_Activity.LoadGameActivity;
+import com.studio.jarn.backfight.LoadGame.LoadGameActivity;
 import com.studio.jarn.backfight.NewGame.NewGameActivity;
-import com.studio.jarn.backfight.Rules_Activity.RulesActivity;
-import com.studio.jarn.backfight.Settings_Activity.SettingsActivity;
+import com.studio.jarn.backfight.Rules.RulesActivity;
+import com.studio.jarn.backfight.Settings.SettingsActivity;
 
 import java.util.UUID;
 
-import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
-import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.AVATAR_IMAGE_SP;
-import static com.studio.jarn.backfight.Settings_Activity.SettingsActivity.PROFILE_NAME_SP;
+import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_SELECTED_SP;
+import static com.studio.jarn.backfight.Settings.SettingsActivity.AVATAR_IMAGE_SP;
+import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_SP;
 
 public class MainMenuActivity extends AppCompatActivity {
 

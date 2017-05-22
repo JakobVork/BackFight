@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/fragment_listBackground"
     android:orientation="vertical"
-    tools:context="com.studio.jarn.backfight.fragment.fragment_item_details">
+    tools:context="com.studio.jarn.backfight.Fragment.fragment_item_details">
 
     <ImageView
         android:id="@+id/fragment_item_details_iv_img"
