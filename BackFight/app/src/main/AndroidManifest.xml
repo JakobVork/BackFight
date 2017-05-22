@@ -50,7 +50,7 @@
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".NewGameActivity"
+            android:name=".NewGame.NewGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.studio.jarn.backfight.LoadGame_Activity.LoadGameActivity;
+import com.studio.jarn.backfight.NewGame.NewGameActivity;
 import com.studio.jarn.backfight.Rules_Activity.RulesActivity;
 import com.studio.jarn.backfight.Settings_Activity.SettingsActivity;
 
