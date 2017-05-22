@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.Notification;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
+import com.studio.jarn.backfight.R;
 import com.studio.jarn.backfight.gameboard.GameActivity;
 
 public class NotificationIntentService extends IntentService {

@@ -61,7 +61,7 @@
             android:theme="@style/FullscreenMenuTheme" />
 
         <service
-            android:name=".NotificationIntentService"
+            android:name=".Notification.NotificationIntentService"
             android:exported="false" />
     </application>
 
