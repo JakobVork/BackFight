@@ -7,12 +7,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
 import com.studio.jarn.backfight.monster.Monster;
 import com.studio.jarn.backfight.monster.MonsterFactory;
+import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.Items.Weapons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,22 +63,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private boolean mScalingValuesCalculated = false;
     private String mPlayerId;
 
-    public GameView(Context context) {
-        super(context);
-        setTouchListener(this);
-        mPlayerId = context.getSharedPreferences(
-                getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
-    }
-
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTouchListener(this);
-        mPlayerId = context.getSharedPreferences(
-                getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
-    }
-
-    public GameView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
         setTouchListener(this);
         mPlayerId = context.getSharedPreferences(
                 getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
@@ -102,6 +93,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 }
             }
         }
+    }
+
+    private void addItemListToDb(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
+        mFirebaseHelper.setItemList(itemsWithCoordinates);
     }
 
     public void setGridSize(int newValue) {
@@ -155,10 +150,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             }
             dy = dy + mSquareHeight;
         }
-        myDraw(canvas);
+        drawMapObjects(canvas);
     }
 
-    private void myDraw(Canvas canvas) {
+    private void drawMapObjects(Canvas canvas) {
 
         setMargins();
 
@@ -326,17 +321,27 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mFirebaseHelper.setMonsterListListener();
     }
 
+    public void setItemListener() {
+        mFirebaseHelper.setItemListListener();
+    }
+
     @Override
     public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
         mGamePlayerList.clear();
         mGamePlayerList = playerList;
         invalidate();
     }
-
     @Override
     public void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monsterList) {
         mMonsterList.clear();
         mMonsterList = monsterList;
+        invalidate();
+    }
+    
+    @Override
+    public void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemList) {
+        mGameItemList.clear();
+        mGameItemList = itemList;
         invalidate();
     }
 
@@ -416,6 +421,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Boolean monsterHandled = false;
         Boolean playerHandled = HandlePlayerClicked(tileX, tileY, placementX, placementY);
 
+
         if (!playerHandled)
             monsterHandled = HandleMonsterClicked(tileX, tileY, placementX, placementY);
 
@@ -423,6 +429,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             HandleItemClicked(tileX, tileY, placementX, placementY);
 
         mFirebaseHelper.setPlayerList(mGamePlayerList);
+        mFirebaseHelper.setItemList(mGameItemList);
 
         //Render map
         invalidate();
@@ -448,8 +455,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                         return true;
                     }
                 }
-                //TODO Check if Item is clicked (ends with return true)
-                //TODO Check if Monster is clicked (ends with return true)
 
                 movePlayer(tuple, tileX, tileY);
                 return true;
@@ -457,9 +462,19 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
             //Check if player is clicked and select it
             if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY && tuple.mCoordinates.placementOnTileX == placementX && tuple.mCoordinates.placementOnTileY == placementY) {
-                mSelectedPlayer = tuple.mGameObject;
-                //Player related click happened
-                return true;
+                if(tuple.mGameObject.id.equals(mPlayerId)) {
+                    mSelectedPlayer = tuple.mGameObject;
+                    //Player related click happened
+                    return true;
+                } else {
+                    // Selected another player - show items and stats
+                    List<GameItem> itemListToShow = tuple.mGameObject.PlayerItems;
+                    if (itemListToShow == null) {
+                        itemListToShow = new ArrayList<GameItem>();
+                    }
+                    ((GameActivity) getContext()).hideItemListFragment();
+                    ((GameActivity) getContext()).showItemListFragment(itemListToShow, tuple.mGameObject.mName);
+                }
             }
         }
 
@@ -472,9 +487,58 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return false;
     }
 
-    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY) {
-        //TODO
+
+    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY){
+        for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList){
+            if(playerTuple.mGameObject.id.equals(mPlayerId)) {
+                // Check for items clicked
+                Tuple<GameItem, Coordinates> mapItem = mapItemClicked(tileX, tileY, placementX, placementY);
+                if(mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
+                    pickUpItem(mapItem);
+                    return true;
+                }
+            }
+        }
         return false;
+    }
+
+    private Tuple<GameItem, Coordinates> mapItemClicked(int tileX, int tileY, int placementX, int placementY) {
+        for (Tuple<GameItem, Coordinates> itemTuple : mGameItemList) {
+            if (itemTuple.mCoordinates.tileX == tileX && itemTuple.mCoordinates.tileY == tileY && itemTuple.mCoordinates.placementOnTileX == placementX && itemTuple.mCoordinates.placementOnTileY == placementY) {
+                return itemTuple;
+            }
+        }
+        return null;
+    }
+
+    private void pickUpItem(Tuple<GameItem, Coordinates> mapItem) {
+        Log.d("ItemClicked", "onTouchUp: Item on map was clicked. " + mapItem.mGameObject.Title);
+
+        // Get item
+        GameItem itemPickedUp = mapItem.mGameObject;
+
+        // Remove item from map
+        mGameItemList.remove(mapItem);
+
+        // Add item to players itemlist
+        addItemToPlayer(itemPickedUp, getPlayerName());
+    }
+
+    private void addItemToPlayer(GameItem item, String playerName) {
+        for (Tuple<Player, Coordinates> playerTuple:mGamePlayerList) {
+            if(playerTuple.mGameObject.mName.equals(playerName)) {
+                Log.d("addItemToPlayer", "addItemToPlayer: " + playerTuple.mGameObject.mName + " = " + playerName);
+                // Check if list is null due to the way firebase handles empty lists.
+                if(playerTuple.mGameObject.PlayerItems == null)
+                {
+                    playerTuple.mGameObject.PlayerItems = new ArrayList<GameItem>();
+                    playerTuple.mGameObject.PlayerItems.add(item);
+                } else {
+                    Log.d("testing", "addItemToPlayer: " + playerTuple.mGameObject.mName);
+                    playerTuple.mGameObject.PlayerItems.add(item);
+                }
+            }
+        }
     }
 
     private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
@@ -688,6 +752,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             }
         }
 
+        addItemListToDb(mGameItemList);
         invalidate();
     }
 
@@ -747,5 +812,30 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return mGrid[coordinates.tileY][coordinates.tileX].CanBePassed;
     }
 
+    public List<GameItem> getPlayerItemList() {
+        List<GameItem> LocalPlayerItems = null;
+        for (Tuple<Player, Coordinates> tuple:mGamePlayerList) {
+            if(tuple.mGameObject.id.equals(mPlayerId)) {
+                LocalPlayerItems = tuple.mGameObject.PlayerItems;
+            }
+        }
+
+        if(LocalPlayerItems == null) {
+            Log.d("getPlayerItemList", "itemList for player was NULL");
+            LocalPlayerItems = new ArrayList<GameItem>();
+        }
+
+        return LocalPlayerItems;
+    }
+
+    public String getPlayerName() {
+        for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
+            if (playerTuple.mGameObject.id.equals(mPlayerId)){
+                return playerTuple.mGameObject.mName;
+            }
+        }
+
+        return ""; //TODO: Maybe throw an exception instead?.
+    }
 } // end class
   

@@ -15,14 +15,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
-import com.studio.jarn.backfight.Items.ItemFactory;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.studio.jarn.backfight.NotificationIntentService.ACTION_NEWROUND;
@@ -30,8 +28,7 @@ import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_TEXT;
 import static com.studio.jarn.backfight.NotificationIntentService.EXTRA_TITLE;
 
 
-public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener
-{
+public class GameActivity extends FragmentActivity implements ItemsAndStatsFragment.OnItemSelectedListener, FirebaseGameActivityListener, PlayerGameActivityListener {
     private static final int sSquaresViewedAtStartup = 3;
     private static final int sDefaultGridSize = 15;
     public static boolean isGameActivityVisible = false;
@@ -45,7 +42,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private ImageView mIvItemFragmentShow;
     private ImageView mIvItemFragmentHide;
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
@@ -83,7 +81,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         mIvItemFragmentShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showItemListFragment();
+                GameView gv = (GameView) findViewById(R.id.boardview);
+                showItemListFragment(gv.getPlayerItemList(), gv.getPlayerName());
             }
         });
     }
@@ -106,7 +105,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 //http://stackoverflow.com/questions/2836256/passing-enum-or-object-through-an-intent-the-best-solution
                 GridType gridType = (GridType) i.getSerializableExtra(getString(R.string.EXTRA_GRIDTYPE));
-                setupMyGrid(gridType);
+                setupMap(gridType);
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
@@ -131,43 +130,31 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 gv.setListeners();
             }
+
+            gv.setItemListener();
         }
     }
 
-    private void showItemListFragment() {
+    public void showItemListFragment(List<GameItem> itemList, String name) {
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmentHide.setVisibility(View.VISIBLE);
 
-        ArrayList<GameItem> items = new ArrayList<>();
-        ItemFactory fac = new ItemFactory(getApplicationContext());
-        items.add(fac.Weapons.AxeMajor());
-        ItemsAndStatsFragment.newInstance(items);
-
         // Add ItemsAndStats fragment
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        if (itemsAndStatsFragment == null) {
-            // TODO: Use correct items instead of hardcoded.
-            ItemFactory itemFac = new ItemFactory(getApplicationContext());
-            ArrayList<GameItem> itemList = new ArrayList<>();
 
-            GameItem item = itemFac.Weapons.SwordSimple();
-            itemList.add(item);
-            item = itemFac.Weapons.SwordFlame();
-            itemList.add(item);
-            item = itemFac.Weapons.AxeMajor();
-            itemList.add(item);
-            item = itemFac.Weapons.Scepter();
-            itemList.add(item);
+        // Need to create a new every time, since the current fragment might be for another user
+        // Need to ensure that this doesn't create a memory leak in some sort? <-- I don't think so
+        // Might need to keep it in detailed fragment, if player has selected a item? <-- A lot
+        // harder, since it also depends on who it is etc.
+        itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList, name);
 
-            itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList);
-        }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
         ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
         ft.commit();
     }
 
-    private void hideItemListFragment() {
+    public void hideItemListFragment() {
         mIvItemFragmentShow.setVisibility(View.VISIBLE);
         mIvItemFragmentHide.setVisibility(View.GONE);
 
@@ -190,29 +177,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         btnRound.setText(roundText);
     }
 
-
-
-
-/*    //ToDO Needs implementation
-    public void addPlayers() {
-        List<Player> players = new ArrayList<>();
-        players.add(new Player(R.drawable.player32, "Pernille"));
-
-        Random random = new Random();
-
-        while (true) {
-            int random1 = random.nextInt(sGridSize - 1);
-            int random2 = random.nextInt(sGridSize - 1);
-
-            if (mGrid[random1][random2].CanBePassed) {
-                mGrid[random1][random2].Players = players;
-                break;
-            }
-        }
-    }*/
-
-    private void setupMyGrid(GridType gridType)
-    {
+    private void setupMap(GridType gridType) {
         IMapGenerator mapGenerator;
 
         switch (gridType) {
