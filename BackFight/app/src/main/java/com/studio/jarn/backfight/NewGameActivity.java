@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.studio.jarn.backfight.firebase.FirebaseHelper;
+import com.studio.jarn.backfight.firebase.FirebaseNewGameListener;
+
 public class NewGameActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
     Button mBtnBack;

@@ -1,7 +1,6 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.firebase;
 
 
-import android.content.ClipData;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -16,17 +15,20 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.studio.jarn.backfight.monster.Monster;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.studio.jarn.backfight.Coordinates;
+import com.studio.jarn.backfight.GameActivity;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.Player;
+import com.studio.jarn.backfight.Tile;
+import com.studio.jarn.backfight.Tuple;
+import com.studio.jarn.backfight.monster.Monster;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-class FirebaseHelper {
+public class FirebaseHelper {
 
     private static final String sDatabasePostfixGrid = "Grid";
     private static final String sDatabasePostfixPlayers = "PlayerList";
@@ -55,7 +57,7 @@ class FirebaseHelper {
     private String mDialogInput;
     private String mGameIdRoundCount;
 
-    FirebaseHelper(Context context) {
+    public FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
 
         if (context instanceof FirebaseNewGameListener) {
@@ -68,7 +70,7 @@ class FirebaseHelper {
         }
     }
 
-    FirebaseHelper(View view) {
+    public FirebaseHelper(View view) {
         mDatabase = FirebaseDatabase.getInstance();
 
         if (view instanceof FirebaseGameViewListener) {
@@ -80,7 +82,7 @@ class FirebaseHelper {
     }
 
 
-    void setStandardKey(String gameId) {
+    public void setStandardKey(String gameId) {
         mGameId = gameId;
         mGameIdRadio = gameId + sDatabasePostfixRadioGroup;
         mGameIdStartGame = gameId + sDatabasePostfixStartGame;
@@ -93,7 +95,7 @@ class FirebaseHelper {
     }
 
     //FirebaseNewGameListener
-    void validateIfGameExist(String input) {
+    public void validateIfGameExist(String input) {
         mDialogInput = input;
 
         DatabaseReference databaseReference = mDatabase.getReference(mDialogInput);
@@ -116,11 +118,11 @@ class FirebaseHelper {
 
 
     //mFirebaseLobbyListener
-    void addPlayerToDb(Player player) {
+    public void addPlayerToDb(Player player) {
         mDatabase.getReference(mGameId).push().setValue(player);
     }
 
-    void setupStartGameListener() {
+    public void setupStartGameListener() {
         mDatabase.getReference(mGameIdStartGame).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -137,7 +139,7 @@ class FirebaseHelper {
         });
     }
 
-    void setupWidgetsListener() {
+    public void setupWidgetsListener() {
         mDatabase.getReference(mGameIdNumberPicker).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -167,7 +169,7 @@ class FirebaseHelper {
         });
     }
 
-    void setListViewListener() {
+    public void setListViewListener() {
         mDatabase.getReference(mGameId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -188,29 +190,29 @@ class FirebaseHelper {
     }
 
 
-    void setNumberPicker(int value) {
+    public void setNumberPicker(int value) {
         mDatabase.getReference(mGameIdNumberPicker).setValue(value);
     }
 
-    void setStartGame() {
+    public void setStartGame() {
         mDatabase.getReference(mGameIdStartGame).setValue(true);
     }
 
-    void setGridType(int value) {
+    public void setGridType(int value) {
         mDatabase.getReference(mGameIdRadio).setValue(value);
     }
 
 
     //FirebaseGameViewListener
-    void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
+    public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
         mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
     }
 
-    void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monstersWithCoordinates) {
+    public void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monstersWithCoordinates) {
         mDatabase.getReference(mGameIdMonsters).setValue(monstersWithCoordinates);
     }
 
-    void setupGridListener() {
+    public void setupGridListener() {
         mDatabase.getReference(mGameIdGrid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -244,7 +246,7 @@ class FirebaseHelper {
         });
     }
 
-    void setPlayerListListener() {
+    public void setPlayerListListener() {
         mDatabase.getReference(mGameIdPlayers).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -262,7 +264,7 @@ class FirebaseHelper {
                  */
 
                 for (DataSnapshot playerTuple : dataSnapshot.getChildren()) {
-                    ArrayList<GameItem> itemList = new ArrayList<GameItem>();
+                    ArrayList<GameItem> itemList = new ArrayList<>();
                     for (DataSnapshot player : playerTuple.getChildren()) {
                         for (DataSnapshot playerProperties : player.getChildren()) {
                             for (DataSnapshot playerItems : playerProperties.getChildren()) {
@@ -289,7 +291,7 @@ class FirebaseHelper {
     }
 
 
-    void setMonsterListListener() {
+    public void setMonsterListListener() {
         mDatabase.getReference(mGameIdMonsters).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -335,7 +337,7 @@ class FirebaseHelper {
         });
     }
 
-    void setRoundCountListener(Context context) {
+    public void setRoundCountListener(Context context) {
         if (context instanceof FirebaseGameActivityListener) {
             mFirebaseGameActivityListener = (FirebaseGameActivityListener) context;
         } else {
@@ -362,20 +364,20 @@ class FirebaseHelper {
     }
 
 
-    void setGrid(List<List<Tile>> list) {
+    public void setGrid(List<List<Tile>> list) {
         mDatabase.getReference(mGameIdGrid).setValue(list);
     }
 
 
-    void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
+    public void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
         mDatabase.getReference(mGameIdItems).setValue(itemsWithCoordinates);
     }
 
-    Tuple<GameItem, Coordinates> convert(Tuple<ItemWeapon, Coordinates> tuple){
+    private Tuple<GameItem, Coordinates> convert(Tuple<ItemWeapon, Coordinates> tuple) {
         return new Tuple<GameItem, Coordinates>(tuple.mGameObject, tuple.mCoordinates);
     }
 
-    void setItemListListener() {
+    public void setItemListListener() {
         mDatabase.getReference(mGameIdItems).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -383,7 +385,7 @@ class FirebaseHelper {
                 Log.d("Test", item);
 
                 GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>>() {};
-                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<Tuple<GameItem, Coordinates>>();
+                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     itemList.add(convert(postSnapshot.getValue(genericTypeIndicator)));
                 }

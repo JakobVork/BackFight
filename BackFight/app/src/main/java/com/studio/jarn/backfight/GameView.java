@@ -7,17 +7,15 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
+import com.studio.jarn.backfight.firebase.FirebaseGameViewListener;
+import com.studio.jarn.backfight.firebase.FirebaseHelper;
 import com.studio.jarn.backfight.monster.Monster;
 import com.studio.jarn.backfight.monster.MonsterFactory;
-import com.studio.jarn.backfight.Items.ItemWeapon;
-import com.studio.jarn.backfight.Items.Weapons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -470,7 +468,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     // Selected another player - show items and stats
                     List<GameItem> itemListToShow = tuple.mGameObject.PlayerItems;
                     if (itemListToShow == null) {
-                        itemListToShow = new ArrayList<GameItem>();
+                        itemListToShow = new ArrayList<>();
                     }
                     ((GameActivity) getContext()).hideItemListFragment();
                     ((GameActivity) getContext()).showItemListFragment(itemListToShow, tuple.mGameObject.mName);
@@ -531,7 +529,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 // Check if list is null due to the way firebase handles empty lists.
                 if(playerTuple.mGameObject.PlayerItems == null)
                 {
-                    playerTuple.mGameObject.PlayerItems = new ArrayList<GameItem>();
+                    playerTuple.mGameObject.PlayerItems = new ArrayList<>();
                     playerTuple.mGameObject.PlayerItems.add(item);
                 } else {
                     Log.d("testing", "addItemToPlayer: " + playerTuple.mGameObject.mName);
@@ -822,7 +820,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         if(LocalPlayerItems == null) {
             Log.d("getPlayerItemList", "itemList for player was NULL");
-            LocalPlayerItems = new ArrayList<GameItem>();
+            LocalPlayerItems = new ArrayList<>();
         }
 
         return LocalPlayerItems;

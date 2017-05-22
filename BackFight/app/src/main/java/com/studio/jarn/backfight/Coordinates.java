@@ -2,7 +2,7 @@ package com.studio.jarn.backfight;
 
 import java.util.Random;
 
-class Coordinates {
+public class Coordinates {
     private final static Random rnd = new Random();
 
     int tileX;

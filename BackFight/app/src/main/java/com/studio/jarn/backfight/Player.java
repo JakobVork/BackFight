@@ -1,26 +1,22 @@
 package com.studio.jarn.backfight;
 
 
-import android.util.Log;
-
-import com.studio.jarn.backfight.Items.GameItem;
-import com.studio.jarn.backfight.Items.ItemFactory;
-import com.studio.jarn.backfight.Items.ItemWeapon;
-
-import java.util.ArrayList;
-import java.util.List;
 import android.content.Context;
 import android.view.View;
 
-class Player {
+import com.studio.jarn.backfight.Items.GameItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Player {
+    public List<GameItem> PlayerItems;
     String mName;
     int mFigure = 0;
     int mFigureSelected = 0;
     int mActionsRemaining = 3;
-    int mActionsPerTurn = 3;
     String id;
-
-    public List<GameItem> PlayerItems;
+    private int mActionsPerTurn = 3;
 
     Player(int Figure, int FigureSelected, String name, String uuid) {
         mFigure = Figure;
@@ -28,7 +24,7 @@ class Player {
         mFigureSelected = FigureSelected;
         id = uuid;
 
-        PlayerItems = new ArrayList<GameItem>();
+        PlayerItems = new ArrayList<>();
     }
 
     //Needed for casting from Firebase

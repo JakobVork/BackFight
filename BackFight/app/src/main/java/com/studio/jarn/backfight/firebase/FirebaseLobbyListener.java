@@ -1,9 +1,11 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.firebase;
 
+
+import com.studio.jarn.backfight.Player;
 
 import java.util.ArrayList;
 
-interface FirebaseLobbyListener {
+public interface FirebaseLobbyListener {
     void startGameClient();
 
     void setNumberPickerValue(int value);
