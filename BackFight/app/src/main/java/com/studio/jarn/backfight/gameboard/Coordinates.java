@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.gameboard;
 
 import java.util.Random;
 

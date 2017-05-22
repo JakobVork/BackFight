@@ -1,6 +1,6 @@
 package com.studio.jarn.backfight.MapGeneration;
 
-import com.studio.jarn.backfight.Tile;
+import com.studio.jarn.backfight.gameboard.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.gameboard;
 
 //inspiration for this class has been found here: http://www.wglxy.com/android-tutorials/android-zoomable-game-board
 

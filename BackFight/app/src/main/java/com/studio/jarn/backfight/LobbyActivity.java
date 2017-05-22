@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.studio.jarn.backfight.firebase.FirebaseHelper;
 import com.studio.jarn.backfight.firebase.FirebaseLobbyListener;
+import com.studio.jarn.backfight.gameboard.GameActivity;
+import com.studio.jarn.backfight.gameboard.GridType;
 import com.studio.jarn.backfight.player.Player;
 import com.studio.jarn.backfight.player.PlayerAdapter;
 

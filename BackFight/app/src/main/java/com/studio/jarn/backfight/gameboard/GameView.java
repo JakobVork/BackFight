@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.gameboard;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemFactory;
+import com.studio.jarn.backfight.R;
 import com.studio.jarn.backfight.firebase.FirebaseGameViewListener;
 import com.studio.jarn.backfight.firebase.FirebaseHelper;
 import com.studio.jarn.backfight.monster.Monster;

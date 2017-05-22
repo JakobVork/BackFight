@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.gameboard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +19,8 @@ import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
+import com.studio.jarn.backfight.NotificationIntentService;
+import com.studio.jarn.backfight.R;
 import com.studio.jarn.backfight.firebase.FirebaseGameActivityListener;
 import com.studio.jarn.backfight.fragment.ItemsAndStatsFragment;
 import com.studio.jarn.backfight.fragment.fragment_item_details;

@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.gameboard;
 
 public class Tile {
     public int TileConnectivityCollectionNr;

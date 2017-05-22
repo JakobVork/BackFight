@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <com.studio.jarn.backfight.GameView
+    <com.studio.jarn.backfight.gameboard.GameView
         android:id="@+id/boardview"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -32,6 +32,7 @@
         android:id="@+id/game_board_activity_iv_hide_items"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
         android:src="@drawable/arrow_right_icon"
@@ -65,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -75,6 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toRightOf="@+id/game_board_activity_tv_actionCount"

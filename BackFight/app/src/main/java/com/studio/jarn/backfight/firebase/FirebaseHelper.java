@@ -16,12 +16,12 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.studio.jarn.backfight.Coordinates;
-import com.studio.jarn.backfight.GameActivity;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
-import com.studio.jarn.backfight.Tile;
-import com.studio.jarn.backfight.Tuple;
+import com.studio.jarn.backfight.gameboard.Coordinates;
+import com.studio.jarn.backfight.gameboard.GameActivity;
+import com.studio.jarn.backfight.gameboard.Tile;
+import com.studio.jarn.backfight.gameboard.Tuple;
 import com.studio.jarn.backfight.monster.Monster;
 import com.studio.jarn.backfight.player.Player;
 

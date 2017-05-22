@@ -1,9 +1,9 @@
 package com.studio.jarn.backfight.firebase;
 
-import com.studio.jarn.backfight.Coordinates;
 import com.studio.jarn.backfight.Items.GameItem;
-import com.studio.jarn.backfight.Tile;
-import com.studio.jarn.backfight.Tuple;
+import com.studio.jarn.backfight.gameboard.Coordinates;
+import com.studio.jarn.backfight.gameboard.Tile;
+import com.studio.jarn.backfight.gameboard.Tuple;
 import com.studio.jarn.backfight.monster.Monster;
 import com.studio.jarn.backfight.player.Player;
 
