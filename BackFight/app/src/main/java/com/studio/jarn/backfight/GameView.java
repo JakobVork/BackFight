@@ -110,7 +110,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public void setupFirebase(String uuid) {
         mFirebaseHelper = new FirebaseHelper(this);
-        mFirebaseHelper.setStandardKey(uuid);
+        mFirebaseHelper.setStandardKey(uuid, getContext());
     }
 
     //Todo: remove hardcoded Players
