@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.Lobby;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.studio.jarn.backfight.R;
 import com.studio.jarn.backfight.firebase.FirebaseHelper;
 import com.studio.jarn.backfight.firebase.FirebaseLobbyListener;
 import com.studio.jarn.backfight.gameboard.GameActivity;

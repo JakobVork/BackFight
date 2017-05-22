@@ -55,7 +55,7 @@
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />
         <activity
-            android:name=".LobbyActivity"
+            android:name=".Lobby.LobbyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="userLandscape"
             android:theme="@style/FullscreenMenuTheme" />

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.studio.jarn.backfight.Lobby.LobbyActivity;
 import com.studio.jarn.backfight.firebase.FirebaseHelper;
 import com.studio.jarn.backfight.firebase.FirebaseNewGameListener;
 
