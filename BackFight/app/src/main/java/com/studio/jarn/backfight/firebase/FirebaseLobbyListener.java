@@ -1,7 +1,7 @@
 package com.studio.jarn.backfight.firebase;
 
 
-import com.studio.jarn.backfight.Player;
+import com.studio.jarn.backfight.player.Player;
 
 import java.util.ArrayList;
 

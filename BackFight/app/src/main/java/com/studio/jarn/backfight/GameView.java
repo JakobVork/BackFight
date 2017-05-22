@@ -16,6 +16,8 @@ import com.studio.jarn.backfight.firebase.FirebaseGameViewListener;
 import com.studio.jarn.backfight.firebase.FirebaseHelper;
 import com.studio.jarn.backfight.monster.Monster;
 import com.studio.jarn.backfight.monster.MonsterFactory;
+import com.studio.jarn.backfight.player.Player;
+import com.studio.jarn.backfight.player.PlayerGameViewListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;

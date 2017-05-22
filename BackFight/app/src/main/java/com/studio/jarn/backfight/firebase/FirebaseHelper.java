@@ -20,10 +20,10 @@ import com.studio.jarn.backfight.Coordinates;
 import com.studio.jarn.backfight.GameActivity;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
-import com.studio.jarn.backfight.Player;
 import com.studio.jarn.backfight.Tile;
 import com.studio.jarn.backfight.Tuple;
 import com.studio.jarn.backfight.monster.Monster;
+import com.studio.jarn.backfight.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;

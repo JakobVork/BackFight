@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.player;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,12 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.studio.jarn.backfight.R;
+
 import java.util.ArrayList;
 
-class PlayerAdapter extends ArrayAdapter<Player> {
+public class PlayerAdapter extends ArrayAdapter<Player> {
 
 
-    PlayerAdapter(Context context, ArrayList<Player> users) {
+    public PlayerAdapter(Context context, ArrayList<Player> users) {
         super(context, 0, users);
     }
 
