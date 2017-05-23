@@ -423,7 +423,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Boolean monsterHandled = false;
         Boolean playerHandled = HandlePlayerClicked(tileX, tileY, placementX, placementY);
 
-
         if (!playerHandled)
             monsterHandled = HandleMonsterClicked(tileX, tileY, placementX, placementY);
 
