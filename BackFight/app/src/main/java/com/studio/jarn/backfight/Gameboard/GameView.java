@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 
 import com.studio.jarn.backfight.Firebase.FirebaseGameViewListener;
 import com.studio.jarn.backfight.Firebase.FirebaseHelper;
@@ -429,6 +430,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         if (!playerHandled && !monsterHandled)
             HandleItemClicked(tileX, tileY, placementX, placementY);
 
+        mFirebaseHelper.setMonsterList(mMonsterList);
         mFirebaseHelper.setPlayerList(mGamePlayerList);
         mFirebaseHelper.setItemList(mGameItemList);
 
@@ -484,10 +486,40 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private Boolean HandleMonsterClicked(int tileX, int tileY, int placementX, int placementY) {
-        //TODO
+
+        // Check if player is on the same tile
+        Tuple<Player, Coordinates> localPlayerTuple = getPlayerTuple();
+        if(localPlayerTuple.mCoordinates.tileX == tileX && localPlayerTuple.mCoordinates.tileY == tileY) {
+
+            // Player is on the same tile as the monster that was clicked
+            // Find monster that was clicked
+            for (Tuple<Monster, Coordinates> monsterTuple:mMonsterList) {
+                if(     monsterTuple.mCoordinates.tileX == tileX &&
+                        monsterTuple.mCoordinates.tileY == tileY &&
+                        monsterTuple.mCoordinates.placementOnTileX == placementX &&
+                        monsterTuple.mCoordinates.placementOnTileY == placementY) {
+
+                    // Player roll dmg
+                    int dmg = localPlayerTuple.mGameObject.rollAttack();
+
+                    // Damage monster
+                    monsterTuple.mGameObject.mHitPoints -= dmg;
+
+                    if(monsterTuple.mGameObject.mHitPoints <= 0) {
+                        // Monster died, remove it from map
+                        Log.d("HandleMonsterClicked", "Monster died");
+                        mMonsterList.remove(monsterTuple);
+                    }
+
+                    // Player lose a turn
+                    localPlayerTuple.mGameObject.takeAction(getContext(), this);
+                }
+            }
+
+        }
+
         return false;
     }
-
 
     private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY){
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList){
@@ -576,19 +608,22 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             monster.mGameObject.resetActions();
             //as long the monster can take turn
             while (monster.mGameObject.canTakeAction()) {
-                boolean attacked = false;
+                boolean attack = false;
                 //check if same spot as player
                 for (Tuple<Player, Coordinates> player : mGamePlayerList) {
                     if (monster.mCoordinates.tileY == player.mCoordinates.tileY && monster.mCoordinates.tileX == player.mCoordinates.tileX) {
                         attackPlayer(player, monster);
-                        attacked = true;
+                        attack = true;
                         break;
                     }
                 }
                 // If not same space as player move
-                if (!attacked) {
+                if (!attack) {
                     while (!moveSingleMonster(monster)) ;
                 }
+
+                // TODO: Would make sense that monster also attacked if it landed on a tile with a player
+                // ... else the mechanics would be waaaaay to easy. (Move -> Attack -> Move = Safe)
             }
         }
 
@@ -599,7 +634,21 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void attackPlayer(Tuple<Player, Coordinates> player, Tuple<Monster, Coordinates> monster) {
-        //Monster attacks
+        //Get ref to player in list
+        for (Tuple<Player, Coordinates> playerTuple:mGamePlayerList) {
+            if(playerTuple.equals(player)) {
+
+                // Damage player
+                player.mGameObject.Health -= monster.mGameObject.mAttackPower;
+                Log.d("Info", "attackPlayer: Player lost " + monster.mGameObject.mAttackPower + " HP");
+                if(player.mGameObject.Health <= 0)
+                {
+                    // Player died - remove him from map
+                    mGamePlayerList.remove(playerTuple);
+                    Log.d("Info", "attackPlayer: Player died");
+                }
+            }
+        }
 
         monster.mGameObject.takeAction();
     }
@@ -811,6 +860,18 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private boolean tileIsPassable(Coordinates coordinates) {
         return mGrid[coordinates.tileY][coordinates.tileX].CanBePassed;
+    }
+
+    public Tuple<Player, Coordinates> getPlayerTuple() {
+        for (Tuple<Player, Coordinates> tuple:mGamePlayerList) {
+            if(tuple.mGameObject.id.equals(mPlayerId)) {
+                return tuple;
+            }
+        }
+
+        Log.d("getPlayerCoordinates", "Could not find local player.");
+
+        return null;
     }
 
     public List<GameItem> getPlayerItemList() {
