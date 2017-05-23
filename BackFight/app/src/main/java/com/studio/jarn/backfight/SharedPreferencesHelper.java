@@ -7,19 +7,20 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
-class SharedPreferencesHelper {
+public class SharedPreferencesHelper {
 
     private static String sPrefKeyGameIdList = "Game ID List";
     private Context mContext;
 
-    SharedPreferencesHelper(Context context) {
+    public SharedPreferencesHelper(Context context) {
         mContext = context;
     }
 
-    void addGameIdToRecentGameIds(String gameId) {
+    public void addGameIdToRecentGameIds(String gameId) {
         List<String> recentGames = getRecentGameIdsList();
         for (String id : recentGames) {
             if (id.equals(gameId)) return;
@@ -46,8 +47,9 @@ class SharedPreferencesHelper {
         return new ArrayList<>(Arrays.asList(TextUtils.split(serialized, ",")));
     }
 
-    CharSequence[] getRecentGameIdsCharSequence() {
+    public CharSequence[] getRecentGameIdsCharSequence() {
         List<String> list = getRecentGameIdsList();
+        Collections.reverse(list);
         return list.toArray(new CharSequence[list.size()]);
     }
 

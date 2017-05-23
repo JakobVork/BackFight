@@ -16,6 +16,7 @@ import com.studio.jarn.backfight.Firebase.FirebaseHelper;
 import com.studio.jarn.backfight.Firebase.FirebaseNewGameListener;
 import com.studio.jarn.backfight.Lobby.LobbyActivity;
 import com.studio.jarn.backfight.R;
+import com.studio.jarn.backfight.SharedPreferencesHelper;
 
 public class NewGameActivity extends AppCompatActivity implements FirebaseNewGameListener {
 

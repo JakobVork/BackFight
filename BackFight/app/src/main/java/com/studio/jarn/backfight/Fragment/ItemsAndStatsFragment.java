@@ -33,7 +33,7 @@ public class ItemsAndStatsFragment extends Fragment {
     public ItemsAndStatsFragment() {
     }
 
-    public static ItemsAndStatsFragment newInstance(List<GameItem> items,  String name) {
+    public static ItemsAndStatsFragment newInstance(List<GameItem> items, String name) {
         if (items != null) {
             ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
             Bundle args = new Bundle();

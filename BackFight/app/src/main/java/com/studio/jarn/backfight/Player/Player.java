@@ -16,7 +16,7 @@ public class Player {
     public int mFigureSelected = 0;
     public int mActionsRemaining = 3;
     public String id;
-    private int mActionsPerTurn = 3;
+    public int mActionsPerTurn = 3; //Needed for Firebase
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
         mFigure = Figure;

@@ -42,8 +42,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static int sGridSize = 16;
     Fragment itemsAndStatsFragment;
     Fragment itemsAndStatsFragmentDetailed;
+    String mUuid;
     private Tile[][] mGrid;
-
     private TextView btnActionCounter;
     private TextView btnRound;
     private ImageView mIvItemFragmentShow;
@@ -64,9 +64,9 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void setupDefaultText() {
-        setActionCounter(3);
         setRound(1);
     }
+
 
     private void setupItemFragment() {
         btnActionCounter = (TextView) findViewById(R.id.game_board_activity_tv_actionCount);
@@ -95,7 +95,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void setupGameView(Intent i) {
-        String uuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
+        mUuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), false);
         sGridSize = i.getIntExtra(getString(R.string.EXTRA_GRIDSIZE), sDefaultGridSize);
 
@@ -116,7 +116,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setupFirebase(uuid);
+                gv.setupFirebase(mUuid);
 
                 //addPlayers();
                 gv.initHostGrid(mGrid);
@@ -132,7 +132,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             } else {
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
-                gv.setupFirebase(uuid);
+                gv.setupFirebase(mUuid);
                 gv.initClientGrid();
 
                 gv.setListeners();
