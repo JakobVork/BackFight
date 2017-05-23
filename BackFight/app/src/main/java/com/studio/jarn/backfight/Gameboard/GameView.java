@@ -490,6 +490,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Tuple<Player, Coordinates> localPlayerTuple = getPlayerTuple();
         if(localPlayerTuple.mCoordinates.tileX == tileX && localPlayerTuple.mCoordinates.tileY == tileY) {
 
+            // Since we can not remove monstre, while we are in the for-loop, we have to make a
+            // copy of it, in order to remove it safely afterwards.
+            boolean monsterWasKilled = false;
+            Tuple<Monster, Coordinates> killedMonster = null;
+
             // Player is on the same tile as the monster that was clicked
             // Find monster that was clicked
             for (Tuple<Monster, Coordinates> monsterTuple:mMonsterList) {
@@ -507,7 +512,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     if(monsterTuple.mGameObject.mHitPoints <= 0) {
                         // Monster died, remove it from map
                         Log.d("HandleMonsterClicked", "Monster died");
-                        mMonsterList.remove(monsterTuple);
+                        monsterWasKilled = true;
+                        killedMonster = monsterTuple; // Copy by value, since it's java
                     }
 
                     // Player lose a turn
@@ -515,6 +521,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 }
             }
 
+            if(monsterWasKilled) {
+                mMonsterList.remove(killedMonster);
+            }
         }
 
         return false;
