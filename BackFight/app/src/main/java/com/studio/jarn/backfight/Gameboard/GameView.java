@@ -462,6 +462,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             // Clicked on Monster - Attack it
             AttackMonster(getLocalPlayer(), getMonsterOnCoord(coordinate));
         } else if (tileNextToPlayer(getLocalPlayer(), coordinate.tileX, coordinate.tileY, 1)){ // 1 = distance
+            // Ensure player has actions left
+            if(!getLocalPlayer().canTakeAction())
+                return;
+
             // Check that player isn't on the tile already
             if(getLocalPlayer().Coordinate.tileX == coordinate.tileX && getLocalPlayer().Coordinate.tileY == coordinate.tileY)
                 return;
