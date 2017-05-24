@@ -16,6 +16,7 @@ public class Player {
     public int mFigureSelected = 0;
     public int mActionsRemaining = 3;
     public String id;
+    public int LineOfSight = 1;
     private int mActionsPerTurn = 3;
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
