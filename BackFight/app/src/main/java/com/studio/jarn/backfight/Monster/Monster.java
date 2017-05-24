@@ -13,6 +13,10 @@ public class Monster {
     public int HitPoints;
     public Coordinates coordinate;
 
+    Monster(int Figure, String name, String decription, int monsterTurn, int hp, int ap) {
+        this(Figure, name, decription, monsterTurn, hp, ap, null);
+    }
+
     Monster(int Figure, String name, String decription, int monsterTurn, int hp, int ap, Coordinates coord) {
         this.Figure = Figure;
         Name = name;

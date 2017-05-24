@@ -24,6 +24,9 @@ public class Player {
 
     private int mActionsPerTurn = 3;
 
+    public Player(int Figure, int FigureSelected, String name, String uuid) {
+        this(Figure, FigureSelected, name, uuid, null);
+    }
 
     public Player(int Figure, int FigureSelected, String name, String uuid, Coordinates coord) {
         this.Figure = Figure;
