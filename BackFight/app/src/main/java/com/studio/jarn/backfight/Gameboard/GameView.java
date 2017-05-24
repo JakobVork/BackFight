@@ -474,13 +474,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     //Player related click happened
                     return true;
                 } else {
-                    // Selected another player - show items and stats
-                    List<GameItem> itemListToShow = tuple.mGameObject.PlayerItems;
-                    if (itemListToShow == null) {
-                        itemListToShow = new ArrayList<>();
-                    }
-                    ((GameActivity) getContext()).hideItemListFragment();
-                    ((GameActivity) getContext()).showItemListFragment(itemListToShow, tuple.mGameObject.mName);
+                    ((GameActivity) getContext()).hideItemListFragment(); // Hides any other fragment if visible
+                    ((GameActivity) getContext()).showItemListFragment(tuple.mGameObject); // Show fragment for clicked player
                 }
             }
         }
@@ -904,22 +899,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return null;
     }
 
-    public List<GameItem> getPlayerItemList() {
-        List<GameItem> LocalPlayerItems = null;
-        for (Tuple<Player, Coordinates> tuple:mGamePlayerList) {
-            if(tuple.mGameObject.id.equals(mPlayerId)) {
-                LocalPlayerItems = tuple.mGameObject.PlayerItems;
-            }
-        }
-
-        if(LocalPlayerItems == null) {
-            Log.d("getPlayerItemList", "itemList for player was NULL");
-            LocalPlayerItems = new ArrayList<>();
-        }
-
-        return LocalPlayerItems;
-    }
-
     public String getPlayerName() {
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
             if (playerTuple.mGameObject.id.equals(mPlayerId)){
@@ -928,6 +907,16 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         return ""; //TODO: Maybe throw an exception instead?.
+    }
+
+    public Player getLocalPlayer() {
+        for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
+            if (playerTuple.mGameObject.id.equals(mPlayerId)){
+                return playerTuple.mGameObject;
+            }
+        }
+
+        return null;
     }
 } // end class
   

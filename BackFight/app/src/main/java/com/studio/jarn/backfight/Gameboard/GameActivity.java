@@ -89,7 +89,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
             @Override
             public void onClick(View v) {
                 GameView gv = (GameView) findViewById(R.id.boardview);
-                showItemListFragment(gv.getPlayerItemList(), gv.getPlayerName());
+                showItemListFragment(gv.getLocalPlayer());
             }
         });
     }
@@ -142,7 +142,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    public void showItemListFragment(List<GameItem> itemList, String name) {
+    public void showItemListFragment(Player player) {
         mIvItemFragmentShow.setVisibility(View.GONE);
         mIvItemFragmentHide.setVisibility(View.VISIBLE);
 
@@ -153,7 +153,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         // Need to ensure that this doesn't create a memory leak in some sort? <-- I don't think so
         // Might need to keep it in detailed fragment, if player has selected a item? <-- A lot
         // harder, since it also depends on who it is etc.
-        itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(itemList, name);
+        itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(player);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
