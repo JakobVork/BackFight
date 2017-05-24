@@ -462,9 +462,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     return true;
                 } else if (PlayerPickUpItemClick(tileX, tileY, placementX, placementY)) {
                     return true;
-                }
+                } else if (movePlayer(tuple, tileX, tileY))
 
-                movePlayer(tuple, tileX, tileY);
                 return true;
             }
 
@@ -602,13 +601,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
     }
 
-    private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
+    private boolean movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
         //Not your own player, and should not be moved
-        if (!tuple.mGameObject.id.equals(mPlayerId)) return;
+        if (!tuple.mGameObject.id.equals(mPlayerId)) return false;
         //Moving to the same tile
-        if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return;
+        if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return false;
         //Click is on an non-passable tile do nothing
-        if (!mGrid[tileY][tileX].CanBePassed) return;
+        if (!mGrid[tileY][tileX].CanBePassed) return false;
 
         if (!MovementIsMoreThanOneTile(tuple.mCoordinates, tileX, tileY)) {
             Coordinates movedTo = moveToTile(tileX, tileY);
@@ -616,8 +615,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 tuple.mCoordinates = movedTo;
                 mSelectedPlayer = null;
                 tuple.mGameObject.takeAction(getContext(), this);
+                return true;
             }
         }
+
+        return false;
     }
 
     private Boolean MovementIsMoreThanOneTile(Coordinates currentPlayerPlacement, int tileX, int tileY) {
