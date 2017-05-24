@@ -14,7 +14,7 @@ public class GameItem {
 
     public GameItem(String title, String description, int img) {
         this.Id = sNextId;
-        sNextId++; // TODO : Find a better why. I've tried to use UUID, but when there's a problem with the adapter.
+        sNextId++; // TODO : Find a better why. Id've tried to use UUID, but when there's a problem with the adapter.
         this.Title = title;
         this.Description = description;
         this.Image = img;

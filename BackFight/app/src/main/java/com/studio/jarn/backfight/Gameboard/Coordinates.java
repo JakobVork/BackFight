@@ -10,7 +10,7 @@ public class Coordinates {
     int placementOnTileX;
     int placementOnTileY;
 
-    Coordinates() {
+    public Coordinates() {
     }
 
     Coordinates(int tileX, int tileY, int placementOnTileX, int placementOnTileY) {

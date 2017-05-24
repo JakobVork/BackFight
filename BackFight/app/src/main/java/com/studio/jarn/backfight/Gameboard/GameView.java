@@ -160,12 +160,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             if (mSelectedPlayer == null) {
-                scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
+                scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.Figure);
             } else {
-                if (tuple.mGameObject.id.equals(mSelectedPlayer.id)) {
-                    scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigureSelected);
+                if (tuple.mGameObject.Id.equals(mSelectedPlayer.Id)) {
+                    scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.FigureSelected);
                 } else {
-                    scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
+                    scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.Figure);
                 }
             }
         }
@@ -362,7 +362,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void actionTaken() {
         //Check if all players have used their turns
         for (Tuple<Player, Coordinates> player : mGamePlayerList) {
-            if (player.mGameObject.mActionsRemaining > 0) return;
+            if (player.mGameObject.ActionsRemaining > 0) return;
         }
         nextRound();
     }
@@ -442,7 +442,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         //Check every object on the map
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             //Check if a Player is already selected
-            if (mSelectedPlayer != null && tuple.mGameObject.id.equals(mSelectedPlayer.id)) {
+            if (mSelectedPlayer != null && tuple.mGameObject.Id.equals(mSelectedPlayer.Id)) {
                 //Check if a player is clicked
                 for (Tuple<Player, Coordinates> tuple1 : mGamePlayerList) {
                     if (tuple1.mCoordinates.tileX == tileX && tuple1.mCoordinates.tileY == tileY && tuple1.mCoordinates.placementOnTileX == placementX && tuple1.mCoordinates.placementOnTileY == placementY) {
@@ -469,7 +469,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
             //Check if player is clicked and select it
             if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY && tuple.mCoordinates.placementOnTileX == placementX && tuple.mCoordinates.placementOnTileY == placementY) {
-                if(tuple.mGameObject.id.equals(mPlayerId)) {
+                if(tuple.mGameObject.Id.equals(mPlayerId)) {
                     mSelectedPlayer = tuple.mGameObject;
                     //Player related click happened
                     return true;
@@ -542,7 +542,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         private Boolean PlayerPickUpItemClick(int tileX, int tileY, int placementX, int placementY){
             Log.d("Debug", "PlayerPickUpItemClick: called");
             for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList){
-            if(playerTuple.mGameObject.id.equals(mPlayerId)) {
+            if(playerTuple.mGameObject.Id.equals(mPlayerId)) {
                 // Check for items clicked
                 Tuple<GameItem, Coordinates> mapItem = mapItemClicked(tileX, tileY, placementX, placementY);
                 if(mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
@@ -581,15 +581,15 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private void addItemToPlayer(GameItem item, String playerName) {
         for (Tuple<Player, Coordinates> playerTuple:mGamePlayerList) {
-            if(playerTuple.mGameObject.mName.equals(playerName)) {
-                Log.d("addItemToPlayer", "addItemToPlayer: " + playerTuple.mGameObject.mName + " = " + playerName);
+            if(playerTuple.mGameObject.Name.equals(playerName)) {
+                Log.d("addItemToPlayer", "addItemToPlayer: " + playerTuple.mGameObject.Name + " = " + playerName);
                 // Check if list is null due to the way firebase handles empty lists.
                 if(playerTuple.mGameObject.PlayerItems == null)
                 {
                     playerTuple.mGameObject.PlayerItems = new ArrayList<>();
                     playerTuple.mGameObject.PlayerItems.add(item);
                 } else {
-                    Log.d("testing", "addItemToPlayer: " + playerTuple.mGameObject.mName);
+                    Log.d("testing", "addItemToPlayer: " + playerTuple.mGameObject.Name);
                     playerTuple.mGameObject.PlayerItems.add(item);
                 }
             }
@@ -598,7 +598,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private boolean movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
         //Not your own player, and should not be moved
-        if (!tuple.mGameObject.id.equals(mPlayerId)) return false;
+        if (!tuple.mGameObject.Id.equals(mPlayerId)) return false;
         //Moving to the same tile
         if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return false;
         //Click is on an non-passable tile do nothing
@@ -889,7 +889,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public Tuple<Player, Coordinates> getPlayerTuple() {
         for (Tuple<Player, Coordinates> tuple:mGamePlayerList) {
-            if(tuple.mGameObject.id.equals(mPlayerId)) {
+            if(tuple.mGameObject.Id.equals(mPlayerId)) {
                 return tuple;
             }
         }
@@ -901,8 +901,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public String getPlayerName() {
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
-            if (playerTuple.mGameObject.id.equals(mPlayerId)){
-                return playerTuple.mGameObject.mName;
+            if (playerTuple.mGameObject.Id.equals(mPlayerId)){
+                return playerTuple.mGameObject.Name;
             }
         }
 
@@ -911,7 +911,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public Player getLocalPlayer() {
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
-            if (playerTuple.mGameObject.id.equals(mPlayerId)){
+            if (playerTuple.mGameObject.Id.equals(mPlayerId)){
                 return playerTuple.mGameObject;
             }
         }
