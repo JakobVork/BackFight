@@ -40,6 +40,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
+    List<SimpleCoordinates> coordinatesList = new ArrayList<>();
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 mGameObject 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -120,6 +121,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
         Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
+        Bitmap bm_shadow = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.shadow128);
 
         //
         // Draw squares to fill the grid.
@@ -137,6 +139,19 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             for (int i = 0; i < mGridSize; i++) {
                 dest1.offsetTo(dx, dy);
 
+                /*//TODO !!!!!!
+                int testX = 0;
+                int testY = 0;
+                for (Tuple<Player, Coordinates> tuple:mGamePlayerList) {
+                    testX = tuple.mCoordinates.tileX;
+                    testY = tuple.mCoordinates.tileY;
+                }
+
+
+                if(j-testY > 1 || j-testY < -1 || i-testX > 1 || i-testX < -1) {
+                    canvas.drawBitmap(bm_shadow, null, dest1, paint);
+                } else {
+*/
                 switch (mGrid[j][i].Type) {
                     case Wall: {
                         canvas.drawBitmap(bm_wall, null, dest1, paint);
@@ -146,7 +161,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                         canvas.drawBitmap(bm_floor, null, dest1, paint);
                         break;
                     }
-           }
+                }
+/*                }*/
                 dx = dx + mSquareWidth;
             }
             dy = dy + mSquareHeight;
@@ -330,8 +346,34 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
         mGamePlayerList.clear();
         mGamePlayerList = playerList;
+
+        int diff = 1;
+
+        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
+            //addCoordinateToSimpleCoordinatesList(tuple.mCoordinates.tileX ,tuple.mCoordinates.tileY);
+            for (int i = -diff; i <= diff; i++) {
+                for (int j = -diff; j <= diff; j++) {
+                    addCoordinateToSimpleCoordinatesList(tuple.mCoordinates.tileX + i, tuple.mCoordinates.tileY + j);
+                }
+            }
+        }
+
         invalidate();
     }
+
+    void addCoordinateToSimpleCoordinatesList(int tileXCoordinate, int tileYCoordinate) {
+
+        boolean alreadyexist = false;
+        for (SimpleCoordinates simpleCoordinate : coordinatesList) {
+            if ((simpleCoordinate.tileX == tileXCoordinate && simpleCoordinate.tileY == tileYCoordinate))
+                alreadyexist = true;
+        }
+
+        //Add coordinate if it does not exist in list
+        if (!alreadyexist)
+            coordinatesList.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+    }
+
     @Override
     public void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monsterList) {
         mMonsterList.clear();
