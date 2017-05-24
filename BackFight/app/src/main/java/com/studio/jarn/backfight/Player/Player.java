@@ -55,14 +55,14 @@ public class Player {
         mActionsRemaining = mActionsPerTurn;
     }
 
-    public int rollAttack(){
+    public int rollAttack() {
         int min = 1;
         int max = 1;
-        for (GameItem item:PlayerItems) {
+        for (GameItem item : PlayerItems) {
             // Check if item is a weapon
-            if(item instanceof ItemWeapon) {
-                min += ((ItemWeapon)item).getDmgMin();
-                max += ((ItemWeapon)item).getDmgMax();
+            if (item instanceof ItemWeapon) {
+                min += ((ItemWeapon) item).getDmgMin();
+                max += ((ItemWeapon) item).getDmgMax();
             }
         }
 
