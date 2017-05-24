@@ -1,23 +1,27 @@
 package com.studio.jarn.backfight.Monster;
 
 
-public class Monster {
-    public int mFigure;
-    public String mName;
-    public String mDecription;
-    public int mActionsRemaining;
-    public int mActionsPerTurn;
-    public int mAttackPower;
-    public int mHitPoints;
+import com.studio.jarn.backfight.Gameboard.Coordinates;
 
-    Monster(int Figure, String name, String decription, int monsterTurn, int hp, int ap) {
-        mFigure = Figure;
-        mName = name;
-        mActionsPerTurn = monsterTurn;
-        mActionsRemaining = monsterTurn;
-        mHitPoints = hp;
-        mAttackPower = ap;
-        mDecription = decription;
+public class Monster {
+    public int Figure;
+    public String Name;
+    public String Decription;
+    public int ActionsRemaining;
+    public int ActionsPerTurn;
+    public int AttackPower;
+    public int HitPoints;
+    public Coordinates coordinate;
+
+    Monster(int Figure, String name, String decription, int monsterTurn, int hp, int ap, Coordinates coord) {
+        this.Figure = Figure;
+        Name = name;
+        ActionsPerTurn = monsterTurn;
+        ActionsRemaining = monsterTurn;
+        HitPoints = hp;
+        AttackPower = ap;
+        Decription = decription;
+        coordinate = coord;
     }
 
     //Needed for casting from Firebase
@@ -25,14 +29,14 @@ public class Monster {
     }
 
     public boolean canTakeAction() {
-        return mActionsRemaining > 0;
+        return ActionsRemaining > 0;
     }
 
     public void takeAction() {
-        mActionsRemaining--;
+        ActionsRemaining--;
     }
 
     public void resetActions() {
-        mActionsRemaining = mActionsPerTurn;
+        ActionsRemaining = ActionsPerTurn;
     }
 }

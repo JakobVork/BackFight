@@ -171,7 +171,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Tuple<Monster, Coordinates> tuple : mMonsterList) {
-            scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
+            scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.Figure);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
@@ -511,9 +511,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     int dmg = localPlayerTuple.mGameObject.rollAttack();
 
                     // Damage monster
-                    monsterTuple.mGameObject.mHitPoints -= dmg;
+                    monsterTuple.mGameObject.HitPoints -= dmg;
                     Log.d("AttackMonster", "Monster lost " + dmg + " HP");
-                    if(monsterTuple.mGameObject.mHitPoints <= 0) {
+                    if(monsterTuple.mGameObject.HitPoints <= 0) {
                         // Monster died, remove it from map
                         Log.d("HandleMonsterClicked", "Monster died");
                         monsterWasKilled = true;
@@ -664,8 +664,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             if(playerTuple.equals(player)) {
 
                 // Damage player
-                player.mGameObject.Health -= monster.mGameObject.mAttackPower;
-                Log.d("Info", "attackPlayer: Player lost " + monster.mGameObject.mAttackPower + " HP");
+                player.mGameObject.Health -= monster.mGameObject.AttackPower;
+                Log.d("Info", "attackPlayer: Player lost " + monster.mGameObject.AttackPower + " HP");
                 if(player.mGameObject.Health <= 0)
                 {
                     // Player died - remove him from map
