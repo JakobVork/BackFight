@@ -23,7 +23,7 @@ public class Player {
     public Coordinates Coordinate;
 
     private int mActionsPerTurn = 3;
-    
+
 
     public Player(int Figure, int FigureSelected, String name, String uuid, Coordinates coord) {
         this.Figure = Figure;
