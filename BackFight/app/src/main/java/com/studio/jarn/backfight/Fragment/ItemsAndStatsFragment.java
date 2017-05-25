@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
+import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.R;
 
 import java.lang.reflect.Type;
@@ -33,13 +34,13 @@ public class ItemsAndStatsFragment extends Fragment {
     public ItemsAndStatsFragment() {
     }
 
-    public static ItemsAndStatsFragment newInstance(List<GameItem> items, String name) {
-        if (items != null) {
+    public static ItemsAndStatsFragment newInstance(Player player) {
+        if (player.PlayerItems != null) {
             ItemsAndStatsFragment fragment = new ItemsAndStatsFragment();
             Bundle args = new Bundle();
-            String jsonArray = new Gson().toJson(items);
+            String jsonArray = new Gson().toJson(player.PlayerItems);
             args.putString(sJsonItemsString, jsonArray);
-            args.putString(sNameString, name);
+            args.putString(sNameString, player.mName);
             fragment.setArguments(args);
             return fragment;
         }

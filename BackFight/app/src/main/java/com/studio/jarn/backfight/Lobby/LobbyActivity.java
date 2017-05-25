@@ -1,8 +1,11 @@
 package com.studio.jarn.backfight.Lobby;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
@@ -192,13 +195,13 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startGameHost();
+                startGameHost(v);
             }
         });
     }
 
     // Starts the game
-    private void startGameHost() {
+    private void startGameHost(View view) {
         if (mListOfPlayersCurrentlyInGame.size() == 0) return;
 
         Intent StartGameIntent = new Intent(this, GameActivity.class);
@@ -210,6 +213,12 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         StartGameIntent.putExtra(getString(R.string.EXTRA_GRIDTYPE), gridTypeSelector());
 
         mFirebaseHelper.setStartGame();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bundle bundle;
+            bundle = ActivityOptions.makeThumbnailScaleUpAnimation(view, bitmap, 0, 0).toBundle();
+            startActivity(StartGameIntent, bundle);
+        } else
         startActivity(StartGameIntent);
     }
 

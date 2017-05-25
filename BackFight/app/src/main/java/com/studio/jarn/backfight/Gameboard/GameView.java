@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -40,6 +42,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
+    List<SimpleCoordinates> mCoordinatesListTileShadowed = new ArrayList<>();
+    List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 mGameObject 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -69,6 +73,32 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         setTouchListener(this);
         mPlayerId = context.getSharedPreferences(
                 getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
+    }
+
+    /**
+     * //https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
+     * @param bmp        input bitmap
+     * @param brightness -255..255 0 is default
+     * @return new bitmap
+     */
+    public static Bitmap changeBitmapBrightness(Bitmap bmp, float brightness) {
+        ColorMatrix cm = new ColorMatrix(new float[]
+                {
+                        1, 0, 0, 0, brightness,
+                        0, 1, 0, 0, brightness,
+                        0, 0, 1, 0, brightness,
+                        0, 0, 0, 1, 0
+                });
+
+        Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(bmp, 0, 0, paint);
+
+        return bitmap;
     }
 
     public GameTouchListener getTouchListener() {
@@ -120,6 +150,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
         Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
+        Bitmap bm_shadow = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.shadow128);
+        Bitmap bm_shadowedWall = changeBitmapBrightness(bm_wall, -50);
+        Bitmap bm_shadowedFloor = changeBitmapBrightness(bm_floor, -50);
+
 
         //
         // Draw squares to fill the grid.
@@ -137,16 +171,34 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             for (int i = 0; i < mGridSize; i++) {
                 dest1.offsetTo(dx, dy);
 
-                switch (mGrid[j][i].Type) {
-                    case Wall: {
-                        canvas.drawBitmap(bm_wall, null, dest1, paint);
-                        break;
+                boolean tileVisible = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileVisible);
+                boolean tileShadowed = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileShadowed);
+                //Draw the map with the shadows depending on where the players are placed.
+                if (tileVisible) {
+                    switch (mGrid[j][i].Type) {
+                        case Wall: {
+                            canvas.drawBitmap(bm_wall, null, dest1, paint);
+                            break;
+                        }
+                        case WoodenFloor: {
+                            canvas.drawBitmap(bm_floor, null, dest1, paint);
+                            break;
+                        }
                     }
-                    case WoodenFloor: {
-                        canvas.drawBitmap(bm_floor, null, dest1, paint);
-                        break;
+                } else if (tileShadowed) {
+                    switch (mGrid[j][i].Type) {
+                        case Wall: {
+                            canvas.drawBitmap(bm_shadowedWall, null, dest1, paint);
+                            break;
+                        }
+                        case WoodenFloor: {
+                            canvas.drawBitmap(bm_shadowedFloor, null, dest1, paint);
+                            break;
+                        }
                     }
-           }
+                } else {
+                    canvas.drawBitmap(bm_shadow, null, dest1, paint);
+                }
                 dx = dx + mSquareWidth;
             }
             dy = dy + mSquareHeight;
@@ -171,11 +223,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Tuple<Monster, Coordinates> tuple : mMonsterList) {
-            scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
+            if (new SimpleCoordinates(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY).existInList(mCoordinatesListTileVisible))
+                scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
-            scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.Image);
+            if (new SimpleCoordinates(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY).existInList(mCoordinatesListTileVisible))
+                scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.Image);
         }
     }
 
@@ -331,7 +385,31 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList) {
         mGamePlayerList.clear();
         mGamePlayerList = playerList;
+
+        //Setting places to show shadows
+
+        mCoordinatesListTileVisible.clear();
+
+        for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
+            for (int i = -tuple.mGameObject.LineOfSight; i <= tuple.mGameObject.LineOfSight; i++) {
+                for (int j = -tuple.mGameObject.LineOfSight; j <= tuple.mGameObject.LineOfSight; j++) {
+                    addCoordinateToSimpleCoordinatesList(tuple.mCoordinates.tileX + i, tuple.mCoordinates.tileY + j);
+                }
+            }
+        }
+
         invalidate();
+    }
+
+
+    void addCoordinateToSimpleCoordinatesList(int tileXCoordinate, int tileYCoordinate) {
+        //Add coordinate if it does not exist in lists
+        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileShadowed))
+            mCoordinatesListTileShadowed.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+
+        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileVisible))
+            mCoordinatesListTileVisible.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+
     }
 
     @Override
@@ -424,19 +502,20 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Boolean monsterHandled = false;
         Boolean playerHandled = HandlePlayerClicked(tileX, tileY, placementX, placementY);
 
-
         if (!playerHandled)
             monsterHandled = HandleMonsterClicked(tileX, tileY, placementX, placementY);
 
         if (!playerHandled && !monsterHandled)
             HandleItemClicked(tileX, tileY, placementX, placementY);
 
+        mFirebaseHelper.setMonsterList(mMonsterList);
         mFirebaseHelper.setPlayerList(mGamePlayerList);
         mFirebaseHelper.setItemList(mGameItemList);
 
         //Render map
         invalidate();
     }
+
 
     private Boolean HandlePlayerClicked(int tileX, int tileY, int placementX, int placementY) {
 
@@ -459,7 +538,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     }
                 }
 
-                movePlayer(tuple, tileX, tileY);
+                if (AttackMonster(tileX, tileY, placementX, placementY)) {
+                    return true;
+                } else if (PlayerPickUpItemClick(tileX, tileY, placementX, placementY)) {
+                    return true;
+                } else if (movePlayer(tuple, tileX, tileY))
+
                 return true;
             }
 
@@ -470,13 +554,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                     //Player related click happened
                     return true;
                 } else {
-                    // Selected another player - show items and stats
-                    List<GameItem> itemListToShow = tuple.mGameObject.PlayerItems;
-                    if (itemListToShow == null) {
-                        itemListToShow = new ArrayList<>();
-                    }
-                    ((GameActivity) getContext()).hideItemListFragment();
-                    ((GameActivity) getContext()).showItemListFragment(itemListToShow, tuple.mGameObject.mName);
+                    ((GameActivity) getContext()).hideItemListFragment(); // Hides any other fragment if visible
+                    ((GameActivity) getContext()).showItemListFragment(tuple.mGameObject); // Show fragment for clicked player
                 }
             }
         }
@@ -490,15 +569,68 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return false;
     }
 
+    private Boolean AttackMonster(int tileX, int tileY, int placementX, int placementY) {
+        // Check if player is on the same tile
+        Tuple<Player, Coordinates> localPlayerTuple = getPlayerTuple();
+        if (localPlayerTuple.mCoordinates.tileX == tileX && localPlayerTuple.mCoordinates.tileY == tileY) {
 
-    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY){
+            // Since we can not remove monstre, while we are in the for-loop, we have to make a
+            // copy of it, in order to remove it safely afterwards.
+            boolean monsterWasKilled = false;
+            Tuple<Monster, Coordinates> killedMonster = null;
+
+            // Player is on the same tile as the monster that was clicked
+            // Find monster that was clicked
+            for (Tuple<Monster, Coordinates> monsterTuple : mMonsterList) {
+                if (monsterTuple.mCoordinates.tileX == tileX &&
+                        monsterTuple.mCoordinates.tileY == tileY &&
+                        monsterTuple.mCoordinates.placementOnTileX == placementX &&
+                        monsterTuple.mCoordinates.placementOnTileY == placementY) {
+
+                    // Player roll dmg
+                    int dmg = localPlayerTuple.mGameObject.rollAttack();
+
+                    // Damage monster
+                    monsterTuple.mGameObject.mHitPoints -= dmg;
+                    Log.d("AttackMonster", "Monster lost " + dmg + " HP");
+                    if (monsterTuple.mGameObject.mHitPoints <= 0) {
+                        // Monster died, remove it from map
+                        Log.d("HandleMonsterClicked", "Monster died");
+                        monsterWasKilled = true;
+                        killedMonster = monsterTuple; // Copy by value, since it's java
+                    }
+
+                    // Player lose a turn
+                    localPlayerTuple.mGameObject.takeAction(getContext(), this);
+                }
+            }
+
+            if (monsterWasKilled) {
+                mMonsterList.remove(killedMonster);
+            }
+        }
+
+        return false;
+    }
+
+    private Boolean HandleItemClicked(int tileX, int tileY, int placementX, int placementY) {
+        // TODO
+        Log.d("Debug", "HandleItemClicked: called");
+        return false;
+    }
+
+    private Boolean PlayerPickUpItemClick(int tileX, int tileY, int placementX, int placementY) {
+        Log.d("Debug", "PlayerPickUpItemClick: called");
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
-            if (playerTuple.mGameObject.id.equals(mPlayerId)) {
+            if(playerTuple.mGameObject.id.equals(mPlayerId)) {
                 // Check for items clicked
                 Tuple<GameItem, Coordinates> mapItem = mapItemClicked(tileX, tileY, placementX, placementY);
-                if (mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
-                    pickUpItem(mapItem);
-                    return true;
+                if(mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
+                    if (playerTuple.mGameObject.canTakeAction()) {
+                        pickUpItem(mapItem);
+                        playerTuple.mGameObject.takeAction(getContext(), this);
+                        return true;
+                    }
                 }
             }
         }
@@ -543,13 +675,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
     }
 
-    private void movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
+    private boolean movePlayer(Tuple<Player, Coordinates> tuple, int tileX, int tileY) {
         //Not your own player, and should not be moved
-        if (!tuple.mGameObject.id.equals(mPlayerId)) return;
+        if (!tuple.mGameObject.id.equals(mPlayerId)) return false;
         //Moving to the same tile
-        if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return;
+        if (tuple.mCoordinates.tileX == tileX && tuple.mCoordinates.tileY == tileY) return false;
         //Click is on an non-passable tile do nothing
-        if (!mGrid[tileY][tileX].CanBePassed) return;
+        if (!mGrid[tileY][tileX].CanBePassed) return false;
 
         if (!MovementIsMoreThanOneTile(tuple.mCoordinates, tileX, tileY)) {
             Coordinates movedTo = moveToTile(tileX, tileY);
@@ -557,8 +689,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 tuple.mCoordinates = movedTo;
                 mSelectedPlayer = null;
                 tuple.mGameObject.takeAction(getContext(), this);
+                return true;
             }
         }
+
+        return false;
     }
 
     private Boolean MovementIsMoreThanOneTile(Coordinates currentPlayerPlacement, int tileX, int tileY) {
@@ -577,19 +712,22 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             monster.mGameObject.resetActions();
             //as long the monster can take turn
             while (monster.mGameObject.canTakeAction()) {
-                boolean attacked = false;
+                boolean attack = false;
                 //check if same spot as player
                 for (Tuple<Player, Coordinates> player : mGamePlayerList) {
                     if (monster.mCoordinates.tileY == player.mCoordinates.tileY && monster.mCoordinates.tileX == player.mCoordinates.tileX) {
                         attackPlayer(player, monster);
-                        attacked = true;
+                        attack = true;
                         break;
                     }
                 }
                 // If not same space as player move
-                if (!attacked) {
+                if (!attack) {
                     while (!moveSingleMonster(monster)) ;
                 }
+
+                // TODO: Would make sense that monster also attacked if it landed on a tile with a player
+                // ... else the mechanics would be waaaaay to easy. (Move -> Attack -> Move = Safe)
             }
         }
 
@@ -600,7 +738,20 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void attackPlayer(Tuple<Player, Coordinates> player, Tuple<Monster, Coordinates> monster) {
-        //Monster attacks
+        //Get ref to player in list
+        for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
+            if (playerTuple.equals(player)) {
+
+                // Damage player
+                player.mGameObject.Health -= monster.mGameObject.mAttackPower;
+                Log.d("Info", "attackPlayer: Player lost " + monster.mGameObject.mAttackPower + " HP");
+                if (player.mGameObject.Health <= 0) {
+                    // Player died - remove him from map
+                    mGamePlayerList.remove(playerTuple);
+                    Log.d("Info", "attackPlayer: Player died");
+                }
+            }
+        }
 
         monster.mGameObject.takeAction();
     }
@@ -814,20 +965,16 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         return mGrid[coordinates.tileY][coordinates.tileX].CanBePassed;
     }
 
-    public List<GameItem> getPlayerItemList() {
-        List<GameItem> LocalPlayerItems = null;
+    public Tuple<Player, Coordinates> getPlayerTuple() {
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             if (tuple.mGameObject.id.equals(mPlayerId)) {
-                LocalPlayerItems = tuple.mGameObject.PlayerItems;
+                return tuple;
             }
         }
 
-        if (LocalPlayerItems == null) {
-            Log.d("getPlayerItemList", "itemList for player was NULL");
-            LocalPlayerItems = new ArrayList<>();
-        }
+        Log.d("getPlayerCoordinates", "Could not find local player.");
 
-        return LocalPlayerItems;
+        return null;
     }
 
     public String getPlayerName() {
@@ -838,6 +985,16 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         return ""; //TODO: Maybe throw an exception instead?.
+    }
+
+    public Player getLocalPlayer() {
+        for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
+            if (playerTuple.mGameObject.id.equals(mPlayerId)){
+                return playerTuple.mGameObject;
+            }
+        }
+
+        return null;
     }
 } // end class
   
