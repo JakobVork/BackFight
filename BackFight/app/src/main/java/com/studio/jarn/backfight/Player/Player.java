@@ -22,8 +22,7 @@ public class Player {
     public int Health = 20;
     public int LineOfSight = 1;
     public Coordinates Coordinate;
-
-    private int mActionsPerTurn = 3;
+    public int mActionsPerTurn = 3; //Needed for Firebase
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
         this(Figure, FigureSelected, name, uuid, null);

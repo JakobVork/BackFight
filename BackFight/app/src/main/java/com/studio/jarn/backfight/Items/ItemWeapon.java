@@ -8,7 +8,8 @@ public class ItemWeapon extends GameItem {
     private int DmgMax;
 
     // Firebase require a default constructor
-    public ItemWeapon() {}
+    public ItemWeapon() {
+    }
 
     public ItemWeapon(int DmgMin_MinRoll,
                       int DmgMin_MaxRoll,
@@ -28,19 +29,19 @@ public class ItemWeapon extends GameItem {
         DmgMax = rnd.nextInt(DmgMax_MaxRoll - DmgMax_MinRoll + 1) + DmgMax_MinRoll;
     }
 
-    public void setDmgMin(int dmgMin){
-        this.DmgMin = dmgMin;
-    }
-
-    public void setDmgMax(int dmgMax){
-        this.DmgMax = dmgMax;
-    }
-
-    public int getDmgMin(){
+    public int getDmgMin() {
         return this.DmgMin;
     }
 
-    public int getDmgMax(){
+    public void setDmgMin(int dmgMin) {
+        this.DmgMin = dmgMin;
+    }
+
+    public int getDmgMax() {
         return this.DmgMax;
+    }
+
+    public void setDmgMax(int dmgMax) {
+        this.DmgMax = dmgMax;
     }
 }

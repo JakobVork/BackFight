@@ -86,7 +86,7 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
 
     private void setupClient() {
         mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
-        mFirebaseHelper.setStandardKey(mGameId);
+        mFirebaseHelper.setStandardKey(mGameId, this);
 
         SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
         String PlayerName = sp.getString(PROFILE_NAME_SP, "");
@@ -114,7 +114,7 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
 
     private void setupHost() {
         mGameId = UUID.randomUUID().toString().substring(30);
-        mFirebaseHelper.setStandardKey(mGameId);
+        mFirebaseHelper.setStandardKey(mGameId, this);
         setupListView();
         setupRadioGroupListener();
         mFirebaseHelper.setNumberPicker(15); //Set 15 as default on db

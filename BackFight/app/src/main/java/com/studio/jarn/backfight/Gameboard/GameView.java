@@ -80,8 +80,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     /*
-     * //https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
-     * @param bmp   input bitmap
+     * https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
+     * @param bmp input bitmap
      * @param brightness -255..255 0 is default
      * @return new bitmap
      */
@@ -145,7 +145,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public void setupFirebase(String uuid) {
         mFirebaseHelper = new FirebaseHelper(this);
-        mFirebaseHelper.setStandardKey(uuid);
+        mFirebaseHelper.setStandardKey(uuid, getContext());
     }
 
     //Todo: remove hardcoded Players
@@ -379,6 +379,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mFirebaseHelper.setPlayerListListener();
         mFirebaseHelper.setRoundCountListener(getContext());
         mFirebaseHelper.setMonsterListListener();
+        mFirebaseHelper.getActionCount();
     }
 
     public void setItemListener() {
@@ -403,6 +404,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         invalidate();
     }
 
+
     void addCoordinateToSimpleCoordinatesList(int tileXCoordinate, int tileYCoordinate) {
         // Add coordinate if it does not exist in lists
         if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileShadowed))
@@ -418,7 +420,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mMonsterList = monsterList;
         invalidate();
     }
-    
+
     @Override
     public void setItemList(List<GameItem> itemList) {
         mGameItemList.clear();
@@ -751,6 +753,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             if ((monster.coordinate.tileY + move) < (mMaxCanvasHeight / mSquareHeight) && (monster.coordinate.tileY + move) > 0)
                 moveMonsterToTile(monster, monster.coordinate.tileX, monster.coordinate.tileY + move);
         }
+        // if check if legal move
+        if (movedTo != null && tuple.mGameObject.canTakeAction()) {
+            tuple.mCoordinates = movedTo;
+            tuple.mGameObject.takeAction();
+            return true;
     }
 
     private boolean tileNextToPlayer(Player player, int tileX, int tileY, int distance) {

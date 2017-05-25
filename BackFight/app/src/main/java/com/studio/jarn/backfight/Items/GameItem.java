@@ -12,7 +12,7 @@ public class GameItem {
 
     public Coordinates Coordinate;
 
-    public GameItem(){
+    public GameItem() {
 
     }
 
