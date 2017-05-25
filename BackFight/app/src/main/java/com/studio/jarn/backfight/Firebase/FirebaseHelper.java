@@ -17,16 +17,19 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.studio.jarn.backfight.Gameboard.Coordinates;
-import com.studio.jarn.backfight.Gameboard.GameActivity;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Gameboard.Tuple;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.Monster.Monster;
 import com.studio.jarn.backfight.Player.Player;
+import com.studio.jarn.backfight.R;
+import com.studio.jarn.backfight.SharedPreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.studio.jarn.backfight.MainMenuActivity.PHONE_UUID_SP;
 
 public class FirebaseHelper {
 
@@ -39,7 +42,6 @@ public class FirebaseHelper {
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
     private static final String sDatabasePostfixRoundCount = "RoundCount";
     public int mRound = 0;
-    GameActivity test;
     private FirebaseDatabase mDatabase;
     private String mGameId;
     private String mGameIdRadio;
@@ -56,14 +58,16 @@ public class FirebaseHelper {
     private FirebaseGameActivityListener mFirebaseGameActivityListener;
     private String mDialogInput;
     private String mGameIdRoundCount;
+    private Context mContext;
 
     public FirebaseHelper(Context context) {
         mDatabase = FirebaseDatabase.getInstance();
-
         if (context instanceof FirebaseNewGameListener) {
             mFirebaseNewGameListener = (FirebaseNewGameListener) context;
         } else if (context instanceof FirebaseLobbyListener) {
             mFirebaseLobbyListener = (FirebaseLobbyListener) context;
+        } else if (context instanceof FirebaseGameActivityListener) {
+            mFirebaseGameActivityListener = (FirebaseGameActivityListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement Listener");
@@ -82,7 +86,10 @@ public class FirebaseHelper {
     }
 
 
-    public void setStandardKey(String gameId) {
+    public void setStandardKey(String gameId, Context context) {
+        new SharedPreferencesHelper(context).addGameIdToRecentGameIds(gameId);
+        mContext = context;
+
         mGameId = gameId;
         mGameIdRadio = gameId + sDatabasePostfixRadioGroup;
         mGameIdStartGame = gameId + sDatabasePostfixStartGame;
@@ -118,8 +125,26 @@ public class FirebaseHelper {
 
 
     //mFirebaseLobbyListener
-    public void addPlayerToDb(Player player) {
-        mDatabase.getReference(mGameId).push().setValue(player);
+    public void addPlayerToDb(final Player player) {
+        final DatabaseReference databaseReference = mDatabase.getReference(mGameId);
+        final boolean[] playerFound = {false};
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    if ((postSnapshot.getValue(Player.class)).id.equals(player.id))
+                        playerFound[0] = true;
+                }
+                if (!playerFound[0])
+                    databaseReference.push().setValue(player);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 
     public void setupStartGameListener() {
@@ -178,7 +203,6 @@ public class FirebaseHelper {
                     playerList.add(postSnapshot.getValue(Player.class));
                 }
                 mFirebaseLobbyListener.setPlayerList(playerList);
-
             }
 
             @Override
@@ -252,7 +276,7 @@ public class FirebaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
-              
+
                 GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
                 };
 
@@ -384,13 +408,38 @@ public class FirebaseHelper {
                 String item = new Gson().toJson(dataSnapshot.getValue());
                 Log.d("Test", item);
 
-                GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>>() {};
+                GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>>() {
+                };
                 ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     itemList.add(convert(postSnapshot.getValue(genericTypeIndicator)));
                 }
 
                 mFirebaseGameViewListener.setItemList(itemList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
+    //Used for setting the action counter to the correct value if people rejoin
+    public void getActionCount() {
+        mDatabase.getReference(mGameIdPlayers).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
+                };
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Tuple<Player, Coordinates> tuple = (postSnapshot.getValue(genericTypeIndicator));
+                    String playerId = mContext.getSharedPreferences(
+                            mContext.getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
+                    if (tuple.mGameObject.id.equals(playerId))
+                        mFirebaseGameActivityListener.setActionCounter(tuple.mGameObject.mActionsRemaining);
+                }
             }
 
             @Override

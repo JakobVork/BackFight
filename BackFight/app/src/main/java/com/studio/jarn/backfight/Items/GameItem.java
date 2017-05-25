@@ -8,7 +8,7 @@ public class GameItem {
     public int Image;
     public long Id;
 
-    public GameItem(){
+    public GameItem() {
 
     }
 

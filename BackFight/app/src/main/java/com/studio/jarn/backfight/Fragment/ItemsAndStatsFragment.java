@@ -19,7 +19,6 @@ import com.studio.jarn.backfight.R;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ItemsAndStatsFragment extends Fragment {
 

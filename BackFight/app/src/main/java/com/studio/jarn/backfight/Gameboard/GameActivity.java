@@ -43,7 +43,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     Fragment itemsAndStatsFragment;
     Fragment itemsAndStatsFragmentDetailed;
     private Tile[][] mGrid;
-
     private TextView btnActionCounter;
     private TextView btnRound;
     private ImageView mIvItemFragmentShow;
@@ -64,9 +63,9 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     private void setupDefaultText() {
-        setActionCounter(3);
         setRound(1);
     }
+
 
     private void setupItemFragment() {
         btnActionCounter = (TextView) findViewById(R.id.game_board_activity_tv_actionCount);
