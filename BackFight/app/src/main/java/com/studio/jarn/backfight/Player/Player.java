@@ -20,6 +20,7 @@ public class Player {
     public int ActionsRemaining = 3;
     public String Id;
     public int Health = 20;
+    public int LineOfSight = 1;
     public Coordinates Coordinate;
 
     private int mActionsPerTurn = 3;

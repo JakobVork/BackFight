@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static android.content.Context.BIND_ABOVE_CLIENT;
 import static com.studio.jarn.backfight.MainMenuActivity.PHONE_UUID_SP;
 
 /**
@@ -40,6 +43,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
+    List<SimpleCoordinates> mCoordinatesListTileShadowed = new ArrayList<>();
+    List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 mGameObject 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -73,6 +78,33 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mPlayerId = context.getSharedPreferences(
                 getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
     }
+
+    /*
+     * //https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
+     * @param bmp   input bitmap
+     * @param brightness -255..255 0 is default
+     * @return new bitmap
+     */
+    public static Bitmap changeBitmapBrightness(Bitmap bmp, float brightness) {
+        ColorMatrix cm = new ColorMatrix(new float[]
+                {
+                        1, 0, 0, 0, brightness,
+                        0, 1, 0, 0, brightness,
+                        0, 0, 1, 0, brightness,
+                        0, 0, 0, 1, 0
+                });
+
+        Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(bmp, 0 ,0, paint);
+
+        return bitmap;
+    }
+
 
     public GameTouchListener getTouchListener() {
         return mTouchListener;
@@ -123,6 +155,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
         Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
+        Bitmap bm_shadow = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.shadow128);
+        Bitmap bm_shadowedWall = changeBitmapBrightness(bm_wall, -50);
+        Bitmap bm_shadowedFloor = changeBitmapBrightness(bm_floor, -50);
 
         //
         // Draw squares to fill the grid.
@@ -140,16 +175,35 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             for (int i = 0; i < mGridSize; i++) {
                 dest1.offsetTo(dx, dy);
 
-                switch (mGrid[j][i].Type) {
-                    case Wall: {
-                        canvas.drawBitmap(bm_wall, null, dest1, paint);
-                        break;
+                boolean tileVisible = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileVisible);
+                boolean tileShadowed = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileShadowed);
+                //Draw the map with the shadows depending on where the players are placed.
+                if(tileVisible) {
+                    switch (mGrid[j][i].Type) {
+                        case Wall: {
+                            canvas.drawBitmap(bm_wall, null, dest1, paint);
+                            break;
+                        }
+                        case WoodenFloor: {
+                            canvas.drawBitmap(bm_floor, null, dest1, paint);
+                            break;
+                        }
                     }
-                    case WoodenFloor: {
-                        canvas.drawBitmap(bm_floor, null, dest1, paint);
-                        break;
+                } else if (tileShadowed) {
+                    switch (mGrid[j][i].Type) {
+                        case Wall: {
+                            canvas.drawBitmap(bm_shadowedWall, null, dest1, paint);
+                            break;
+                        }
+                        case WoodenFloor: {
+                            canvas.drawBitmap(bm_shadowedFloor, null, dest1, paint);
+                            break;
+                        }
                     }
-           }
+                } else {
+                    canvas.drawBitmap(bm_shadow, null, dest1, paint);
+                }
+
                 dx = dx + mSquareWidth;
             }
             dy = dy + mSquareHeight;
@@ -174,11 +228,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Monster monster : mMonsterList) {
-            scaleBitmapAndAddToCanvas(canvas, monster.coordinate, monster.Figure);
+            if(new SimpleCoordinates(monster.coordinate.tileX, monster.coordinate.tileY).existInList(mCoordinatesListTileVisible))
+                scaleBitmapAndAddToCanvas(canvas, monster.coordinate, monster.Figure);
         }
 
         for (GameItem item : mGameItemList) {
-            scaleBitmapAndAddToCanvas(canvas, item.Coordinate, item.Image);
+            if(new SimpleCoordinates(item.Coordinate.tileX, item.Coordinate.tileY).existInList(mCoordinatesListTileVisible))
+                scaleBitmapAndAddToCanvas(canvas, item.Coordinate, item.Image);
         }
     }
 
@@ -333,8 +389,29 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void setPlayerList(List<Player> playerList) {
         mGamePlayerList.clear();
         mGamePlayerList = playerList;
+
+        mCoordinatesListTileVisible.clear();
+
+        for (Player player : mGamePlayerList) {
+            for (int i = -player.LineOfSight; i <= player.LineOfSight; i++) {
+                for (int j = -player.LineOfSight; j <= player.LineOfSight; j++) {
+                    addCoordinateToSimpleCoordinatesList(player.Coordinate.tileX + i, player.Coordinate.tileY + j);
+                }
+            }
+        }
+
         invalidate();
     }
+
+    void addCoordinateToSimpleCoordinatesList(int tileXCoordinate, int tileYCoordinate) {
+        // Add coordinate if it does not exist in lists
+        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileShadowed))
+            mCoordinatesListTileShadowed.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+
+        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileVisible))
+            mCoordinatesListTileVisible.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+    }
+
     @Override
     public void setMonsterList(List<Monster> monsterList) {
         mMonsterList.clear();
