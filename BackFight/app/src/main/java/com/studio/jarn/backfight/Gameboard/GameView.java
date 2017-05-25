@@ -624,16 +624,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                         break;
                     }
                 }
-                // If not same space as player move
+                // If monster is not attacking
                 if (!attack) {
-                    while (monster.canTakeAction()){
-                        moveSingleMonster(monster);
-                        monster.takeAction();
-                    };
+                    moveSingleMonster(monster);
+                    monster.takeAction();
                 }
-
-                // TODO: Would make sense that monster also attacked if it landed on a tile with a player
-                // ... else the mechanics would be waaaaay to easy. (Move -> Attack -> Move = Safe)
             }
         }
 
@@ -846,13 +841,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         int rounds = mFirebaseHelper.mRound;
 
 
+        // Find a tile that is away from player and is passable.
         Coordinates coordinates = moveToRandomTile();
-        //check if moveToRandomTile have found a tile, if not just find a random coordinate
-        if (coordinates == null) {
-            while (tileIsPassable((coordinates = Coordinates.getRandom(mGridSize)))) {
-            }
-
+        while (coordinates == null || !tileIsPassable(coordinates)) {
+            coordinates = moveToRandomTile();
         }
+
 
         switch (type) {
             // Normal monster
