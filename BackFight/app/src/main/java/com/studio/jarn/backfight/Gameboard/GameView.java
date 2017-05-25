@@ -42,8 +42,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     int mObjectMarginValue;
     int mObjectWidthValue;
     int mObjectHeightValue;
-    List<SimpleCoordinates> coordinatesListTileShadowed = new ArrayList<>();
-    List<SimpleCoordinates> coordinatesListTileVisible = new ArrayList<>();
+    List<SimpleCoordinates> mCoordinatesListTileShadowed = new ArrayList<>();
+    List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 mGameObject 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -76,11 +76,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     /**
+     * //https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
      * @param bmp        input bitmap
      * @param brightness -255..255 0 is default
      * @return new bitmap
      */
-    public static Bitmap changeBitmapContrastBrightness(Bitmap bmp, float brightness) {
+    public static Bitmap changeBitmapBrightness(Bitmap bmp, float brightness) {
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
                         1, 0, 0, 0, brightness,
@@ -89,15 +90,15 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                         0, 0, 0, 1, 0
                 });
 
-        Bitmap ret = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+        Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        Canvas canvas = new Canvas(ret);
+        Canvas canvas = new Canvas(bitmap);
 
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(cm));
         canvas.drawBitmap(bmp, 0, 0, paint);
 
-        return ret;
+        return bitmap;
     }
 
     public GameTouchListener getTouchListener() {
@@ -137,8 +138,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mSquaresViewedAtStartup = newValue;
     }
 
-    //https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
-
     public void setupFirebase(String uuid) {
         mFirebaseHelper = new FirebaseHelper(this);
         mFirebaseHelper.setStandardKey(uuid);
@@ -152,8 +151,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Bitmap bm_wall = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wall128);
         Bitmap bm_floor = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.floor128);
         Bitmap bm_shadow = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.shadow128);
-        Bitmap bm_shadowedWall = changeBitmapContrastBrightness(bm_wall, -50);
-        Bitmap bm_shadowedFloor = changeBitmapContrastBrightness(bm_floor, -50);
+        Bitmap bm_shadowedWall = changeBitmapBrightness(bm_wall, -50);
+        Bitmap bm_shadowedFloor = changeBitmapBrightness(bm_floor, -50);
 
 
         //
@@ -172,8 +171,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             for (int i = 0; i < mGridSize; i++) {
                 dest1.offsetTo(dx, dy);
 
-                boolean tileVisible = new SimpleCoordinates(i, j).existInList(coordinatesListTileVisible);
-                boolean tileShadowed = new SimpleCoordinates(i, j).existInList(coordinatesListTileShadowed);
+                boolean tileVisible = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileVisible);
+                boolean tileShadowed = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileShadowed);
                 //Draw the map with the shadows depending on where the players are placed.
                 if (tileVisible) {
                     switch (mGrid[j][i].Type) {
@@ -224,12 +223,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Tuple<Monster, Coordinates> tuple : mMonsterList) {
-            if (new SimpleCoordinates(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY).existInList(coordinatesListTileVisible))
+            if (new SimpleCoordinates(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY).existInList(mCoordinatesListTileVisible))
                 scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.mFigure);
         }
 
         for (Tuple<GameItem, Coordinates> tuple : mGameItemList) {
-            if (new SimpleCoordinates(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY).existInList(coordinatesListTileVisible))
+            if (new SimpleCoordinates(tuple.mCoordinates.tileX, tuple.mCoordinates.tileY).existInList(mCoordinatesListTileVisible))
                 scaleBitmapAndAddToCanvas(canvas, tuple.mCoordinates, tuple.mGameObject.Image);
         }
     }
@@ -388,7 +387,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         //Setting places to show shadows
 
-        coordinatesListTileVisible.clear();
+        mCoordinatesListTileVisible.clear();
 
         for (Tuple<Player, Coordinates> tuple : mGamePlayerList) {
             for (int i = -tuple.mGameObject.LineOfSight; i <= tuple.mGameObject.LineOfSight; i++) {
@@ -403,11 +402,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     void addCoordinateToSimpleCoordinatesList(int tileXCoordinate, int tileYCoordinate) {
         //Add coordinate if it does not exist in lists
-        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(coordinatesListTileShadowed))
-            coordinatesListTileShadowed.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileShadowed))
+            mCoordinatesListTileShadowed.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
 
-        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(coordinatesListTileVisible))
-            coordinatesListTileVisible.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
+        if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileVisible))
+            mCoordinatesListTileVisible.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
 
     }
 
