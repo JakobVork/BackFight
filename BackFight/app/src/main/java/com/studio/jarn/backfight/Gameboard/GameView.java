@@ -77,6 +77,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     /**
      * //https://stackoverflow.com/questions/12891520/how-to-programmatically-change-contrast-of-a-bitmap-in-android
+     *
      * @param bmp        input bitmap
      * @param brightness -255..255 0 is default
      * @return new bitmap
@@ -622,10 +623,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private Boolean PlayerPickUpItemClick(int tileX, int tileY, int placementX, int placementY) {
         Log.d("Debug", "PlayerPickUpItemClick: called");
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
-            if(playerTuple.mGameObject.id.equals(mPlayerId)) {
+            if (playerTuple.mGameObject.id.equals(mPlayerId)) {
                 // Check for items clicked
                 Tuple<GameItem, Coordinates> mapItem = mapItemClicked(tileX, tileY, placementX, placementY);
-                if(mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
+                if (mapItem != null && playerTuple.mCoordinates.tileX == tileX && playerTuple.mCoordinates.tileY == tileY) {
                     if (playerTuple.mGameObject.canTakeAction()) {
                         pickUpItem(mapItem);
                         playerTuple.mGameObject.takeAction(getContext(), this);
@@ -989,7 +990,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public Player getLocalPlayer() {
         for (Tuple<Player, Coordinates> playerTuple : mGamePlayerList) {
-            if (playerTuple.mGameObject.id.equals(mPlayerId)){
+            if (playerTuple.mGameObject.id.equals(mPlayerId)) {
                 return playerTuple.mGameObject;
             }
         }
