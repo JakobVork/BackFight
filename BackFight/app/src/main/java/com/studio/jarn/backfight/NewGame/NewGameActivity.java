@@ -1,13 +1,17 @@
 package com.studio.jarn.backfight.NewGame;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -55,7 +59,7 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         mBtnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createLobby();
+                createLobby(v);
             }
         });
 
@@ -78,6 +82,7 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         input.setText(mDialogText);
+        input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
         builder.setView(input);
         builder.setMessage(R.string.newGame_dialogMessage);
@@ -100,9 +105,15 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
 
 
     //Creates a lobby players can join before starting a game
-    private void createLobby() {
+    private void createLobby(View view) {
         Intent lobbyIntent = new Intent(this, LobbyActivity.class);
         lobbyIntent.putExtra(getString(R.string.EXTRA_HOST), true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bundle bundle;
+            bundle = ActivityOptions.makeThumbnailScaleUpAnimation(view, bitmap, 0, 0).toBundle();
+            startActivity(lobbyIntent, bundle);
+        } else
         startActivity(lobbyIntent);
     }
 
