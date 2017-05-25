@@ -83,7 +83,6 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
                 R.string.newGame_dialogHint);
 
         builder.setView(input);
-        /*builder.setMessage(R.string.newGame_dialogMessage);*/
         builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -141,7 +141,8 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                // Failed to read value
+                Log.w("", "Failed to read value.", databaseError.toException());
             }
         });
     }

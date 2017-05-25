@@ -30,16 +30,16 @@ public class SharedPreferencesHelper {
         }
         recentGames.add(gameId);
 
-        SharedPreferences settingsSp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor settingsSpEditor = settingsSp.edit();
-        settingsSpEditor.putString(sPrefKeyGameIdList, TextUtils.join(",", recentGames));
-        settingsSpEditor.apply();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.putString(sPrefKeyGameIdList, TextUtils.join(",", recentGames));
+        spEditor.apply();
     }
 
     private List<String> getRecentGameIdsList() {
 
-        SharedPreferences settingsSp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String serialized = settingsSp.getString(sPrefKeyGameIdList, null);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String serialized = sp.getString(sPrefKeyGameIdList, null);
         if (serialized == null)
             return new ArrayList<>();
 
