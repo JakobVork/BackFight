@@ -149,9 +149,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
 
         // Need to create a new every time, since the current fragment might be for another user
-        // Need to ensure that this doesn't create a memory leak in some sort? <-- I don't think so
-        // Might need to keep it in detailed fragment, if player has selected a item? <-- A lot
-        // harder, since it also depends on who it is etc.
         itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(player);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

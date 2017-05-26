@@ -16,9 +16,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.studio.jarn.backfight.Gameboard.Coordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
-import com.studio.jarn.backfight.Gameboard.Tuple;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.Monster.Monster;
@@ -132,7 +130,7 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    if ((postSnapshot.getValue(Player.class)).id.equals(player.id))
+                    if ((postSnapshot.getValue(Player.class)).Id.equals(player.Id))
                         playerFound[0] = true;
                 }
                 if (!playerFound[0])
@@ -228,11 +226,11 @@ public class FirebaseHelper {
 
 
     //FirebaseGameViewListener
-    public void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playersWithCoordinates) {
+    public void setPlayerList(List<Player> playersWithCoordinates) {
         mDatabase.getReference(mGameIdPlayers).setValue(playersWithCoordinates);
     }
 
-    public void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monstersWithCoordinates) {
+    public void setMonsterList(List<Monster> monstersWithCoordinates) {
         mDatabase.getReference(mGameIdMonsters).setValue(monstersWithCoordinates);
     }
 
@@ -275,31 +273,34 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                ArrayList<Tuple<Player, Coordinates>> playerList = new ArrayList<>();
+                List<Player> playerList = new ArrayList<>();
 
-                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
-                };
+                GenericTypeIndicator<Player> genericTypeIndicator = new GenericTypeIndicator<Player>() {};
 
                 /*
                  * Because we use inheritance firebase can not handle that the list is of GameItem,
                  * and that the item can be of ItemWeapon type. Therefore we have go through every
-                 * PlayerTuple -> Player -> ItemList -> Item
+                 * Player -> ItemList -> Item
                  * in order to keep all properties. If not, weapons would lose their damage.
                  */
 
-                for (DataSnapshot playerTuple : dataSnapshot.getChildren()) {
-                    ArrayList<GameItem> itemList = new ArrayList<>();
-                    for (DataSnapshot player : playerTuple.getChildren()) {
-                        for (DataSnapshot playerProperties : player.getChildren()) {
+                for (DataSnapshot playerObj: dataSnapshot.getChildren()) {
+                    List<GameItem> itemList = new ArrayList<>();
+                    for (DataSnapshot playerProperties : playerObj.getChildren()) {
                             for (DataSnapshot playerItems : playerProperties.getChildren()) {
-                                ItemWeapon item = playerItems.getValue(ItemWeapon.class);
-                                itemList.add(item);
-                            }
+                                try {
+                                    ItemWeapon item = playerItems.getValue(ItemWeapon.class);
+                                    itemList.add(item);
+                                } catch (Exception e) {
+                                    // Do nothing, since it's not the itemList it tries to cast.
+                                    // Todo: Find a better way to handle this problem.
+                                }
                         }
                     }
 
-                    Tuple<Player, Coordinates> player = playerTuple.getValue(genericTypeIndicator);
-                    player.mGameObject.PlayerItems = itemList;
+                    Player player = playerObj.getValue(genericTypeIndicator);
+
+                    player.PlayerItems = itemList;
                     playerList.add(player);
 
                 }
@@ -320,9 +321,9 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                ArrayList<Tuple<Monster, Coordinates>> monsterList = new ArrayList<>();
+                List<Monster> monsterList = new ArrayList<>();
 
-                GenericTypeIndicator<Tuple<Monster, Coordinates>> monsterGenericTypeIndicator = new GenericTypeIndicator<Tuple<Monster, Coordinates>>() {
+                GenericTypeIndicator<Monster> monsterGenericTypeIndicator = new GenericTypeIndicator<Monster>() {
                 };
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     monsterList.add(postSnapshot.getValue(monsterGenericTypeIndicator));
@@ -393,12 +394,8 @@ public class FirebaseHelper {
     }
 
 
-    public void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemsWithCoordinates) {
+    public void setItemList(List<GameItem> itemsWithCoordinates) {
         mDatabase.getReference(mGameIdItems).setValue(itemsWithCoordinates);
-    }
-
-    private Tuple<GameItem, Coordinates> convert(Tuple<ItemWeapon, Coordinates> tuple) {
-        return new Tuple<GameItem, Coordinates>(tuple.mGameObject, tuple.mCoordinates);
     }
 
     public void setItemListListener() {
@@ -408,11 +405,10 @@ public class FirebaseHelper {
                 String item = new Gson().toJson(dataSnapshot.getValue());
                 Log.d("Test", item);
 
-                GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<ItemWeapon, Coordinates>>() {
-                };
-                ArrayList<Tuple<GameItem, Coordinates>> itemList = new ArrayList<>();
+                GenericTypeIndicator<ItemWeapon> genericTypeIndicator = new GenericTypeIndicator<ItemWeapon>() {};
+                List<GameItem> itemList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    itemList.add(convert(postSnapshot.getValue(genericTypeIndicator)));
+                    itemList.add(postSnapshot.getValue(genericTypeIndicator));
                 }
 
                 mFirebaseGameViewListener.setItemList(itemList);
@@ -431,14 +427,14 @@ public class FirebaseHelper {
         mDatabase.getReference(mGameIdPlayers).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
+                GenericTypeIndicator<Player> genericTypeIndicator = new GenericTypeIndicator<Player>() {
                 };
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Tuple<Player, Coordinates> tuple = (postSnapshot.getValue(genericTypeIndicator));
+                    Player player = (postSnapshot.getValue(genericTypeIndicator));
                     String playerId = mContext.getSharedPreferences(
                             mContext.getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
-                    if (tuple.mGameObject.id.equals(playerId))
-                        mFirebaseGameActivityListener.setActionCounter(tuple.mGameObject.mActionsRemaining);
+                    if (player.Id.equals(playerId))
+                        mFirebaseGameActivityListener.setActionCounter(player.ActionsRemaining);
                 }
             }
 

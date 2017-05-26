@@ -1,5 +1,7 @@
 package com.studio.jarn.backfight.Items;
 
+import com.studio.jarn.backfight.Gameboard.Coordinates;
+
 public class GameItem {
 
     private static long sNextId = 0;
@@ -7,6 +9,8 @@ public class GameItem {
     public String Description;
     public int Image;
     public long Id;
+
+    public Coordinates Coordinate;
 
     public GameItem() {
 
@@ -18,5 +22,7 @@ public class GameItem {
         this.Title = title;
         this.Description = description;
         this.Image = img;
+
+        Coordinate = null; // Coordinate will be assigned if needed - Default is null.
     }
 }

@@ -39,7 +39,7 @@ public class ItemsAndStatsFragment extends Fragment {
             Bundle args = new Bundle();
             String jsonArray = new Gson().toJson(player.PlayerItems);
             args.putString(sJsonItemsString, jsonArray);
-            args.putString(sNameString, player.mName);
+            args.putString(sNameString, player.Name);
             fragment.setArguments(args);
             return fragment;
         }
