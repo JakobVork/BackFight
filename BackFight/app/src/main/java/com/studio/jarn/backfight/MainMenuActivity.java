@@ -188,7 +188,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     }
 
 
-    // Display Dialog to enter game ID
+    // Display Dialog to enter spectate
     private void DisplayEnterSpectateDialog() {
         //Source: http://stackoverflow.com/questions/10903754/input-text-dialog-android
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
