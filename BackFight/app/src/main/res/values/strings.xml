@@ -5,14 +5,15 @@
     <string name="all_icon">Icon</string>
     <string name="all_sp_name">LOCAL_STORE</string>
     <string name="mainMenu_newGame">New Game</string>
-    <string name="mainMenu_loadGame">Load Game</string>
+    <string name="mainMenu_spectateGame">Spectate Game</string>
     <string name="mainMenu_rules">Rules</string>
     <string name="mainMenu_settings">Settings</string>
     <string name="mainMenu_exit">Exit</string>
     <string name="mainMenu_dialogMessage">What is your profile name?</string>
     <string name="mainMenu_dialogBtnPositive">OK</string>
     <string name="mainMenu_dialogTitle">Profile name</string>
-    <string name="newGame_load">Load</string>
+    <string name="newGame_dialogSpectateTitle">Spectate</string>
+    <string name="newGame_dialogSpectateMessage">Insert spectate ID</string>
     <string name="newGame_create">Create</string>
     <string name="newGame_join">Join</string>
     <string name="newGame_dialogTitle">Input ID</string>
@@ -38,6 +39,7 @@
     <string name="EXTRA_HOST">com.jarn.extra.host</string>
     <string name="EXTRA_GRIDTYPE">com.jarn.extra.gridtype</string>
     <string name="EXTRA_GRIDSIZE">com.jarn.extra.gridsize</string>
+    <string name="EXTRA_SPECTATE">com.jarn.extra.spectate</string>
 
 
     <!-- Items -->

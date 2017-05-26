@@ -54,13 +54,14 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
+        setupItemFragment();
+        setupDefaultText();
         Intent i = getIntent();
         if (i != null) {
             setupGameView(i);
         }
 
-        setupItemFragment();
-        setupDefaultText();
+
     }
 
     private void setupDefaultText() {
@@ -97,6 +98,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void setupGameView(Intent i) {
         String uuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), false);
+        boolean spectate = i.getBooleanExtra(getString(R.string.EXTRA_SPECTATE), false);
         sGridSize = i.getIntExtra(getString(R.string.EXTRA_GRIDSIZE), sDefaultGridSize);
 
         GameView gv = (GameView) findViewById(R.id.boardview);
@@ -140,6 +142,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
             gv.setItemListener();
         }
+        if (spectate)
+            btnActionCounter.setVisibility(View.GONE);
     }
 
     public void showItemListFragment(Player player) {
