@@ -23,7 +23,7 @@ import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
 import com.studio.jarn.backfight.Monster.Monster;
-import com.studio.jarn.backfight.MonsterDetails;
+import com.studio.jarn.backfight.Fragment.MonsterDetails;
 import com.studio.jarn.backfight.Notification.NotificationIntentService;
 import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.Player.PlayerGameActivityListener;
