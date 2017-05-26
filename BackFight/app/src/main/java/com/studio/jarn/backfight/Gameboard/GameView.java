@@ -177,7 +177,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 boolean tileVisible = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileVisible);
                 boolean tileShadowed = new SimpleCoordinates(i, j).existInList(mCoordinatesListTileShadowed);
                 //Draw the map with the shadows depending on where the players are placed.
-                if(tileVisible) {
+                if (tileVisible) {
                     switch (mGrid[j][i].Type) {
                         case Wall: {
                             canvas.drawBitmap(bm_wall, null, dest1, paint);
@@ -227,12 +227,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         for (Monster monster : mMonsterList) {
-            if(new SimpleCoordinates(monster.coordinate.tileX, monster.coordinate.tileY).existInList(mCoordinatesListTileVisible))
+            if (new SimpleCoordinates(monster.coordinate.tileX, monster.coordinate.tileY).existInList(mCoordinatesListTileVisible))
                 scaleBitmapAndAddToCanvas(canvas, monster.coordinate, monster.Figure);
         }
 
         for (GameItem item : mGameItemList) {
-            if(new SimpleCoordinates(item.Coordinate.tileX, item.Coordinate.tileY).existInList(mCoordinatesListTileVisible))
+            if (new SimpleCoordinates(item.Coordinate.tileX, item.Coordinate.tileY).existInList(mCoordinatesListTileVisible))
                 scaleBitmapAndAddToCanvas(canvas, item.Coordinate, item.Image);
         }
     }
@@ -510,7 +510,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         // Get player to check for state
         Player localPlayer = getLocalPlayer();
 
-        if(mSelectedPlayer != null && mSelectedPlayer.equals(localPlayer)) {
+        if (mSelectedPlayer != null && mSelectedPlayer.equals(localPlayer)) {
             // Player is selected
             HandleActionForSelectedPlayer(coordinate);
         } else {
@@ -530,7 +530,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     // Only called when local player is selected first
     private void HandleActionForSelectedPlayer(Coordinates coordinate) {
         // Check what the player clicked on and do action accordenly
-        if(clickedOnLocalPlayer(coordinate)) {
+        if (clickedOnLocalPlayer(coordinate)) {
             // Clicked on local player - Deselect
             mSelectedPlayer = null;
         } else if (clickedOnItem(coordinate)) {
@@ -541,11 +541,11 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             AttackMonster(getLocalPlayer(), getMonsterOnCoord(coordinate));
         } else if (tileNextToPlayer(getLocalPlayer(), coordinate.tileX, coordinate.tileY, 1)){ // 1 = distance
             // Ensure player has actions left
-            if(!getLocalPlayer().canTakeAction())
+            if (!getLocalPlayer().canTakeAction())
                 return;
 
             // Check that player isn't on the tile already
-            if(getLocalPlayer().Coordinate.tileX == coordinate.tileX && getLocalPlayer().Coordinate.tileY == coordinate.tileY)
+            if (getLocalPlayer().Coordinate.tileX == coordinate.tileX && getLocalPlayer().Coordinate.tileY == coordinate.tileY)
                 return;
 
             movePlayerToTile(getLocalPlayer(), coordinate.tileX, coordinate.tileY);
@@ -561,7 +561,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     // Only called whe local player is not selected
     private void HandleActionForNonSelectedPlayer(Coordinates coordinate) {
         // Check what the player clicked on and do action accordenly
-        if(clickedOnLocalPlayer(coordinate)) {
+        if (clickedOnLocalPlayer(coordinate)) {
             // Clicked on local player - Select
             mSelectedPlayer = getLocalPlayer();
         } else if (clickedOnItem(coordinate)) {
@@ -588,7 +588,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private boolean clickedOnItem(Coordinates coord) {
         for (GameItem item : mGameItemList) {
-            if(item.Coordinate != null && item.Coordinate.equals(coord))
+            if (item.Coordinate != null && item.Coordinate.equals(coord))
                 return true;
         }
 
@@ -608,12 +608,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Log.d("ItemClicked", "pickUpItem: Item on map was clicked.");
 
         // Ensure player is on the same file as item
-        if(!(player.Coordinate.tileX == coord.tileX && player.Coordinate.tileY == coord.tileY))
+        if (!(player.Coordinate.tileX == coord.tileX && player.Coordinate.tileY == coord.tileY))
             return;
 
         // get item that was clicked on
         GameItem item = getItemOnCoord(coord);
-        if(item == null)
+        if (item == null)
             return;
 
         // Remove item from map
@@ -622,7 +622,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         // Add item to players itemlist
         // List might be null due to firebase
-        if(player.PlayerItems == null)
+        if (player.PlayerItems == null)
             player.PlayerItems = new ArrayList<>();
 
         player.PlayerItems.add(item);
@@ -632,7 +632,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private GameItem getItemOnCoord(Coordinates coord) {
         for (GameItem item : mGameItemList) {
-            if(item.Coordinate != null && item.Coordinate.equals(coord))
+            if (item.Coordinate != null && item.Coordinate.equals(coord))
                 return item;
         }
 
@@ -641,7 +641,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private Monster getMonsterOnCoord(Coordinates coord) {
         for (Monster monster : mMonsterList) {
-            if(monster.coordinate != null && monster.coordinate.equals(coord))
+            if (monster.coordinate != null && monster.coordinate.equals(coord))
                 return monster;
         }
 
@@ -649,7 +649,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void AttackMonster(Player player, Monster monster) {
-        if(player.Coordinate.tileX == monster.coordinate.tileX && player.Coordinate.tileY == monster.coordinate.tileY) {
+        if (player.Coordinate.tileX == monster.coordinate.tileX && player.Coordinate.tileY == monster.coordinate.tileY) {
 
             // Player roll dmg
             int dmg = player.rollAttack();
@@ -657,7 +657,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             // Damage monster
             monster.HitPoints -= dmg;
             Log.d("AttackMonster", "Monster lost " + dmg + " HP");
-            if(monster.HitPoints <= 0) {
+            if (monster.HitPoints <= 0) {
                 // Monster died, remove it from map
                 Log.d("HandleMonsterClicked", "Monster died");
                 mMonsterList.remove(monster);
@@ -679,7 +679,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private Player getPlayerOnCoord(Coordinates coord) {
         for (Player player :mGamePlayerList) {
-            if(player.Coordinate != null && player.Coordinate.equals(coord))
+            if (player.Coordinate != null && player.Coordinate.equals(coord))
                 return player;
         }
 
@@ -720,7 +720,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         // Damage player
         player.Health -= monster.AttackPower;
         Log.d("Info", "attackPlayer: Player lost " + monster.AttackPower + " HP");
-        if(player.Health <= 0)
+        if (player.Health <= 0)
         {
             // Player died - remove him from map
             mGamePlayerList.remove(player);
@@ -732,7 +732,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private void moveSingleMonster(Monster monster) {
         // Check if monster has actions left
-        if(!monster.canTakeAction())
+        if (!monster.canTakeAction())
             return;
 
         Random random = new Random();
@@ -757,14 +757,14 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private boolean tileNextToPlayer(Player player, int tileX, int tileY, int distance) {
 
         // Can't do this in one if-statment, since that would allow the player to move diagonal
-        if(player.Coordinate.tileX <= tileX + distance && player.Coordinate.tileX >= tileX - distance) {
-            if(player.Coordinate.tileY <= tileY && player.Coordinate.tileY >= tileY) {
+        if (player.Coordinate.tileX <= tileX + distance && player.Coordinate.tileX >= tileX - distance) {
+            if (player.Coordinate.tileY <= tileY && player.Coordinate.tileY >= tileY) {
                 return true;
             }
         }
 
-        if(player.Coordinate.tileY <= tileY + distance && player.Coordinate.tileY >= tileY - distance) {
-            if(player.Coordinate.tileX <= tileX && player.Coordinate.tileX >= tileX){
+        if (player.Coordinate.tileY <= tileY + distance && player.Coordinate.tileY >= tileY - distance) {
+            if (player.Coordinate.tileX <= tileX && player.Coordinate.tileX >= tileX){
                 return true;
             }
         }
@@ -822,7 +822,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             Coordinates coordinates = Coordinates.getRandom(mGridSize);
             Coordinates availableCoord = availableCoord(coordinates.tileX, coordinates.tileY);
 
-            if(availableCoord != null) {
+            if (availableCoord != null) {
                 int awayFromPlayer = 0;
 
                 for (Player player : mGamePlayerList) {
@@ -843,20 +843,20 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private void movePlayerToTile(Player player, int tileX, int tileY) {
         // Check if tile is passable
-        if(!mGrid[tileY][tileX].CanBePassed) return;
+        if (!mGrid[tileY][tileX].CanBePassed) return;
 
         Coordinates coord = availableCoord(tileX, tileY);
-        if(coord != null) {
+        if (coord != null) {
             player.Coordinate = coord;
         }
     }
 
     private void moveMonsterToTile(Monster monster, int tileX, int tileY) {
         // Check if tile is passable
-        if(!mGrid[tileY][tileX].CanBePassed) return;
+        if (!mGrid[tileY][tileX].CanBePassed) return;
 
         Coordinates coord = availableCoord(tileX, tileY);
-        if(coord != null) {
+        if (coord != null) {
             monster.coordinate = coord;
         }
     }
