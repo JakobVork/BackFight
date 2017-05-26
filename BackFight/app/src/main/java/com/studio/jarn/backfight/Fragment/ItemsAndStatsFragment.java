@@ -17,6 +17,8 @@ import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.R;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -24,11 +26,19 @@ public class ItemsAndStatsFragment extends Fragment {
 
     private final static String sJsonItemsString = "sJsonItemsString";
     private final static String sNameString = "sNameString";
+    private final static String sHpString = "sHpString";
+    private final static String sMinDmgString = "sMinDmgString";
+    private final static String sMaxDmgString = "sMaxDmgString";
     private OnItemSelectedListener mListener;
     private ArrayList<GameItem> mItemList;
     private String mName;
+    private int mHp;
+    private int mMinDmg;
+    private int mMaxDmg;
     private TextView mTvName;
+    private TextView mTvHp;
     private ListView mItemListView;
+    private TextView mTvDmg;
 
     public ItemsAndStatsFragment() {
     }
@@ -40,6 +50,9 @@ public class ItemsAndStatsFragment extends Fragment {
             String jsonArray = new Gson().toJson(player.PlayerItems);
             args.putString(sJsonItemsString, jsonArray);
             args.putString(sNameString, player.Name);
+            args.putInt(sHpString, player.Health);
+            args.putInt(sMinDmgString, player.getMinDmg());
+            args.putInt(sMaxDmgString, player.getMaxDmg());
             fragment.setArguments(args);
             return fragment;
         }
@@ -57,6 +70,9 @@ public class ItemsAndStatsFragment extends Fragment {
             }.getType();
             mItemList = new Gson().fromJson(jsonItems, listType);
             mName = getArguments().getString(sNameString);
+            mHp = getArguments().getInt(sHpString);
+            mMinDmg = getArguments().getInt(sMinDmgString);
+            mMaxDmg = getArguments().getInt(sMaxDmgString);
         }
     }
 
@@ -78,6 +94,12 @@ public class ItemsAndStatsFragment extends Fragment {
 
         mTvName = (TextView) view.findViewById(R.id.fragment_item_tv_name);
         mTvName.setText(mName);
+
+        mTvHp = (TextView) view.findViewById(R.id.fragment_item_tv_hp);
+        mTvHp.setText("HP: " + String.valueOf(mHp));
+
+        mTvDmg = (TextView) view.findViewById(R.id.fragment_item_tv_dmg);
+        mTvDmg.setText("Dmg: " + String.valueOf(mMinDmg) + " - " + String.valueOf(mMaxDmg));
 
         return view;
     }
