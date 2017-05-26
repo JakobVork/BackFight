@@ -20,7 +20,7 @@ public class Player {
     public String id;
     public int Health = 20;
     public int LineOfSight = 1;
-    private int mActionsPerTurn = 3;
+    public int mActionsPerTurn = 3; //Needed for Firebase
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
         mFigure = Figure;

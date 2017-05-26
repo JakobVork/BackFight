@@ -16,11 +16,12 @@
     <string name="newGame_dialogSpectateMessage">Insert spectate ID</string>
     <string name="newGame_create">Create</string>
     <string name="newGame_join">Join</string>
-    <string name="newGame_dialogTitle">Input ID</string>
+    <string name="newGame_dialogTitle">Recent ID\'s used</string>
     <string name="newGame_dialogMessage">Insert host ID</string>
     <string name="newGame_dialogBtnPositive">Join game</string>
     <string name="newGame_dialogBtnNegative">Cancel</string>
     <string name="newGame_dialogErrorMessage">Game Id does not exist</string>
+    <string name="newGame_dialogHint">Enter new Id!</string>
     <string name="lobby_startGame">Start Game</string>
     <string name="lobby_title">Lobby</string>
     <string name="lobby_default">Default</string>
@@ -83,5 +84,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="game_actionCount">Action count left:</string>
     <string name="game_roundCounter">Round count:</string>
+
 
 </resources>
