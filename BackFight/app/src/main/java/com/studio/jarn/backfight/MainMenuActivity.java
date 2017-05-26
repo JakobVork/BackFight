@@ -6,12 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -32,7 +36,7 @@ import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_S
 public class MainMenuActivity extends AppCompatActivity {
 
     public static String PHONE_UUID_SP = "Phone UUID";
-
+    private static final int NO_INTERNET_SETTINGS_INTENT = 42;
 
     Button mBtnNewGame;
     Button mBtnLoadGame;
@@ -48,6 +52,52 @@ public class MainMenuActivity extends AppCompatActivity {
         initButtons();
         isItFirstTime();
 
+        if (!isConnectedToInternet()) {
+            createNetErrorDialog();
+        }
+    }
+
+    private boolean isConnectedToInternet() {
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni != null && ni.isConnected())
+            return true;
+
+        return false;
+    }
+
+    // Method copied from https://stackoverflow.com/questions/15456428/ask-user-to-start-wifi-or-3g-on-launching-an-android-app-if-not-connected-to-int
+    private void createNetErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.")
+                .setTitle("Unable to connect")
+                .setCancelable(false)
+                .setPositiveButton("Settings",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent i = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                                startActivityForResult(i, NO_INTERNET_SETTINGS_INTENT);
+                            }
+                        }
+                )
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finish();
+                            }
+                    }
+                );
+        builder.create().show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Returned - Check if internet is available now.
+        if (!isConnectedToInternet()) {
+            createNetErrorDialog();
+        }
     }
 
     private void isItFirstTime() {
