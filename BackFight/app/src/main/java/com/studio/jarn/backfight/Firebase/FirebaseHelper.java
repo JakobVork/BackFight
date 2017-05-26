@@ -17,7 +17,6 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.studio.jarn.backfight.Gameboard.Coordinates;
-import com.studio.jarn.backfight.Gameboard.GameActivity;
 import com.studio.jarn.backfight.Gameboard.SimpleCoordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Gameboard.Tuple;
@@ -468,6 +467,8 @@ public class FirebaseHelper {
                 GenericTypeIndicator<List<SimpleCoordinates>> genericTypeIndicator = new GenericTypeIndicator<List<SimpleCoordinates>>() {
                 };
                 List<SimpleCoordinates> simpleCoordiantes = dataSnapshot.getValue(genericTypeIndicator);
+                if (simpleCoordiantes == null)
+                    simpleCoordiantes = new ArrayList<>();
                 mFirebaseGameViewListener.setTileShadowedList(simpleCoordiantes);
             }
 

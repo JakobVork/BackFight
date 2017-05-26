@@ -11,7 +11,12 @@ public class SimpleCoordinates {
         this.tileY = tileY;
     }
 
+    SimpleCoordinates() {
+    } //For use in Firebase
+
     boolean existInList(List<SimpleCoordinates> list) {
+        if (list == null)
+            return false;
         for (SimpleCoordinates simpleCoordinates : list) {
             if (simpleCoordinates.tileX == this.tileX && simpleCoordinates.tileY == this.tileY) {
                 return true;
