@@ -44,6 +44,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     Button mBtnExit;
     String mDialogText;
     FirebaseHelper mFirebaseHelper;
+    Button mDialogBtnSpectatePositive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,13 +201,21 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         input.setText(mDialogText);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
+        //https://stackoverflow.com/questions/8063439/android-edittext-finished-typing-event
+        //Set focus to the positive button when pressing enter.
+        input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mDialogBtnSpectatePositive.requestFocus();
+            }
+        });
+
         builder.setView(input);
         builder.setMessage(R.string.newGame_dialogMessage);
         builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mFirebaseHelper.validateIfGameExist(input.getText().toString());
-
             }
         });
         builder.setNegativeButton(R.string.newGame_dialogBtnNegative, new DialogInterface.OnClickListener() {
@@ -215,8 +224,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
                 dialog.cancel();
             }
         });
-        builder.show();
-
+        mDialogBtnSpectatePositive = builder.show().getButton(DialogInterface.BUTTON_POSITIVE);
     }
 
     @Override

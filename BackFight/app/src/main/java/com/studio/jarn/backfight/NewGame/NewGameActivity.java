@@ -29,6 +29,7 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
     Button mBtnJoin;
     String mDialogText;
     FirebaseHelper mFirebaseHelper;
+    private Button mDialogBtnPositive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,14 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         input.setHint(
                 R.string.newGame_dialogHint);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        //https://stackoverflow.com/questions/8063439/android-edittext-finished-typing-event
+        //Set focus to the positive button when pressing enter.
+        input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mDialogBtnPositive.requestFocus();
+            }
+        });
 
         builder.setView(input);
         builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
@@ -109,7 +118,7 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
                 mFirebaseHelper.validateIfGameExist((items[which]).toString());
             }
         });
-        builder.show();
+        mDialogBtnPositive = builder.show().getButton(DialogInterface.BUTTON_POSITIVE);
     }
 
 
