@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static android.content.Context.BIND_ABOVE_CLIENT;
 import static com.studio.jarn.backfight.MainMenuActivity.PHONE_UUID_SP;
 
 /**
@@ -624,7 +623,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         // Add item to players itemlist
         // List might be null due to firebase
         if(player.PlayerItems == null)
-            player.PlayerItems = new ArrayList<GameItem>();
+            player.PlayerItems = new ArrayList<>();
 
         player.PlayerItems.add(item);
 
@@ -671,7 +670,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private boolean clickedOnOtherPlayer(Coordinates coord) {
         for (Player player :mGamePlayerList) {
-            if(player.Coordinate != null && player.Coordinate.equals(coord) && player.Id != mPlayerId)
+            if (player.Coordinate != null && player.Coordinate.equals(coord) && !player.Id.equals(mPlayerId))
                 return true;
         }
 
@@ -753,11 +752,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             if ((monster.coordinate.tileY + move) < (mMaxCanvasHeight / mSquareHeight) && (monster.coordinate.tileY + move) > 0)
                 moveMonsterToTile(monster, monster.coordinate.tileX, monster.coordinate.tileY + move);
         }
-        // if check if legal move
-        if (movedTo != null && tuple.mGameObject.canTakeAction()) {
-            tuple.mCoordinates = movedTo;
-            tuple.mGameObject.takeAction();
-            return true;
     }
 
     private boolean tileNextToPlayer(Player player, int tileX, int tileY, int distance) {

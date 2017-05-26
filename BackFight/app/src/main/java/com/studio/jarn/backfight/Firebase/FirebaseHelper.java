@@ -16,7 +16,6 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.studio.jarn.backfight.Gameboard.Coordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
@@ -131,7 +130,7 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    if ((postSnapshot.getValue(Player.class)).id.equals(player.id))
+                    if ((postSnapshot.getValue(Player.class)).Id.equals(player.Id))
                         playerFound[0] = true;
                 }
                 if (!playerFound[0])
@@ -274,7 +273,7 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                List<Player> playerList = new ArrayList<Player>();
+                List<Player> playerList = new ArrayList<>();
 
                 GenericTypeIndicator<Player> genericTypeIndicator = new GenericTypeIndicator<Player>() {};
 
@@ -428,14 +427,14 @@ public class FirebaseHelper {
         mDatabase.getReference(mGameIdPlayers).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<Tuple<Player, Coordinates>> genericTypeIndicator = new GenericTypeIndicator<Tuple<Player, Coordinates>>() {
+                GenericTypeIndicator<Player> genericTypeIndicator = new GenericTypeIndicator<Player>() {
                 };
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Tuple<Player, Coordinates> tuple = (postSnapshot.getValue(genericTypeIndicator));
+                    Player player = (postSnapshot.getValue(genericTypeIndicator));
                     String playerId = mContext.getSharedPreferences(
                             mContext.getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE).getString(PHONE_UUID_SP, "");
-                    if (tuple.mGameObject.id.equals(playerId))
-                        mFirebaseGameActivityListener.setActionCounter(tuple.mGameObject.mActionsRemaining);
+                    if (player.Id.equals(playerId))
+                        mFirebaseGameActivityListener.setActionCounter(player.ActionsRemaining);
                 }
             }
 
