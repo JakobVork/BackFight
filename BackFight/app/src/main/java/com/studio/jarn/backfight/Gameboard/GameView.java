@@ -99,7 +99,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(cm));
-        canvas.drawBitmap(bmp, 0 ,0, paint);
+        canvas.drawBitmap(bmp, 0, 0, paint);
 
         return bitmap;
     }
