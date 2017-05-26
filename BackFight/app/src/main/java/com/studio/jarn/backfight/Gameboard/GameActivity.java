@@ -22,6 +22,8 @@ import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
+import com.studio.jarn.backfight.Monster.Monster;
+import com.studio.jarn.backfight.MonsterDetails;
 import com.studio.jarn.backfight.Notification.NotificationIntentService;
 import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.Player.PlayerGameActivityListener;
@@ -150,6 +152,22 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
         // Need to create a new every time, since the current fragment might be for another user
         itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(player);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
+        ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+        ft.commit();
+    }
+
+    public void showItemListFragment(Monster monster) {
+        mIvItemFragmentShow.setVisibility(View.GONE);
+        mIvItemFragmentHide.setVisibility(View.VISIBLE);
+
+        // Add ItemsAndStats fragment
+        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+
+        // Need to create a new every time, since the current fragment might be for another user
+        itemsAndStatsFragment = MonsterDetails.newInstance(monster);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
