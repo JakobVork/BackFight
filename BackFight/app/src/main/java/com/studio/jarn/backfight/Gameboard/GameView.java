@@ -407,7 +407,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         if (!new SimpleCoordinates(tileXCoordinate, tileYCoordinate).existInList(mCoordinatesListTileVisible))
             mCoordinatesListTileVisible.add(new SimpleCoordinates(tileXCoordinate, tileYCoordinate));
-
     }
 
     @Override
@@ -424,7 +423,20 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         invalidate();
     }
 
+    public void getTileShadowedList() {
+        mFirebaseHelper.getTileShadowedList();
+    }
+
+    @Override
+    public void setTileShadowedList(List<SimpleCoordinates> simpleCoordinatesList) {
+        mCoordinatesListTileShadowed = simpleCoordinatesList;
+    }
+
     public void startMonsterTurn() {
+
+        mFirebaseHelper.setTileShadowedList(mCoordinatesListTileShadowed);
+
+
         MonsterTurn();
 
         //TODO!!

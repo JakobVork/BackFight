@@ -133,6 +133,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.setGridSize(sGridSize);
                 gv.setViewSizeAtStartup(sSquaresViewedAtStartup);
                 gv.setupFirebase(uuid);
+                gv.getTileShadowedList();
                 gv.initClientGrid();
 
                 gv.setListeners();

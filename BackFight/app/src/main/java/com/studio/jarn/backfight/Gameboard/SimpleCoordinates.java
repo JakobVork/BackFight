@@ -2,9 +2,9 @@ package com.studio.jarn.backfight.Gameboard;
 
 import java.util.List;
 
-class SimpleCoordinates {
-    private int tileX;
-    private int tileY;
+public class SimpleCoordinates {
+    public int tileX; //For use in Firebase
+    public int tileY; //For use in Firebase
 
     SimpleCoordinates(int tileX, int tileY) {
         this.tileX = tileX;
