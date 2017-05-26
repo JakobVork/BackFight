@@ -568,13 +568,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             // TODO: Show item stats on a fragment
         } else if (clickedOnMonster(coordinate)) {
             Monster monsterToShow = getMonsterOnCoord(coordinate);
-            ((GameActivity) getContext()).hideItemListFragment(); // Hides any other fragment if visible
-            ((GameActivity) getContext()).showItemListFragment(monsterToShow); // Show fragment for clicked monster
+            ((GameActivity) getContext()).hideFragment(); // Hides any other fragment if visible
+            ((GameActivity) getContext()).showOverviewFragment(monsterToShow); // Show fragment for clicked monster
         } else if (clickedOnOtherPlayer(coordinate)) {
             // Show stats and item fragment for the clicked player
             Player playerToShow = getPlayerOnCoord(coordinate);
-            ((GameActivity) getContext()).hideItemListFragment(); // Hides any other fragment if visible
-            ((GameActivity) getContext()).showItemListFragment(playerToShow); // Show fragment for clicked player
+            ((GameActivity) getContext()).hideFragment(); // Hides any other fragment if visible
+            ((GameActivity) getContext()).showOverviewFragment(playerToShow); // Show fragment for clicked player
         }
     }
 

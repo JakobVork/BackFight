@@ -42,13 +42,13 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static final int sDefaultGridSize = 15;
     public static boolean isGameActivityVisible = false;
     private static int sGridSize = 16;
-    Fragment itemsAndStatsFragment;
-    Fragment itemsAndStatsFragmentDetailed;
+    Fragment overviewFragment;
+    Fragment detailFragment;
     private Tile[][] mGrid;
     private TextView btnActionCounter;
     private TextView btnRound;
-    private ImageView mIvItemFragmentShow;
-    private ImageView mIvItemFragmentHide;
+    private ImageView mIvFragmentShow;
+    private ImageView mIvFragmentHide;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,25 +72,25 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void setupItemFragment() {
         btnActionCounter = (TextView) findViewById(R.id.game_board_activity_tv_actionCount);
         btnRound = (TextView) findViewById(R.id.game_board_activity_tv_round);
-        mIvItemFragmentHide = (ImageView) findViewById(R.id.game_board_activity_iv_hide_items);
-        mIvItemFragmentShow = (ImageView) findViewById(R.id.game_board_activity_iv_show_items);
-        hideItemListFragment();
+        mIvFragmentHide = (ImageView) findViewById(R.id.game_board_activity_iv_hide_items);
+        mIvFragmentShow = (ImageView) findViewById(R.id.game_board_activity_iv_show_items);
+        hideFragment();
 
-        mIvItemFragmentHide.setOnClickListener(new View.OnClickListener() {
+        mIvFragmentHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getFragmentManager().getBackStackEntryCount() > 0) {
                     getFragmentManager().popBackStack();
                 }
-                hideItemListFragment();
+                hideFragment();
             }
         });
 
-        mIvItemFragmentShow.setOnClickListener(new View.OnClickListener() {
+        mIvFragmentShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GameView gv = (GameView) findViewById(R.id.boardview);
-                showItemListFragment(gv.getLocalPlayer());
+                showOverviewFragment(gv.getLocalPlayer());
             }
         });
     }
@@ -143,47 +143,47 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
         }
     }
 
-    public void showItemListFragment(Player player) {
-        mIvItemFragmentShow.setVisibility(View.GONE);
-        mIvItemFragmentHide.setVisibility(View.VISIBLE);
+    public void showOverviewFragment(Player player) {
+        mIvFragmentShow.setVisibility(View.GONE);
+        mIvFragmentHide.setVisibility(View.VISIBLE);
 
         // Add ItemsAndStats fragment
-        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
 
         // Need to create a new every time, since the current fragment might be for another user
-        itemsAndStatsFragment = ItemsAndStatsFragment.newInstance(player);
+        overviewFragment = ItemsAndStatsFragment.newInstance(player);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
-        ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+        ft.add(R.id.game_board_activity_items_and_stats_fragment, overviewFragment);
         ft.commit();
     }
 
-    public void showItemListFragment(Monster monster) {
-        mIvItemFragmentShow.setVisibility(View.GONE);
-        mIvItemFragmentHide.setVisibility(View.VISIBLE);
+    public void showOverviewFragment(Monster monster) {
+        mIvFragmentShow.setVisibility(View.GONE);
+        mIvFragmentHide.setVisibility(View.VISIBLE);
 
         // Add ItemsAndStats fragment
-        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
 
         // Need to create a new every time, since the current fragment might be for another user
-        itemsAndStatsFragment = MonsterDetails.newInstance(monster);
+        overviewFragment = MonsterDetails.newInstance(monster);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
-        ft.add(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragment);
+        ft.add(R.id.game_board_activity_items_and_stats_fragment, overviewFragment);
         ft.commit();
     }
 
-    public void hideItemListFragment() {
-        mIvItemFragmentShow.setVisibility(View.VISIBLE);
-        mIvItemFragmentHide.setVisibility(View.GONE);
+    public void hideFragment() {
+        mIvFragmentShow.setVisibility(View.VISIBLE);
+        mIvFragmentHide.setVisibility(View.GONE);
 
-        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        if (itemsAndStatsFragment != null) {
+        overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        if (overviewFragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, 0, 0);
-            ft.remove(itemsAndStatsFragment);
+            ft.remove(overviewFragment);
             ft.commit();
         }
     }
@@ -217,10 +217,10 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
-        itemsAndStatsFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        itemsAndStatsFragmentDetailed = fragment_item_details.newInstance((ItemWeapon) item);
+        overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
+        detailFragment = fragment_item_details.newInstance((ItemWeapon) item);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.game_board_activity_items_and_stats_fragment, itemsAndStatsFragmentDetailed);
+        ft.replace(R.id.game_board_activity_items_and_stats_fragment, detailFragment);
         ft.addToBackStack(null);
         ft.commit();
     }
