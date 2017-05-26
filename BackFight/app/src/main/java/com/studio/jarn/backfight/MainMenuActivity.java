@@ -69,10 +69,10 @@ public class MainMenuActivity extends AppCompatActivity {
     // Method copied from https://stackoverflow.com/questions/15456428/ask-user-to-start-wifi-or-3g-on-launching-an-android-app-if-not-connected-to-int
     private void createNetErrorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.")
-                .setTitle("Unable to connect")
+        builder.setMessage(R.string.internetErrorMessage)
+                .setTitle(R.string.internetErrorTitle)
                 .setCancelable(false)
-                .setPositiveButton("Settings",
+                .setPositiveButton(R.string.internetErrorSettings,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent i = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
@@ -80,7 +80,7 @@ public class MainMenuActivity extends AppCompatActivity {
                             }
                         }
                 )
-                .setNegativeButton("Cancel",
+                .setNegativeButton(R.string.internetErrorCancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 finish();
