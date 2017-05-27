@@ -350,10 +350,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private void LimitCameraDistanceToBoard(){
         int margin = 600;
 
-        if (mPosX > (-(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth/2)*mScaleFactor)) mPosX = -(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth/2)*mScaleFactor;
-        if (mPosY > (-(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight/2)*mScaleFactor)) mPosY = -(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight/2)*mScaleFactor;
-        if (mPosX < (((mMaxCanvasWidth / 2) + margin - (mMaxCanvasWidth/2)*mScaleFactor) - mMaxCanvasWidth)) mPosX = ((mMaxCanvasWidth / 2) + margin - (mMaxCanvasWidth/2)*mScaleFactor) - mMaxCanvasWidth;
-        if (mPosY < (((mMaxCanvasHeight / 2) + margin - (mMaxCanvasHeight/2)*mScaleFactor) - mMaxCanvasHeight)) mPosY = ((mMaxCanvasHeight / 2) + margin - (mMaxCanvasHeight/2)*mScaleFactor) - mMaxCanvasHeight;
+        if (mPosX > (-(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth / 2) * mScaleFactor)) mPosX = -(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth / 2) * mScaleFactor;
+        if (mPosY > (-(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight / 2) * mScaleFactor)) mPosY = -(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight / 2) * mScaleFactor;
+        if (mPosX < (((mMaxCanvasWidth / 2) + margin - (mMaxCanvasWidth / 2) * mScaleFactor) - mMaxCanvasWidth)) mPosX = ((mMaxCanvasWidth / 2) + margin - (mMaxCanvasWidth / 2) * mScaleFactor) - mMaxCanvasWidth;
+        if (mPosY < (((mMaxCanvasHeight / 2) + margin - (mMaxCanvasHeight / 2) * mScaleFactor) - mMaxCanvasHeight)) mPosY = ((mMaxCanvasHeight / 2) + margin - (mMaxCanvasHeight / 2) * mScaleFactor) - mMaxCanvasHeight;
     }
 
     @Override
