@@ -315,6 +315,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         //The out commented code is there for the person who needs to fix to know what was there before
         canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
 
+        LimitCameraDistanceToBoard();
+
         // Set up the grid  and grid selection variables.
         if (mGrid == null)
             mGrid = new Tile[mGridSize][mGridSize];
@@ -343,6 +345,15 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         canvas.restore();
 
+    }
+
+    private void LimitCameraDistanceToBoard(){
+        int margin = 600;
+
+        if (mPosX > (-(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth / 2) * mScaleFactor)) mPosX = -(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth / 2) * mScaleFactor;
+        if (mPosY > (-(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight / 2) * mScaleFactor)) mPosY = -(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight / 2) * mScaleFactor;
+        if (mPosX < (((mMaxCanvasWidth / 2) + margin - (mMaxCanvasWidth / 2) * mScaleFactor) - mMaxCanvasWidth)) mPosX = ((mMaxCanvasWidth / 2) + margin - (mMaxCanvasWidth / 2) * mScaleFactor) - mMaxCanvasWidth;
+        if (mPosY < (((mMaxCanvasHeight / 2) + margin - (mMaxCanvasHeight / 2) * mScaleFactor) - mMaxCanvasHeight)) mPosY = ((mMaxCanvasHeight / 2) + margin - (mMaxCanvasHeight / 2) * mScaleFactor) - mMaxCanvasHeight;
     }
 
     @Override
