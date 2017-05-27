@@ -23,6 +23,8 @@ public class Player {
     public int LineOfSight = 1;
     public Coordinates Coordinate;
     public int mActionsPerTurn = 3; //Needed for Firebase
+    private final int mBaseMinDmg = 1;
+    private final int mBaseMaxDmg = 1;
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
         this(Figure, FigureSelected, name, uuid, null);
@@ -63,17 +65,36 @@ public class Player {
     }
 
     public int rollAttack(){
-        int min = 1;
-        int max = 1;
-        for (GameItem item:PlayerItems) {
-            // Check if item is a weapon
-            if(item instanceof ItemWeapon) {
-                min += ((ItemWeapon)item).getDmgMin();
-                max += ((ItemWeapon)item).getDmgMax();
-            }
-        }
+        int min = getMinDmg();
+        int max = getMaxDmg();
 
         Random rnd = new Random();
         return rnd.nextInt(max - min + 1) + min; // return a number between min and max (both inc.)
+    }
+
+    public int getMinDmg() {
+        int min = mBaseMinDmg;
+        if(PlayerItems != null) {
+            for (GameItem item:PlayerItems) {
+                // Check if item is a weapon
+                if(item instanceof ItemWeapon) {
+                    min += ((ItemWeapon)item).getDmgMin();
+                }
+            }
+        }
+        return min;
+    }
+
+    public int getMaxDmg() {
+        int max = mBaseMaxDmg;
+        if(PlayerItems != null) {
+            for (GameItem item:PlayerItems) {
+                // Check if item is a weapon
+                if(item instanceof ItemWeapon) {
+                    max += ((ItemWeapon)item).getDmgMax();
+                }
+            }
+        }
+        return max;
     }
 }

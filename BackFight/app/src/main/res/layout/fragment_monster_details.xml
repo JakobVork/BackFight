@@ -1,0 +1,56 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_listBackground"
+    tools:context="com.studio.jarn.backfight.MonsterDetails">
+
+    <TextView
+        android:id="@+id/fragment_monster_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/name"
+        app:layout_constraintLeft_toLeftOf="@+id/fragment_monster_iv_image"
+        app:layout_constraintRight_toRightOf="@+id/fragment_monster_iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_monster_iv_image" />
+
+    <ImageView
+        android:id="@+id/fragment_monster_iv_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fragment_monster_tv_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/hp"
+        app:layout_constraintLeft_toLeftOf="@+id/fragment_monster_tv_name"
+        app:layout_constraintRight_toRightOf="@+id/fragment_monster_tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_monster_tv_name" />
+
+    <TextView
+        android:id="@+id/fragment_monster_tv_dmg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/dmg"
+        app:layout_constraintLeft_toLeftOf="@+id/fragment_monster_tv_hp"
+        app:layout_constraintRight_toRightOf="@+id/fragment_monster_tv_hp"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_monster_tv_hp" />
+</android.support.constraint.ConstraintLayout>
