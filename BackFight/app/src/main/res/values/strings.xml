@@ -85,6 +85,9 @@
     <string name="dmg">Dmg</string>
     <string name="hp">Hp</string>
     <string name="name">Name</string>
+    <string name="fragment_item_details_title">Title</string>
+    <string name="fragment_item_details_description">Description</string>
+    <string name="fragment_item_details_stats">Stats</string>
 
 
 </resources>

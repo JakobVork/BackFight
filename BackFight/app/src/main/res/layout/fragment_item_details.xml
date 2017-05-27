@@ -17,7 +17,7 @@
         android:id="@+id/fragment_item_details_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text="@string/fragment_item_details_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Space
@@ -29,7 +29,7 @@
         android:id="@+id/fragment_item_details_tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description"
+        android:text="@string/fragment_item_details_description"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Space
@@ -41,7 +41,7 @@
         android:id="@+id/fragment_item_details_tv_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stats" />
+        android:text="@string/fragment_item_details_stats" />
 
     <!-- Inspiration from http://stackoverflow.com/questions/14779688/put-buttons-at-bottom-of-screen-with-linearlayout -->
     <LinearLayout

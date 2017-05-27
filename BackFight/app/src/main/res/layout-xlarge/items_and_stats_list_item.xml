@@ -20,7 +20,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/fragment_list_item_img"
-        android:text="Large Text"
         android:textSize="24sp" />
 
 </RelativeLayout>
