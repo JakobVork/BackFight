@@ -34,8 +34,8 @@ public class PlayerAdapter extends ArrayAdapter<Player> {
         ImageView iw_image = (ImageView) convertView.findViewById(R.id.item_playerclass_iv_icon);
         // Populate the data into the template view using the data object
         assert PlayerClass != null;
-        tv_name.setText(PlayerClass.mName);
-        iw_image.setBackgroundResource(PlayerClass.mFigure);
+        tv_name.setText(PlayerClass.Name);
+        iw_image.setBackgroundResource(PlayerClass.Figure);
         // Return the completed view to render on screen
         return convertView;
     }

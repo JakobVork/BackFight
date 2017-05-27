@@ -10,7 +10,7 @@ public class Coordinates {
     int placementOnTileX;
     int placementOnTileY;
 
-    Coordinates() {
+    public Coordinates() {
     }
 
     Coordinates(int tileX, int tileY, int placementOnTileX, int placementOnTileY) {
@@ -25,5 +25,20 @@ public class Coordinates {
         int y = rnd.nextInt(GridSize);
 
         return new Coordinates(x, y, 1, 1);
+    }
+
+    // Coords are equal, if their properties are equal.
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Coordinates) {
+            if(((Coordinates) obj).tileX == this.tileX &&
+                    ((Coordinates) obj).tileY == this.tileY &&
+                    ((Coordinates) obj).placementOnTileX == this.placementOnTileX &&
+                    ((Coordinates) obj).placementOnTileY == this.placementOnTileY) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
