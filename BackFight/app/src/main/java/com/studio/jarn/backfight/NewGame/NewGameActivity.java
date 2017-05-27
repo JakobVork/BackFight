@@ -148,8 +148,8 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
     }
 
     @Override
-    public void gameExist(boolean test, String input) {
-        if (test) {
+    public void gameExist(boolean exist, String input) {
+        if (exist) {
             Intent lobbyIntent = new Intent(NewGameActivity.this, LobbyActivity.class);
             lobbyIntent.putExtra(getString(R.string.EXTRA_HOST), false);
             lobbyIntent.putExtra(getString(R.string.EXTRA_UUID), input);

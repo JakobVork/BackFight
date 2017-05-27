@@ -1,6 +1,7 @@
 package com.studio.jarn.backfight;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
@@ -193,12 +193,14 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     private void DisplayEnterSpectateDialog() {
         //Source: http://stackoverflow.com/questions/10903754/input-text-dialog-android
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.newGame_dialogSpectateTitle);
+        builder.setTitle(R.string.all_dialogSpectateTitle);
 
         // Set up the input
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         input.setText(mDialogText);
+        input.setHint(
+                R.string.newGame_dialogHint);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
         //https://stackoverflow.com/questions/8063439/android-edittext-finished-typing-event
@@ -211,7 +213,6 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         });
 
         builder.setView(input);
-        builder.setMessage(R.string.newGame_dialogMessage);
         builder.setPositiveButton(R.string.newGame_dialogBtnPositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -224,12 +225,22 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
                 dialog.cancel();
             }
         });
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(getBaseContext());
+        final CharSequence[] items = sharedPreferencesHelper.getRecentGameIdsCharSequence();
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mFirebaseHelper.validateIfGameExist((items[which]).toString());
+            }
+        });
+
         mDialogBtnSpectatePositive = builder.show().getButton(DialogInterface.BUTTON_POSITIVE);
     }
 
     @Override
-    public void gameExist(boolean test, String input) {
-        if (test) {
+    public void gameExist(boolean exist, String input) {
+        if (exist) {
             Intent lobbyIntent = new Intent(MainMenuActivity.this, LobbyActivity.class);
             lobbyIntent.putExtra(getString(R.string.EXTRA_HOST), false);
             lobbyIntent.putExtra(getString(R.string.EXTRA_UUID), input);
