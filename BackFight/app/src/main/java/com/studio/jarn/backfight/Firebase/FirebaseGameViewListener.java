@@ -1,22 +1,20 @@
 package com.studio.jarn.backfight.Firebase;
 
-import com.studio.jarn.backfight.Gameboard.Coordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
-import com.studio.jarn.backfight.Gameboard.Tuple;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Monster.Monster;
 import com.studio.jarn.backfight.Player.Player;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public interface FirebaseGameViewListener {
     void setGrid(int sizeOfArrayOnFirebase, Tile[][] grid);
 
-    void setPlayerList(ArrayList<Tuple<Player, Coordinates>> playerList);
+    void setPlayerList(List<Player> playerList);
 
-    void setMonsterList(ArrayList<Tuple<Monster, Coordinates>> monsterList);
+    void setMonsterList(List<Monster> monsterList);
 
-    void setItemList(ArrayList<Tuple<GameItem, Coordinates>> itemList);
+    void setItemList(List<GameItem> itemList);
 
 }
