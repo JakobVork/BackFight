@@ -49,19 +49,21 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private TextView btnRound;
     private ImageView mIvFragmentShow;
     private ImageView mIvFragmentHide;
+    private boolean mSpectate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_activity);
 
+        setupItemFragment();
+        setupDefaultText();
         Intent i = getIntent();
         if (i != null) {
             setupGameView(i);
         }
 
-        setupItemFragment();
-        setupDefaultText();
+
     }
 
     private void setupDefaultText() {
@@ -98,6 +100,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private void setupGameView(Intent i) {
         String uuid = i.getStringExtra(getString(R.string.EXTRA_UUID));
         boolean host = i.getBooleanExtra(getString(R.string.EXTRA_HOST), false);
+        mSpectate = i.getBooleanExtra(getString(R.string.EXTRA_SPECTATE), false);
         sGridSize = i.getIntExtra(getString(R.string.EXTRA_GRIDSIZE), sDefaultGridSize);
 
         GameView gv = (GameView) findViewById(R.id.boardview);
@@ -142,6 +145,10 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
 
             gv.setItemListener();
         }
+        if (mSpectate) {
+            btnActionCounter.setVisibility(View.GONE);
+            mIvFragmentShow.setVisibility(View.GONE);
+        }
     }
 
     public void showOverviewFragment(Player player) {
@@ -177,7 +184,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     }
 
     public void hideFragment() {
-        mIvFragmentShow.setVisibility(View.VISIBLE);
+        if (!mSpectate)
+            mIvFragmentShow.setVisibility(View.VISIBLE);
         mIvFragmentHide.setVisibility(View.GONE);
 
         overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);

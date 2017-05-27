@@ -52,8 +52,9 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
     String mGameId;
     RadioGroup mRg;
     FirebaseHelper mFirebaseHelper;
-    Intent intent;
-    boolean host;
+    Intent mIntent;
+    boolean mHost;
+    boolean mSpectate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
 
         mFirebaseHelper = new FirebaseHelper(this);
 
-        if (host) setupHost();
+        if (mHost) setupHost();
         else setupClient();
     }
 
@@ -85,20 +86,23 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
     }
 
     private void setupClient() {
-        mGameId = intent.getExtras().getString(getString(R.string.EXTRA_UUID));
+        mGameId = mIntent.getExtras().getString(getString(R.string.EXTRA_UUID));
+        mSpectate = mIntent.getExtras().getBoolean(getString(R.string.EXTRA_SPECTATE), false);
         mFirebaseHelper.setStandardKey(mGameId, this);
 
-        SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
-        String PlayerName = sp.getString(PROFILE_NAME_SP, "");
-        int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
-        int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
-        String Uuid = sp.getString(PHONE_UUID_SP, "");
-        if (PlayerName.length() == 11 && (ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980)) {
-            Image = R.drawable.player32;
-            ImageSelected = R.drawable.player32selected;
+        if (!mSpectate) {
+            SharedPreferences sp = this.getSharedPreferences(getResources().getString(R.string.all_sp_name), Context.MODE_PRIVATE);
+            String PlayerName = sp.getString(PROFILE_NAME_SP, "");
+            int Image = sp.getInt(AVATAR_IMAGE_SP, R.drawable.player32);
+            int ImageSelected = sp.getInt(AVATAR_IMAGE_SELECTED_SP, R.drawable.player32selected);
+            String Uuid = sp.getString(PHONE_UUID_SP, "");
+            if (PlayerName.length() == 11 && (ByteBuffer.wrap(PlayerName.getBytes(Charset.forName("UTF-8"))).getInt() == 1147236980)) {
+                Image = R.drawable.player32;
+                ImageSelected = R.drawable.player32selected;
+            }
+            mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName, Uuid));
         }
 
-        mFirebaseHelper.addPlayerToDb(new Player(Image, ImageSelected, PlayerName, Uuid));
         mFirebaseHelper.setupStartGameListener();
         mFirebaseHelper.setupWidgetsListener();
 
@@ -134,8 +138,8 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
     }
 
     private void getValuesFromIntent() {
-        intent = getIntent();
-        host = intent.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
+        mIntent = getIntent();
+        mHost = mIntent.getExtras().getBoolean(getString(R.string.EXTRA_HOST), false);
     }
 
     private void setupRadioGroupListener() {
@@ -226,6 +230,8 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
         Intent StartGameIntent = new Intent(this, GameActivity.class);
         StartGameIntent.putExtra(getString(R.string.EXTRA_UUID), mGameId);
         StartGameIntent.putExtra(getString(R.string.EXTRA_HOST), false);
+        StartGameIntent.putExtra(getString(R.string.EXTRA_SPECTATE), mSpectate);
+
         startActivity(StartGameIntent);
     }
 
