@@ -126,7 +126,6 @@ public class FirebaseHelper {
         });
     }
 
-
     //mFirebaseLobbyListener
     public void addPlayerToDb(final Player player) {
         final DatabaseReference databaseReference = mDatabase.getReference(mGameId);

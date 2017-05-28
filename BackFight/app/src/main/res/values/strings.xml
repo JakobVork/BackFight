@@ -91,5 +91,10 @@
     <string name="fragment_item_details_description">Description</string>
     <string name="fragment_item_details_stats">Stats</string>
 
+    <string name="internetErrorMessage">You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.</string>
+    <string name="internetErrorTitle">Unable to connect</string>
+    <string name="internetErrorSettings">Settings</string>
+    <string name="internetErrorCancel">Cancel</string>
+
 
 </resources>
