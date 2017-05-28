@@ -74,7 +74,7 @@
     <string name="EXTRA_HOST">com.jarn.extra.host</string>
     <string name="EXTRA_PLAYERLIST">com.jarn.extra.playerlist</string>
     <string name="EXTRA_UUID">com.jarn.extra.uuid</string>
-    <string name="mainMenu_spectateGame">Overvåg spil</string>
+    <string name="mainMenu_spectateGame">Se på</string>
     <string name="mainMenu_dialogSpectateBtnPositive">Overvåg spil</string>
     <string name="internetErrorCancel">Cancel</string>
     <string name="internetErrorMessage">Applikationen har brug for netværk. Venligst tænd for netværket i indstillinger.</string>
