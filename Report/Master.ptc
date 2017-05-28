@@ -2,4 +2,9 @@
 \select@language {danish}
 \ttl@starttoc {rapport@1}
 \contentsline {chapter}{\chapternumberline {1}Work plan}{2}{chapter.1}
+\contentsline {chapter}{\chapternumberline {2}Requirements specification}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Vision}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Personas}{3}{section.2.2}
+\contentsline {section}{\numberline {2.3}Scenarios}{3}{section.2.3}
+\contentsline {section}{\numberline {2.4}User interface design}{4}{section.2.4}
 \contentsfinish 
