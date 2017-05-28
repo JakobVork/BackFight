@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.5.28)  28 MAY 2017 13:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.5.28)  28 MAY 2017 13:46
 entering extended mode
 **./Master.tex
 (Master.tex
@@ -1709,8 +1709,8 @@ Package footmisc Info: Declaring symbol style lamport-robust on input line 883.
 Package footmisc Info: Declaring symbol style lamport* on input line 903.
 Package footmisc Info: Declaring symbol style lamport*-robust on input line 924
 .
-)) (Master.aux (docs/forside.aux) (docs/arbejdsfordeling.aux)
-(docs/RequirementsSpecification.aux))
+)) (Master.aux (docs/forside.aux) (docs/RequirementsSpecification.aux)
+(docs/ChosenDesign.aux) (docs/arbejdsfordeling.aux))
 \openout1 = `Master.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
@@ -1731,7 +1731,8 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 4.
 LaTeX Font Info:    ... okay on input line 4.
 \c@lstlisting=\count327
 LaTeX Info: Redefining \Ref on input line 4.
- ABD: EverySelectfont initializing macros
+
+ABD: EverySelectfont initializing macros
 LaTeX Info: Redefining \selectfont on input line 4.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\translator\dicts\translator-basi
@@ -1832,29 +1833,9 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.15 \include{docs/arbejdsfordeling}
-                                     [1
+l.15 \include{docs/RequirementsSpecification}
+                                              [1
 
-
-
-]
-\openout2 = `docs/arbejdsfordeling.aux'.
-
- (docs/arbejdsfordeling.tex
-Package babel Info: Redefining danish shorthand "|
-(babel)             in language  on input line 3.
-Package babel Info: Redefining danish shorthand "~
-(babel)             in language  on input line 3.
-)
-Package babel Info: Redefining danish shorthand "|
-(babel)             in language  on input line 15.
-Package babel Info: Redefining danish shorthand "~
-(babel)             in language  on input line 15.
-Package babel Info: Redefining danish shorthand "|
-(babel)             in language  on input line 15.
-Package babel Info: Redefining danish shorthand "~
-(babel)             in language  on input line 15.
- [2
 
 
 ]
@@ -1886,8 +1867,7 @@ Package babel Info: Redefining danish shorthand "|
 (babel)             in language  on input line 21.
 Package babel Info: Redefining danish shorthand "~
 (babel)             in language  on input line 21.
- [3
-
+ [2
 
 
 ]
@@ -1896,17 +1876,39 @@ Package babel Info: Redefining danish shorthand "|
 Package babel Info: Redefining danish shorthand "~
 (babel)             in language  on input line 21.
 
-<images/Gui.png, id=60, 1204.5pt x 903.375pt>
+<images/Gui.png, id=65, 1204.5pt x 903.375pt>
 File: images/Gui.png Graphic file (type png)
  <use images/Gui.png>
 Package pdftex.def Info: images/Gui.png used on input line 26.
 (pdftex.def)             Requested size: 256.0748pt x 192.0577pt.
 
-<images/GameView.png, id=61, 1204.5pt x 903.375pt>
+<images/GameView.png, id=66, 1204.5pt x 903.375pt>
 File: images/GameView.png Graphic file (type png)
  <use images/GameView.png>
 Package pdftex.def Info: images/GameView.png used on input line 32.
 (pdftex.def)             Requested size: 256.0748pt x 192.0577pt.
+)
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 15.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 15.
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 15.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 15.
+
+[3 <./images/Gui.png> <./images/GameView.png>]
+\openout2 = `docs/ChosenDesign.aux'.
+
+ (docs/ChosenDesign.tex
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 3.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 3.
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 5.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 5.
 )
 Package babel Info: Redefining danish shorthand "|
 (babel)             in language  on input line 16.
@@ -1916,34 +1918,60 @@ Package babel Info: Redefining danish shorthand "|
 (babel)             in language  on input line 16.
 Package babel Info: Redefining danish shorthand "~
 (babel)             in language  on input line 16.
+ [4
 
-[4 <./images/Gui.png> <./images/GameView.png>]
+
+
+]
+\openout2 = `docs/arbejdsfordeling.aux'.
+
+
+(docs/arbejdsfordeling.tex
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 3.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 3.
+)
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 17.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 17.
+Package babel Info: Redefining danish shorthand "|
+(babel)             in language  on input line 17.
+Package babel Info: Redefining danish shorthand "~
+(babel)             in language  on input line 17.
+ [5
+
+
+
+]
 \tf@ptc=\write5
 \openout5 = `Master.ptc'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 30.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 30.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 31.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 31.
  (Master.aux (docs/forside.aux)
-(docs/arbejdsfordeling.aux) (docs/RequirementsSpecification.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 30.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 30.
+(docs/RequirementsSpecification.aux) (docs/ChosenDesign.aux)
+(docs/arbejdsfordeling.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 31.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 31.
 Package rerunfilecheck Info: File `Master.out' has not changed.
-(rerunfilecheck)             Checksum: B779DFFA4F173283240F012AA520D27B;339.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 30.
+(rerunfilecheck)             Checksum: 2895FD9312832BD86D063576162088C8;443.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 31.
  ) 
 Here is how much of TeX's memory you used:
- 26720 strings out of 493328
- 461231 string characters out of 3139124
+ 26735 strings out of 493328
+ 461493 string characters out of 3139124
  667966 words of memory out of 3000000
- 29853 multiletter control sequences out of 15000+200000
+ 29858 multiletter control sequences out of 15000+200000
  20064 words of font info for 50 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  47i,12n,78p,10402b,828s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\
-ecrm0900.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\
-ec\dpi600\ecbi0900.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour
-\jknappen\ec\dpi600\ecbx1200.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts
-\pk\ljfour\jknappen\ec\dpi600\tcrm1000.pk>{C:/Program Files/MiKTeX 2.9/fonts/en
+tcrm1000.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\
+ec\dpi600\ecrm0900.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour
+\jknappen\ec\dpi600\ecbi0900.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts
+\pk\ljfour\jknappen\ec\dpi600\ecbx1200.pk>{C:/Program Files/MiKTeX 2.9/fonts/en
 c/dvips/base/8r.enc} <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\j
 knappen\ec\dpi600\ecrm1000.pk> <C:\Users\ander\AppData\Local\MiKTeX\2.9\fonts\p
 k\ljfour\jknappen\ec\dpi600\ecbx1000.pk> <C:\Users\ander\AppData\Local\MiKTeX\2
@@ -1953,9 +1981,9 @@ pData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi657\ecti1000.pk> <C:\User
 s\ander\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi720\eccc1200.pk
 ><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/bookman/ubkd8a.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/urw/bookman/ubkl8a.pfb>
-Output written on Master.pdf (5 pages, 4558055 bytes).
+Output written on Master.pdf (6 pages, 4566096 bytes).
 PDF statistics:
- 308 PDF objects out of 1000 (max. 8388607)
- 14 named destinations out of 1000 (max. 500000)
- 59 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 328 PDF objects out of 1000 (max. 8388607)
+ 17 named destinations out of 1000 (max. 500000)
+ 75 words of extra memory for PDF output out of 10000 (max. 10000000)
 
