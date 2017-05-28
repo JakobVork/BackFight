@@ -1,0 +1,4 @@
+Hit Points
+Spillere og monstre har Hit Points, hvis en spiller eller et monsters Hit Points rammer 0 eller under dør spilleren eller monsteret.
+Hvis et monster dør, er der change for at smide en genstand som spillerene kan smale op.
+Hvis en spiller dør, er spillet tabt og afsluttes.

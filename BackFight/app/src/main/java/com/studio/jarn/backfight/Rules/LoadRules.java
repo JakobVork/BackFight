@@ -24,32 +24,32 @@ class LoadRules {
     ArrayList<Rules> getRules() {
 
         String language = Locale.getDefault().getDisplayLanguage();
-        if(language.equals("english")) LoadEnglishRules();
+        if(language.equals("English")) LoadEnglishRules();
         else if (language.equals("dansk")) LoadDanishRules();
 
         return mRules;
     }
 
     public void LoadEnglishRules(){
-        getSingleRule(R.raw.actions);
-        getSingleRule(R.raw.attack);
-        getSingleRule(R.raw.round);
-        getSingleRule(R.raw.hitpoints);
-        getSingleRule(R.raw.items);
-        getSingleRule(R.raw.monsters);
-        getSingleRule(R.raw.movement);
-        getSingleRule(R.raw.credits);
+        getSingleRule(R.raw.actions_en);
+        getSingleRule(R.raw.attack_en);
+        getSingleRule(R.raw.round_en);
+        getSingleRule(R.raw.hitpoints_en);
+        getSingleRule(R.raw.items_en);
+        getSingleRule(R.raw.monsters_en);
+        getSingleRule(R.raw.movement_en);
+        getSingleRule(R.raw.credits_en);
     }
 
     public void LoadDanishRules(){
-        getSingleRule(R.raw.actions);
-        getSingleRule(R.raw.angrib);
-        getSingleRule(R.raw.round);
-        getSingleRule(R.raw.hitpoints);
-        getSingleRule(R.raw.items);
-        getSingleRule(R.raw.monsters);
-        getSingleRule(R.raw.movement);
-        getSingleRule(R.raw.credits);
+        getSingleRule(R.raw.actions_da);
+        getSingleRule(R.raw.attack_da);
+        getSingleRule(R.raw.round_da);
+        getSingleRule(R.raw.hitpoints_da);
+        getSingleRule(R.raw.items_da);
+        getSingleRule(R.raw.monsters_da);
+        getSingleRule(R.raw.movement_da);
+        getSingleRule(R.raw.credits_da);
     }
 
 

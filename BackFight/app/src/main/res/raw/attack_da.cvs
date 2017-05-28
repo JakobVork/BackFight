@@ -1,0 +1,3 @@
+Angrib
+Spillere kan kun angribe monstre på samme felt som dem selv. Et angreb skader alt efter spillerens angrebs styrke(dmg), som bestemmes efter hvilke våben spilleren har på sig.
+Monstre vil angribe spillere hvis de står på samme felt som spilleren.

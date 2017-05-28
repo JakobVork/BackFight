@@ -1,0 +1,9 @@
+Monstre
+Monstre fungere på mange måder som spillere, de har 2 handlinger hver runde.
+Der er mange forskellige monstre og og har samme type monster kan have forskellige stats.
+Monstre angriber vil altid angribe en spiller hvis mulig.
+
+Der er 3 forskellige slags monstre:
+    - Normal: De svageste monstre går under den kategori, og du vil møde mange af dem.
+    - Epic: Sjældene monstre som er stærkere end de normale monstre. Disse kan have specielle angreb.
+    - Boss: Spillet vindes ved at besejre dette monster.

@@ -1,0 +1,5 @@
+Bevægelse
+Spillere er kun i stand til at rykke deres egen figur rundt på spille pladen.
+Alle handlingere på benyttes til at rykke, dog kan man ikke rykke væk fra et felt med et monster på.
+Det er ikke muligt at gå igennem eller på vægge, medmindre en genstand tillader det.
+Det koster én handling at rykke ind på et felt med vand som normalt, dog koster det 2 handlinger at rykke ud af det igen.
