@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="Tablet_TextSize">24sp</dimen>
+    <dimen name="Tablet_HeadingSize">30sp</dimen>
+    <dimen name="Tablet_TitleSize">75sp</dimen>
+    <dimen name="Tablet_ButtonHeight">100dp</dimen>
+    <dimen name="Tablet_ButtonWidth">300dp</dimen>
+    <dimen name="Tablet_PlayerIcon">60dp</dimen>
+    <dimen name="Tablet_SplashIcon_Width">500dp</dimen>
+    <dimen name="Tablet_SplashIcon_Height">400dp</dimen>
+    <dimen name="Phone_TitleSize">50sp</dimen>
+    <dimen name="Phone_HeadingSize">18sp</dimen>
+    <dimen name="Phone_TextSize">14sp</dimen>
+    <dimen name="Phone_SplashIcon_Width">222dp</dimen>
+    <dimen name="Phone_SplashIcon_Height">169dp</dimen>
+    <dimen name="Phone_PlayerIcon">30dp</dimen>
+
+</resources>
