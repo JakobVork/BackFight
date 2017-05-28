@@ -68,7 +68,7 @@
         app:layout_constraintVertical_bias="0.100000024" />
 
     <Button
-        android:id="@+id/activity_mainMenu_btn_loadGame"
+        android:id="@+id/activity_mainMenu_btn_spectateGame"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -76,7 +76,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/btn_BackgroundColor"
-        android:text="@string/mainMenu_loadGame"
+        android:text="@string/mainMenu_spectateGame"
         android:textColor="@color/btn_TextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -111,7 +111,7 @@
         android:textColor="@color/btn_TextColor"
         app:layout_constraintLeft_toLeftOf="@+id/activity_mainMenu_gl_55Procent"
         app:layout_constraintRight_toLeftOf="@+id/activity_mainMenu_gl_95Procent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_mainMenu_btn_loadGame" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_mainMenu_btn_spectateGame" />
 
     <Button
         android:id="@+id/activity_mainMenu_btn_exit"

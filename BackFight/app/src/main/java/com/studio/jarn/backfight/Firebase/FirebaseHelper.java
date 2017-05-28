@@ -16,6 +16,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.studio.jarn.backfight.Gameboard.Coordinates;
+import com.studio.jarn.backfight.Gameboard.SimpleCoordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
@@ -39,6 +41,7 @@ public class FirebaseHelper {
     private static final String sDatabasePostfixRadioGroup = "RadioGroup";
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
     private static final String sDatabasePostfixRoundCount = "RoundCount";
+    private static final String getsDatabasePostfixShadowedList = "ShadowedList";
     public int mRound = 0;
     private FirebaseDatabase mDatabase;
     private String mGameId;
@@ -49,6 +52,7 @@ public class FirebaseHelper {
     private String mGameIdPlayers;
     private String mGameIdMonsters;
     private String mGameIdItems;
+    private String mGameIdShadowedList;
 
     private FirebaseNewGameListener mFirebaseNewGameListener;
     private FirebaseLobbyListener mFirebaseLobbyListener;
@@ -97,6 +101,7 @@ public class FirebaseHelper {
         mGameIdItems = gameId + sDatabasePostfixItems;
         mGameIdRoundCount = gameId + sDatabasePostfixRoundCount;
         mGameIdMonsters = gameId + getsDatabasePostfixMonsters;
+        mGameIdShadowedList = gameId + getsDatabasePostfixShadowedList;
     }
 
     //FirebaseNewGameListener
@@ -120,7 +125,6 @@ public class FirebaseHelper {
             }
         });
     }
-
 
     //mFirebaseLobbyListener
     public void addPlayerToDb(final Player player) {
@@ -442,6 +446,31 @@ public class FirebaseHelper {
             public void onCancelled(DatabaseError databaseError) {
                 // Failed to read value
                 Log.w("", "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
+    public void setTileShadowedList(List<SimpleCoordinates> mCoordinatesListTileShadowed) {
+        mDatabase.getReference(mGameIdShadowedList).setValue(mCoordinatesListTileShadowed);
+    }
+
+    public void getTileShadowedList() {
+
+        DatabaseReference databaseReference = mDatabase.getReference(mGameIdShadowedList);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<SimpleCoordinates>> genericTypeIndicator = new GenericTypeIndicator<List<SimpleCoordinates>>() {
+                };
+                List<SimpleCoordinates> simpleCoordiantes = dataSnapshot.getValue(genericTypeIndicator);
+                if (simpleCoordiantes == null)
+                    simpleCoordiantes = new ArrayList<>();
+                mFirebaseGameViewListener.setTileShadowedList(simpleCoordiantes);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

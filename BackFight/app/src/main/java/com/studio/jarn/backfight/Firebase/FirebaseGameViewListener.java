@@ -1,5 +1,7 @@
 package com.studio.jarn.backfight.Firebase;
 
+import com.studio.jarn.backfight.Gameboard.Coordinates;
+import com.studio.jarn.backfight.Gameboard.SimpleCoordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Monster.Monster;
@@ -16,5 +18,7 @@ public interface FirebaseGameViewListener {
     void setMonsterList(List<Monster> monsterList);
 
     void setItemList(List<GameItem> itemList);
+
+    void setTileShadowedList(List<SimpleCoordinates> simpleCoordinatesList);
 
 }

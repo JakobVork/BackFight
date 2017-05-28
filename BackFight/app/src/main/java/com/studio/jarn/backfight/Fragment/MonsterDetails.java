@@ -1,4 +1,4 @@
-package com.studio.jarn.backfight;
+package com.studio.jarn.backfight.Fragment;
 
 
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.studio.jarn.backfight.Monster.Monster;
+import com.studio.jarn.backfight.R;
 
 public class MonsterDetails extends Fragment {
     private static final String mMonsterString = "mMonsterString";
