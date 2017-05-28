@@ -1,0 +1,29 @@
+\input{preamble_ida15}
+\pagestyle{Uni}
+
+\begin{document}
+
+%Forside
+\include{docs/forside}
+
+%Indholdsfortegnelse
+\startcontents[rapport]
+\renewcommand{\baselinestretch}{0.75}\normalsize
+\printcontents[rapport]{ }{0}{\chapter*{Indholdsfortegnelse}}
+\renewcommand{\baselinestretch}{1.1}\normalsize
+
+\include{docs/arbejdsfordeling}
+
+%\startcontents[dokumentation]
+%\renewcommand{\baselinestretch}{0.75}\normalsize
+%\printcontents[dokumentation]{ }{0}{\chapter*{Indholdsfortegnelse}}
+%\renewcommand{\baselinestretch}{1.1}\normalsize
+
+
+%Bibliography
+%\bibliography{Dokumentation/bibtex/litteratur}
+
+
+%\stopcontents[dokumentation]
+
+\end{document}
