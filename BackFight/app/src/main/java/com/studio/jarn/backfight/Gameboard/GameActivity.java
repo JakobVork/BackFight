@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Firebase.FirebaseGameActivityListener;
 import com.studio.jarn.backfight.Fragment.ItemsAndStatsFragment;
+import com.studio.jarn.backfight.Fragment.MonsterDetails;
 import com.studio.jarn.backfight.Fragment.fragment_item_details;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
@@ -23,7 +24,6 @@ import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
 import com.studio.jarn.backfight.Monster.Monster;
-import com.studio.jarn.backfight.Fragment.MonsterDetails;
 import com.studio.jarn.backfight.Notification.NotificationIntentService;
 import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.Player.PlayerGameActivityListener;
@@ -131,7 +131,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.spawnItems(10);
 
                 // Spawn monsters
-                gv.spawnStartMonsters(5);
+                gv.spawnStartMonsters();
 
             } else {
                 gv.setGridSize(sGridSize);

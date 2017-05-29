@@ -26,7 +26,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/mainMenu_rules"
         android:textColor="@color/btn_TextColor"
-        android:textSize="@dimen/Phone_HeadingSize"
+        android:textSize="@dimen/Tablet_HeadingSize"
         app:layout_constraintBottom_toTopOf="@+id/activity_rules_gl_seachHight"
         app:layout_constraintLeft_toLeftOf="@+id/activity_rules_gl_vertical"
         app:layout_constraintRight_toRightOf="parent"
@@ -45,6 +45,7 @@
         android:background="@color/btn_BackgroundColor"
         android:text="@string/all_back"
         android:textColor="@color/btn_TextColor"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/activity_rules_gl_vertical"
@@ -92,7 +93,7 @@
     <EditText
         android:id="@+id/activity_rules_et_search"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -106,7 +107,7 @@
         android:textColor="@color/btn_TextColor"
         android:textColorHint="@color/btn_TextColorHint"
         android:textColorLink="@color/btn_TextColor"
-        android:textSize="@dimen/Phone_HeadingSize"
+        android:textSize="@dimen/Tablet_HeadingSize"
         app:layout_constraintBottom_toTopOf="@+id/activity_rules_gl_seachHight"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/activity_rules_gl_vertical"
@@ -117,7 +118,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="57dp" />
+        app:layout_constraintGuide_end="598dp" />
 
     <TextView
         android:id="@+id/activity_rules_tv_details"
@@ -130,7 +131,7 @@
         android:scrollbars="vertical"
         android:text="@string/rules_rulesDetails"
         android:textColor="@color/btn_TextColor"
-        android:textSize="@dimen/Phone_TextSize"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/activity_rules_gl_vertical"
         app:layout_constraintRight_toRightOf="parent"

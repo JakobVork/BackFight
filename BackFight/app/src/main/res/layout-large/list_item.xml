@@ -5,4 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textColor="@color/btn_TextColor"
-    android:textSize="@dimen/Phone_HeadingSize" />
+    android:textSize="@dimen/Tablet_HeadingSize" />
