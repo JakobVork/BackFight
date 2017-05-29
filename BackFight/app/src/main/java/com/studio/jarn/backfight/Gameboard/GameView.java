@@ -404,6 +404,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         mCoordinatesListTileVisible.clear();
 
+
         for (Player player : mGamePlayerList) {
             for (int i = -player.LineOfSight; i <= player.LineOfSight; i++) {
                 for (int j = -player.LineOfSight; j <= player.LineOfSight; j++) {
@@ -411,7 +412,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 }
             }
         }
-
+        //Show boss monster when it spawns
+        if (mBoss != null)
+            addCoordinateToSimpleCoordinatesList(mBoss.coordinate.tileX, mBoss.coordinate.tileY);
         invalidate();
     }
 
@@ -436,8 +439,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void setMonsterList(List<Monster> monsterList) {
         mMonsterList.clear();
         mMonsterList = monsterList;
-        if (mBoss != null)
-            addCoordinateToSimpleCoordinatesList(mBoss.coordinate.tileX, mBoss.coordinate.tileY);
 
         invalidate();
     }
