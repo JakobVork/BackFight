@@ -1,0 +1,9 @@
+Genstande
+Der er 3 forskellige typer af genstande: Våben, Udrustning og ikke kamp releteret genstande.
+Genstande er placeret rundt på spille pladen, og kan smides af et monster når det dør.
+Det koster en tur at smale en genstand op.
+Items kan ses i siden ved klik på pilen i øverste højre hjørne.
+
+Våben: Øger spillerens skade mod monstre.
+Udrustning: Øger spillerens Hit Points.
+Ikke kamp releteret genstande: Læs beskrivelsen på genstanden.
