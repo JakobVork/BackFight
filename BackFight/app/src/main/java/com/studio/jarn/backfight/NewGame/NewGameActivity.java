@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,9 @@ import com.studio.jarn.backfight.Firebase.FirebaseNewGameListener;
 import com.studio.jarn.backfight.Lobby.LobbyActivity;
 import com.studio.jarn.backfight.R;
 import com.studio.jarn.backfight.SharedPreferencesHelper;
+
+import static com.studio.jarn.backfight.MainMenuActivity.PHONE_TEXT_SIZE;
+import static com.studio.jarn.backfight.MainMenuActivity.TABLET_TEXT_SIZE;
 
 public class NewGameActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
@@ -86,6 +90,16 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         input.setText(mDialogText);
         input.setHint(
                 R.string.newGame_dialogHint);
+
+        //checks for phone or tablet and set textsize
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
+                | (getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            input.setTextSize(TABLET_TEXT_SIZE);
+        else
+            input.setTextSize(PHONE_TEXT_SIZE);
+
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         //https://stackoverflow.com/questions/8063439/android-edittext-finished-typing-event
         //Set focus to the positive button when pressing enter.

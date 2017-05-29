@@ -13,15 +13,15 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textSize="@dimen/Phone_TextSize"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintBottom_toBottomOf="@+id/item_playerclass_iv_icon"
         app:layout_constraintLeft_toRightOf="@+id/item_playerclass_iv_icon"
         app:layout_constraintTop_toTopOf="@+id/item_playerclass_iv_icon" />
 
     <ImageView
         android:id="@+id/item_playerclass_iv_icon"
-        android:layout_width="@dimen/Phone_PlayerIcon"
-        android:layout_height="@dimen/Phone_PlayerIcon"
+        android:layout_width="@dimen/Tablet_PlayerIcon"
+        android:layout_height="@dimen/Tablet_PlayerIcon"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"

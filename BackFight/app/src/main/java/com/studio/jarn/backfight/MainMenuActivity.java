@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,7 +16,6 @@ import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -38,9 +38,10 @@ import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_S
 
 public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
-    public static String PHONE_UUID_SP = "Phone UUID";
     private static final int NO_INTERNET_SETTINGS_INTENT = 42;
-
+    public static String PHONE_UUID_SP = "Phone UUID";
+    public static Integer PHONE_TEXT_SIZE = 18;
+    public static Integer TABLET_TEXT_SIZE = 30;
     Button mBtnNewGame;
     Button mBtnSpectateGame;
     Button mBtnRules;
@@ -68,10 +69,8 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     private boolean isConnectedToInternet() {
         ConnectivityManager cm = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni != null && ni.isConnected())
-            return true;
+        return ni != null && ni.isConnected();
 
-        return false;
     }
 
     // Method copied from https://stackoverflow.com/questions/15456428/ask-user-to-start-wifi-or-3g-on-launching-an-android-app-if-not-connected-to-int
@@ -125,6 +124,15 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+
+        //checks for phone or tablet and set textsize
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
+                | (getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            input.setTextSize(TABLET_TEXT_SIZE);
+        else
+            input.setTextSize(PHONE_TEXT_SIZE);
 
         builder.setView(input);
         builder.setMessage(R.string.mainMenu_dialogMessage);
@@ -253,6 +261,15 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         input.setHint(
                 R.string.newGame_dialogHint);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+
+        //checks for phone or tablet and set textsize
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
+                | (getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            input.setTextSize(TABLET_TEXT_SIZE);
+        else
+            input.setTextSize(PHONE_TEXT_SIZE);
 
         //https://stackoverflow.com/questions/8063439/android-edittext-finished-typing-event
         //Set focus to the positive button when pressing enter.
