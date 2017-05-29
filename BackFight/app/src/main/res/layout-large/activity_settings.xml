@@ -16,27 +16,29 @@
 
     <Button
         android:id="@+id/activity_settings_btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/Tablet_ButtonWidth"
+        android:layout_height="@dimen/Tablet_ButtonHeight"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/btn_BackgroundColor"
         android:text="@string/all_back"
         android:textColor="@color/btn_TextColor"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/activity_settings_btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/Tablet_ButtonWidth"
+        android:layout_height="@dimen/Tablet_ButtonHeight"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@color/btn_BackgroundColor"
         android:text="@string/settings_save"
         android:textColor="@color/btn_TextColor"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -52,7 +54,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/mainMenu_settings"
         android:textColor="@color/btn_TextColor"
-        android:textSize="@dimen/Phone_HeadingSize"
+        android:textSize="@dimen/Tablet_HeadingSize"
         app:layout_constraintBottom_toTopOf="@+id/activity_settings_gl_horizotalTitle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -72,17 +74,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
         android:ems="10"
         android:hint="@string/settings_hint"
         android:imeOptions="flagNoExtractUi"
         android:inputType="textPersonName"
         android:textColor="@color/btn_TextColor"
         android:textColorHint="@color/btn_TextColorHint"
-        android:textSize="@dimen/Phone_HeadingSize"
-        app:layout_constraintHorizontal_bias="0.6"
+        android:textSize="@dimen/Tablet_HeadingSize"
         app:layout_constraintLeft_toRightOf="@+id/activity_settings_tv_name"
         app:layout_constraintRight_toLeftOf="@+id/activity_settings_gl_vertical50"
         app:layout_constraintTop_toTopOf="@+id/activity_settings_gl_horizotalTitle" />
@@ -96,7 +98,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/settings_profileName"
         android:textColor="@color/btn_TextColor"
-        android:textSize="@dimen/Phone_TextSize"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/activity_settings_gl_horizotalTitle" />
 
@@ -115,20 +117,21 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="90dp"
         android:text="@string/settings_avatarImg"
         android:textColor="@color/btn_TextColor"
-        android:textSize="@dimen/Phone_TextSize"
+        android:textSize="@dimen/Tablet_TextSize"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_settings_et_name" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/activity_settings_vp_image"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/activity_settings_tv_AvatarImg"
         app:layout_constraintRight_toLeftOf="@+id/activity_settings_gl_vertical50"
         app:layout_constraintTop_toBottomOf="@+id/activity_settings_et_name">

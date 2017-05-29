@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.studio.jarn.backfight.Firebase.FirebaseGameActivityListener;
 import com.studio.jarn.backfight.Fragment.ItemsAndStatsFragment;
+import com.studio.jarn.backfight.Fragment.MonsterDetails;
 import com.studio.jarn.backfight.Fragment.fragment_item_details;
 import com.studio.jarn.backfight.Items.GameItem;
 import com.studio.jarn.backfight.Items.ItemWeapon;
@@ -23,7 +24,6 @@ import com.studio.jarn.backfight.MapGeneration.DefaultMap;
 import com.studio.jarn.backfight.MapGeneration.IMapGenerator;
 import com.studio.jarn.backfight.MapGeneration.MazeMap;
 import com.studio.jarn.backfight.Monster.Monster;
-import com.studio.jarn.backfight.Fragment.MonsterDetails;
 import com.studio.jarn.backfight.Notification.NotificationIntentService;
 import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.Player.PlayerGameActivityListener;
@@ -131,7 +131,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.spawnItems(10);
 
                 // Spawn monsters
-                gv.spawnStartMonsters(5);
+                gv.spawnStartMonsters();
 
             } else {
                 gv.setGridSize(sGridSize);
@@ -237,8 +237,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     //ToDo for testing purpose
     public void showMonsterDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Monster");
-        alertDialog.setMessage("Monster turn :)");
+        alertDialog.setTitle(R.string.monster);
+        alertDialog.setMessage(getResources().getString(R.string.monster_turn));
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -251,8 +251,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     public void sendNotificationNewRound() {
         Intent notificationServiceIntent = new Intent(this, NotificationIntentService.class);
         notificationServiceIntent.setAction(ACTION_NEWROUND);
-        notificationServiceIntent.putExtra(EXTRA_TITLE, "New Round");
-        notificationServiceIntent.putExtra(EXTRA_TEXT, "A new round has started remember to take your turn :)");
+        notificationServiceIntent.putExtra(EXTRA_TITLE, getResources().getString(R.string.newRound));
+        notificationServiceIntent.putExtra(EXTRA_TEXT, getResources().getString(R.string.newRoundStarted));
         startService(notificationServiceIntent);
     }
 

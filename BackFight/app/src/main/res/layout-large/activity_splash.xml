@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/activity_splash_img_title"
-        android:layout_width="@dimen/Phone_SplashIcon_Width"
-        android:layout_height="@dimen/Phone_SplashIcon_Height"
+        android:layout_width="@dimen/Tablet_SplashIcon_Width"
+        android:layout_height="@dimen/Tablet_SplashIcon_Height"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -33,7 +33,7 @@
         android:layout_marginTop="0dp"
         android:text="@string/app_name"
         android:textColor="@color/start_TextColor"
-        android:textSize="@dimen/Phone_TitleSize"
+        android:textSize="@dimen/Tablet_TitleSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
