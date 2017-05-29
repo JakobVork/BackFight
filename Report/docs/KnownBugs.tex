@@ -7,13 +7,13 @@
 \begin{enumerate}
 	\item \textbf{Monster spawn:} When spawning monsters in the start of the game there is a chance they are spawned on the same tile as the players.
 	
-	\item \textbf{Kill monster:} When a monster is killed by a player on a tile, and another player decides to move to that tile the two players will end up on the same place on that tile. This is because the tile holds 1 player and the tile doesn't know that the player is placed on space 2 and not space 1.
+	\item \textbf{Kill monster:} When a monster is killed by a player on a tile and another player decides to move to that tile the two players will end up on the same place on that tile. This is because the tile holds 1 player and the tile doesn't know that the player is placed on space 2 and not space 1.
 		
-	\item \textbf{Spectate:} When spectating a game you have been playing in earlier you will join this game as the player and be able to move yourself, you will miss some normal join features tho. This should be fixed so the player was informed that they were not able to spectate the game but should use join. 
+	\item \textbf{Spectate:} When spectating a game you have been playing in earlier you will join this game as the player and be able to move yourself, you will also be miss some of the normal join features. This should be fixed so the player was informed that they were not able to spectate the game but should use join.
 
-	\item \textbf{Firebase lag:} When multiple players are making an action at the same time Firebase will reject one of the changes and rollback, this is because the whole list is uploaded instead of just the element in the list that is changed. Since we have split the game state over 3 lists to minimize the risk of conflicts there is sometimes some weird scenarios where one of the lists gets updated and the other gets rolled back.
+	\item \textbf{Firebase lag:} When multiple players are making an action at the same time Firebase will reject one of the changes and rollback, this is because the whole list is uploaded instead of just the element in the list that is changed. The game state is split over 3 lists to minimize the risk of conflicts, this sometimes create weird scenarios where one of the lists gets updated and the other gets rolled back.
 	
-	Problem is probably: "If all of the following are true, it's okay to store the array in Firebase\footnote{https://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html}
+	Problem is described here: "If all of the following are true, it's okay to store the array in Firebase\footnote{https://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html}
 	
 	\begin{itemize}
 		\item \textbf{only one client is capable of writing to the data at a time}
