@@ -53,7 +53,7 @@
     <string name="item_sword_magical_title">Al Samirs Sword</string>
     <string name="item_sword_magical_description">The Sword of Al Samir is forged in the elver castle. It possess\' some fragments from the mightly dragon Phlamir.</string>
     <string name="item_scepter_title">Scepter</string>
-    <string name="item_scepter_description">It might be royal, but it\'s not efficient.</string>
+    <string name="item_scepter_description">It might be royal, but it won\'t help you now</string>
     <string name="item_axe_title">Battle Axe</string>
     <string name="item_axe_description">No tree nor monster can stop you now.</string>
     <string name="item_axe_major_title">Battle Axe Of Lionheart</string>
@@ -95,6 +95,10 @@
     <string name="internetErrorTitle">Unable to connect</string>
     <string name="internetErrorSettings">Settings</string>
     <string name="internetErrorCancel">Cancel</string>
+    <string name="monster">Monster</string>
+    <string name="monster_turn">Monster turn</string>
+    <string name="newRound">New round</string>
+    <string name="newRoundStarted">A new round has started remeber to take your turn</string>
 
 
 </resources>

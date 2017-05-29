@@ -70,6 +70,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private int mTileDivision = 4;
     private boolean mScalingValuesCalculated = false;
     private String mPlayerId;
+    private Monster mBoss;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -403,6 +404,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         mCoordinatesListTileVisible.clear();
 
+
         for (Player player : mGamePlayerList) {
             for (int i = -player.LineOfSight; i <= player.LineOfSight; i++) {
                 for (int j = -player.LineOfSight; j <= player.LineOfSight; j++) {
@@ -410,9 +412,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 }
             }
         }
-
+        //Show boss monster when it spawns
+        if (mBoss != null)
+            addCoordinateToSimpleCoordinatesList(mBoss.coordinate.tileX, mBoss.coordinate.tileY);
         invalidate();
     }
+
 
 
     void addCoordinateToSimpleCoordinatesList(int tileXCoordinate, int tileYCoordinate) {
@@ -434,6 +439,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void setMonsterList(List<Monster> monsterList) {
         mMonsterList.clear();
         mMonsterList = monsterList;
+
         invalidate();
     }
 
@@ -717,6 +723,26 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     public void MonsterTurn() {
         //Each monster take turn
+        int rounds = mFirebaseHelper.mRound;
+        if (rounds > 19)
+            rounds = 20;
+        switch (rounds) {
+            //spawn epic monster
+            case 5:
+                spawnMonster(1);
+                break;
+            case 10:
+                spawnMonster(2);
+                break;
+            case 15:
+                spawnMonster(1);
+                break;
+            case 20:
+                spawnMonster(0);
+                spawnMonster(0);
+            default:
+                spawnMonster(0);
+        }
         for (Monster monster : mMonsterList) {
             monster.resetActions();
 
@@ -855,8 +881,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 int awayFromPlayer = 0;
 
                 for (Player player : mGamePlayerList) {
-                    if (availableCoord .tileX > (player.Coordinate.tileX) || (player.Coordinate.tileX) > (availableCoord .tileX)) {
-                        if (availableCoord .tileY > (player.Coordinate.tileY) || availableCoord .tileY < (player.Coordinate.tileY)) {
+                    if (availableCoord.tileX > (player.Coordinate.tileX) || (player.Coordinate.tileX) > (availableCoord.tileX)) {
+                        if (availableCoord.tileY > (player.Coordinate.tileY) || availableCoord.tileY < (player.Coordinate.tileY)) {
                             awayFromPlayer++;
                         }
                     }
@@ -966,7 +992,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 break;
             // Boss monster
             case 2:
-                spawnMonsterOnTile(fac.getRandomBossMonster(numberOfPlayers, rounds), coordinates);
+                mBoss = fac.getRandomBossMonster(numberOfPlayers, rounds);
+                spawnMonsterOnTile(mBoss, coordinates);
                 break;
         }
 
@@ -974,11 +1001,33 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     // method who spawns monster at start
-    public void spawnStartMonsters(int numberOfMonsters) {
-        for (int c = 0; c < numberOfMonsters - 1; c++) {
-            spawnMonster(0);
+    public void spawnStartMonsters() {
+
+        if (mGridSize > 9) {
+            //Spawn normal monsters
+            // 1 player = 2 monsters, 2 player = 4 monsters, 3 player = 6 monsters, 4 player = 8 monsters
+            for (int i = 0; i < 2 + (2 * (mGamePlayerList.size() - 1)); i++) {
+                spawnMonster(0);
+            }
+
+            //Spawn epic monsters
+            // 1 player = 1 monsters, 2 player = 2 monsters, 3 player = 3 monsters, 4 player = 4 monsters
+            for (int i = 0; i < mGamePlayerList.size(); i++) {
+                spawnMonster(1);
+            }
+        } else {
+            //Spawn normal monsters
+            // 1 player = 2 monsters, 2 player = 3 monsters, 3 player = 4 monsters, 4 player = 5 monsters
+            for (int i = 0; i < 2 + ((mGamePlayerList.size() - 1)); i++) {
+                spawnMonster(0);
+            }
+
+            //Spawn epic monsters
+            // 1 player = 1 monsters, 2 player = 2 monsters, 3 player = 3 monsters, 4 player = 4 monsters
+            for (int i = 0; i < mGamePlayerList.size(); i++) {
+                spawnMonster(1);
+            }
         }
-        spawnMonster(1);
 
         mFirebaseHelper.setMonsterList(mMonsterList);
     }
