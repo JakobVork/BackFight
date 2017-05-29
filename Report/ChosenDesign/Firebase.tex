@@ -1,0 +1,15 @@
+\section{Firebase}
+
+Firebase is a realtime database, everything is stored as JSON and synchronized in realtime to every connected phone\footnote{https://firebase.google.com/docs/database/}.
+
+The reason for choosing Firebase over any other database was the fast setup, where we in a very short time could setup a database that could fit our needs. The database needed should be able to sync between multiple clients playing a co-op game. It was also handled by the framework and therefore already tested. Firebase is used for everything the requires synchronization between devices and works for controlling the game state.
+
+The use of Firebase in Backfight is described in the following:
+Firebase is used for holding game state information to control our game from server side:
+The Grid is created when a host presses create it is then distributed to all the users who have joined.
+\\
+The game state is defined by three different lists and a round count the player list, the monster list and the item list that together defines what state the game is in. These three lists can be changed by all users when they move, attack or pick up items, each of these lists would then change to reflect the action. This allows the other users to see the action on their local device.
+\\
+The round count is to see what round the game is in this can be used to control difficulty of monsters and events. There is also a shadowed list that holds all the tiles that have been in range of a player that should be shadowed for players unless someone is in range.
+
+There are also lists for the lobby state, since when the host changes settings or start the game these should be reflected on the joined devices.
