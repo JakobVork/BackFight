@@ -1,0 +1,9 @@
+Handlinger
+En spiller har hver runde 3 handlinger, dette kan påvirkes af genstande.
+Når alle spillere har brugt deres handlinger er det monstrenes tur, hvorefter næste runde starter.
+
+Det koster én handling at:
+    - Rykke et felt.
+    - Angribe et monster.
+    - Samle genstande op.
+    - forsøg på gåder.

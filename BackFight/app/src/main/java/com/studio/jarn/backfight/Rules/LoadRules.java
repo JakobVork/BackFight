@@ -4,10 +4,13 @@ package com.studio.jarn.backfight.Rules;
 import android.app.Activity;
 import android.util.Log;
 
+import com.studio.jarn.backfight.R;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Locale;
 
 class LoadRules {
 
@@ -19,25 +22,44 @@ class LoadRules {
     }
 
     ArrayList<Rules> getRules() {
-        getSingleRule("actions");
-        getSingleRule("attack");
-        getSingleRule("credits");
-        getSingleRule("hitpoints");
-        getSingleRule("items");
-        getSingleRule("monsters");
-        getSingleRule("movement");
-        getSingleRule("round");
+
+        String language = Locale.getDefault().getDisplayLanguage();
+        if(language.equals("English")) LoadEnglishRules();
+        else if (language.equals("dansk")) LoadDanishRules();
+
         return mRules;
     }
 
+    public void LoadEnglishRules(){
+        getSingleRule(R.raw.actions_en);
+        getSingleRule(R.raw.attack_en);
+        getSingleRule(R.raw.round_en);
+        getSingleRule(R.raw.hitpoints_en);
+        getSingleRule(R.raw.items_en);
+        getSingleRule(R.raw.monsters_en);
+        getSingleRule(R.raw.movement_en);
+        getSingleRule(R.raw.credits_en);
+    }
 
-    private void getSingleRule(String Rule) {
+    public void LoadDanishRules(){
+        getSingleRule(R.raw.actions_da);
+        getSingleRule(R.raw.attack_da);
+        getSingleRule(R.raw.round_da);
+        getSingleRule(R.raw.hitpoints_da);
+        getSingleRule(R.raw.items_da);
+        getSingleRule(R.raw.monsters_da);
+        getSingleRule(R.raw.movement_da);
+        getSingleRule(R.raw.credits_da);
+    }
 
-        String ruleTitle = "raw/" + Rule;
+
+    private void getSingleRule(int Rule) {
+
+        String ruleTitle = "";
         ArrayList<String> ruleDescription = new ArrayList<>();
         Rules rule;
-        InputStream is = activity.getResources().openRawResource(activity.getResources().getIdentifier(ruleTitle,
-                "raw", activity.getPackageName()));
+
+        InputStream is = activity.getResources().openRawResource(Rule);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         try {
             String line;
@@ -50,8 +72,10 @@ class LoadRules {
                     ruleDescription.add(line);
                 }
             }
-            rule = new Rules(ruleTitle, ruleDescription);
-            mRules.add(rule);
+            if(!ruleTitle.isEmpty()) {
+                rule = new Rules(ruleTitle, ruleDescription);
+                mRules.add(rule);
+            }
         } catch (Exception ex) {
             Log.e("ERROR", "Something wrong during CSV file read", ex);
         }

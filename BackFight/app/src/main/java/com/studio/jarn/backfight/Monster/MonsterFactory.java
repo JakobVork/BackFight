@@ -48,8 +48,8 @@ public class MonsterFactory {
 
     private Monster Zombie(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
+        int hp = 6 * numberOfPlayers + numberOfRounds;
+        int ap = 4;
         int monsterTurn = 2;
 
         return new Monster(
@@ -63,8 +63,8 @@ public class MonsterFactory {
 
     private Monster Undead(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
+        int hp = 7 * numberOfPlayers + numberOfRounds;
+        int ap = 3;
         int monsterTurn = 2;
 
         return new Monster(
@@ -78,9 +78,9 @@ public class MonsterFactory {
 
     private Monster Muler(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
-        int monsterTurn = 2;
+        int hp = 5 * numberOfPlayers + numberOfRounds;
+        int ap = 3;
+        int monsterTurn = 3;
 
         return new Monster(
                 R.drawable.monster_muler,
@@ -93,9 +93,9 @@ public class MonsterFactory {
 
     private Monster Tauler(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
-        int monsterTurn = 2;
+        int hp = 8 * numberOfPlayers + numberOfRounds;
+        int ap = 3;
+        int monsterTurn = 4;
 
         return new Monster(
                 R.drawable.monster_tauler,
@@ -107,10 +107,10 @@ public class MonsterFactory {
     }
 
     private Monster Mauler(int numberOfPlayers, int numberOfRounds) {
-        // used for scaling
-        int hp = 6;
+        // used for scaling6
+        int hp = 5 * numberOfPlayers + numberOfRounds;
         int ap = 2;
-        int monsterTurn = 2;
+        int monsterTurn = 3;
 
         return new Monster(
                 R.drawable.monster_mauler,
@@ -123,9 +123,9 @@ public class MonsterFactory {
 
     private Monster Hiss(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
-        int monsterTurn = 2;
+        int hp = 4 * numberOfPlayers;
+        int ap = 1;
+        int monsterTurn = 6;
 
         return new Monster(
                 R.drawable.monster_hiss,
@@ -138,9 +138,9 @@ public class MonsterFactory {
 
     private Monster GhostHorse(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
-        int monsterTurn = 2;
+        int hp = 10 * numberOfPlayers + numberOfRounds;
+        int ap = 4;
+        int monsterTurn = 3;
 
         return new Monster(
                 R.drawable.monster_ghost_horse,
@@ -153,9 +153,9 @@ public class MonsterFactory {
 
     private Monster ThreeHeaded(int numberOfPlayers, int numberOfRounds) {
         // used for scaling
-        int hp = 6;
-        int ap = 2;
-        int monsterTurn = 2;
+        int hp = 25 * numberOfPlayers;
+        int ap = 4;
+        int monsterTurn = 3;
 
         return new Monster(
                 R.drawable.monster_3headed,
