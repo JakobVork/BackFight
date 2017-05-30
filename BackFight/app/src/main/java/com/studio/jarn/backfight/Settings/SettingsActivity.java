@@ -2,6 +2,7 @@ package com.studio.jarn.backfight.Settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -57,8 +58,15 @@ public class SettingsActivity extends AppCompatActivity {
         mViewPager.setClipChildren(false);
         mViewPager.setOffscreenPageLimit(mCustomPagerAdapter.getCount());
 
-        //TODO remove hardcoded
-        mViewPager.setPageMargin(-400);
+
+        //checks for phone or tablet and set margin
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
+                | (getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            mViewPager.setPageMargin(-150);
+        else
+            mViewPager.setPageMargin(-350);
     }
 
     // Make OnClickListener to the buttons
