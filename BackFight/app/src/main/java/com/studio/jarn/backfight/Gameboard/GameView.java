@@ -873,7 +873,8 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     // Get coordinate to Random tile, at least one tile away from a player.
     private Coordinates moveToRandomTile() {
-        for (int i = 0; i < 15; i++) {
+        int maxNumberOfTries = 15;
+        for (int i = 0; i < maxNumberOfTries; i++) {
             Coordinates coordinates = Coordinates.getRandom(mGridSize);
             Coordinates availableCoord = availableCoord(coordinates.tileX, coordinates.tileY);
 
