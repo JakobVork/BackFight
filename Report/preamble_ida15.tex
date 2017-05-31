@@ -36,7 +36,6 @@ oneside,openright
 \usepackage{nameref}
 % ¤¤ Oversaettelse og tegnsaetning ¤¤ %
 \usepackage[utf8]{inputenc}					% Input-indkodning af tegnsaet (UTF8)
-\usepackage[danish]{babel}					% Dokumentets sprog
 \usepackage[T1]{fontenc}					% Output-indkodning af tegnsaet (T1)
 \usepackage{ragged2e,anyfontsize}			% Justering af elementer
 \usepackage{fixltx2e}						% Retter forskellige fejl i LaTeX-kernen
@@ -189,17 +188,6 @@ oneside,openright
                 double, lock, stackalloc,
                 else, long, static,
                 enum, namespace, string},
-}
-
-
-% ¤¤ Navngivning ¤¤ %
-\addto\captionsdanish{
-	\renewcommand\appendixname{Appendiks}
-	\renewcommand\contentsname{Indholdsfortegnelse}	
-	\renewcommand\appendixpagename{Appendiks}
-	\renewcommand\appendixtocname{Appendiks}
-	\renewcommand\cftchaptername{\chaptername~}				% Skriver "Kapitel" foran kapitlerne i indholdsfortegnelsen
-	\renewcommand\cftappendixname{\appendixname~}			% Skriver "Appendiks" foran appendiks i indholdsfortegnelsen
 }
 
 % ¤¤ Kapiteludssende ¤¤ %

@@ -4,8 +4,8 @@
 
 Since the application was developed in a very short period of time there are some improvements that could benefit the application. This chapter will list some ideas for these improvements.
 
-\section{Drop tables}
-The team like the idea of items scattered around the word, but would also like to see drop tables to be included into the game. Thereby, when the player slays a monster a die would be rolled, and an item might show up on that tile. 
+\section{Monster drops items}
+The team like the idea of items scattered around on the map, but would also like monster to have a chance to drop items when they are killed. Since some items are better than others a looting system in some format would be required.
 
 \section{Monster and item class type}
 It is currently possible to spawn three different monster class': 'Common', 'Epic' and 'Boss'. However, the class type is only known at spawn time. As soon as the monster is in the list there is no way to check the class type unless one checks on the name. \\
@@ -31,7 +31,7 @@ When a player losses health or gain a new item the fragment does not reflect thi
 This could be done in two ways. Either a similar approach as the item listener, were the activity has the responsibility to update the fragment, or by letting the fragment implement a local broadcast receiver and thereby moving the responsibility into the fragment itself. The last one is the preferred way, since it would make the activity responsible for knowing what to show, but let the fragment be responsible for keeping it up to date.
 
 \section{Different types to items}
-The current game only has weapons as items. However, more items will be included in the future. This is also the reason that ItemWeapon class inherit from GameItem class as shown in figure \ref{fig:itemsAndMonstersDiagram}. An example would be armour, that therefor also would inherit from GameItem class.
+The current game only has weapons as items. However, more items will be included in the future. This is also the reason that ItemWeapon class inherit from GameItem class as shown in figure \ref{fig:itemsAndMonstersDiagram}. An example would be armor, that therefore also would inherit from GameItem class.
 
 \section{Firebase synchronisation}
-When two or more players take an action at the same time only one would actually take place, the rest would reset their actions. This is both quite annoying for the users, but it also introduces some potentially errors, since each game state list is maintained asynchronously  and separately, and therefore one might get updated correctly, but the others reset. This bug/feature are explained in depth in the section "Known Bugs". 
+When two or more players take an action at the same time only one would actually take place, the rest would reset their actions. This is both quite annoying for the users but it also introduces some potentially errors since each game state list is maintained asynchronously and separately; One list might get updated correctly, but the others reset. This bug/feature are explained in depth in the section "Known Bugs". 
