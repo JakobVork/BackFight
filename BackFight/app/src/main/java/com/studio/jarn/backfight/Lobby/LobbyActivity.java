@@ -40,21 +40,21 @@ import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_S
 
 public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyListener {
 
-    Button mBtnBack;
-    Button mBtnStart;
-    TextView mTvId;
-    ListView mLvPlayers;
-    RadioButton mRbDefault;
-    RadioButton mRbMaze;
-    NumberPicker mNpGridSize;
-    PlayerAdapter mPlayerAdapter;
-    List<Player> mListOfPlayersCurrentlyInGame = new ArrayList<>();
-    String mGameId;
-    RadioGroup mRg;
-    FirebaseHelper mFirebaseHelper;
-    Intent mIntent;
-    boolean mHost;
-    boolean mSpectate;
+    private Button mBtnBack;
+    private Button mBtnStart;
+    private TextView mTvId;
+    private ListView mLvPlayers;
+    private RadioButton mRbDefault;
+    private RadioButton mRbMaze;
+    private NumberPicker mNpGridSize;
+    private PlayerAdapter mPlayerAdapter;
+    private List<Player> mListOfPlayersCurrentlyInGame = new ArrayList<>();
+    private String mGameId;
+    private RadioGroup mRg;
+    private FirebaseHelper mFirebaseHelper;
+    private Intent mIntent;
+    private boolean mHost;
+    private boolean mSpectate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

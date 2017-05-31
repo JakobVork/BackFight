@@ -28,11 +28,11 @@ import static com.studio.jarn.backfight.MainMenuActivity.TABLET_TEXT_SIZE;
 
 public class NewGameActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
-    Button mBtnBack;
-    Button mBtnCreate;
-    Button mBtnJoin;
-    String mDialogText;
-    FirebaseHelper mFirebaseHelper;
+    private Button mBtnBack;
+    private Button mBtnCreate;
+    private Button mBtnJoin;
+    private String mDialogText;
+    private FirebaseHelper mFirebaseHelper;
     private Button mDialogBtnPositive;
 
     @Override

@@ -42,14 +42,14 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     public static String PHONE_UUID_SP = "Phone UUID";
     public static Integer PHONE_TEXT_SIZE = 18;
     public static Integer TABLET_TEXT_SIZE = 30;
-    Button mBtnNewGame;
-    Button mBtnSpectateGame;
-    Button mBtnRules;
-    Button mBtnSettings;
-    Button mBtnExit;
-    String mDialogText;
-    FirebaseHelper mFirebaseHelper;
-    Button mDialogBtnSpectatePositive;
+    private Button mBtnNewGame;
+    private Button mBtnSpectateGame;
+    private Button mBtnRules;
+    private Button mBtnSettings;
+    private Button mBtnExit;
+    private String mDialogText;
+    private FirebaseHelper mFirebaseHelper;
+    private Button mDialogBtnSpectatePositive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -336,7 +336,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     }
 
     // Hide the action bar
-    public void hideActionBar(){
+    private void hideActionBar() {
 
         ActionBar mActionBar = getSupportActionBar();
         if(mActionBar != null)

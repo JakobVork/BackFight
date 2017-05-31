@@ -30,7 +30,7 @@ class LoadRules {
         return mRules;
     }
 
-    public void LoadEnglishRules(){
+    private void LoadEnglishRules() {
         getSingleRule(R.raw.actions_en);
         getSingleRule(R.raw.attack_en);
         getSingleRule(R.raw.round_en);
@@ -41,7 +41,7 @@ class LoadRules {
         getSingleRule(R.raw.credits_en);
     }
 
-    public void LoadDanishRules(){
+    private void LoadDanishRules() {
         getSingleRule(R.raw.actions_da);
         getSingleRule(R.raw.attack_da);
         getSingleRule(R.raw.round_da);
