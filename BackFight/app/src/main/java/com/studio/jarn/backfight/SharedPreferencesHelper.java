@@ -13,8 +13,8 @@ import java.util.List;
 
 public class SharedPreferencesHelper {
 
-    private static String sPrefKeyGameIdList = "Game ID List";
-    private Context mContext;
+    private static final String sPrefKeyGameIdList = "Game ID List";
+    private final Context mContext;
 
     public SharedPreferencesHelper(Context context) {
         mContext = context;

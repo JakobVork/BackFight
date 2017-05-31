@@ -27,7 +27,7 @@ public class Coordinates {
         return new Coordinates(x, y, 1, 1);
     }
 
-    // Coords are equal, if their properties are equal.
+    // Coordinates are equal, if their properties are equal.
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Coordinates) {

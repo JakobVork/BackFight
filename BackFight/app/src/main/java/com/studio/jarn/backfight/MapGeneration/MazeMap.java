@@ -42,7 +42,7 @@ public class MazeMap implements IMapGenerator {
 
     //inspiration for the maze function have been taken from http://www.migapro.com/depth-first-search/
     //There is used depth first search to generate the maze
-    private Tile[][] recursionMaze(Tile[][] mGrid, int row, int column) {
+    private void recursionMaze(Tile[][] mGrid, int row, int column) {
         // 4 random directions
         int[] randDirs = generateRandomDirections();
         Tile floorTile = new Tile(Tile.Types.WoodenFloor);
@@ -92,8 +92,6 @@ public class MazeMap implements IMapGenerator {
                     break;
             }
         }
-
-        return mGrid;
     }
 
     //inspiration for the maze function have been taken from http://www.migapro.com/depth-first-search/

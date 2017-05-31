@@ -8,13 +8,12 @@ import java.util.Random;
 
 public class MonsterFactory {
 
-    private Context mContext;
+    private final Context mContext;
 
     public MonsterFactory(Context context) {
         mContext = context;
     }
 
-    // TODO give them stats
     public Monster getRandomNormalMonster(int numberOfPlayers, int numberOfRounds) {
         switch (new Random().nextInt(5)) {
             case 0:

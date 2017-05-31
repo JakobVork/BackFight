@@ -1,0 +1,36 @@
+\pagestyle{Uni}
+
+\chapter{Known Bugs}
+\label{ch:knownBugs}
+
+\section{Bug List}
+
+\begin{enumerate}
+	\item \textbf{Monster spawn:} There is a chance that monsters spawn on the same tile as the players when the game starts.
+	
+	\item \textbf{Kill monster:} When a monster is killed by a player on a tile and another player decides to move to that tile the two players will end up on the same place on that tile. This is because the tile holds one player and the tile doesn't know that the player is placed on space 2 and not space 1.
+		
+	\item \textbf{Spectate:} When spectating a game you have been playing in earlier you will join this game as the player and be able to move yourself. You will also miss some of the normal join features. This should be fixed so the player was informed that they are joining the game as a player.
+
+	\item \textbf{Firebase lag:} When multiple players are making an action at the same time Firebase will reject one of the changes and rollback. This is because the whole list is uploaded instead of just the element in the list that is changed. The game state is split over three lists to minimize the risk of conflicts. This will sometimes create weird scenarios where one of the lists gets updated and the other gets rolled back.
+	
+	Problem is described here: "If all of the following are true, it's okay to store the array in Firebase\footnote{https://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html}
+	
+	\begin{itemize}
+		\item \textbf{only one client is capable of writing to the data at a time}
+		\item to remove keys, we save the entire array instead of using .remove()
+		\item we take extra care when referring to anything by array index (a mutable key)"
+	\end{itemize}
+	In Backfight the game state lists can be changed by multiple users at the same time. To solve this problem either the game could be changed to be round based so each the each user would have a turn. Another solution would be to make some server side logic that would take the changed elements and then handle the synchronization with the database.
+	
+	\item \textbf{Losing action:} If a player clicks a wall they will lose an action even tho they can't move there. This is because the method call takeAction is placed after the movePlayer instead of inside.
+	
+	\item \textbf{Language error:} The language of the items and monsters will be decided by the language settings of the player hosting the game. This is because all the items/monsters are uploaded to the database as strings. This can be fixed by using id's for the items instead so it just pulls the strings from the local system.
+	
+	\item \textbf{Boss Monsters:} The Boss Monster will only show on the board of the last player who takes a turn in round 10. This is because only the last player will have the object and thereby have the coordinates. This can be fixed by adding a field to the Monster class describing the class of the monster. It would then be possible to just look in the monster list for a monster with the class of Boss and then show this.%TODO add ref to future improvments
+	
+	\item \textbf{Zoom:} The zoom is buggy because it does not zoom but scales the map and then the center is not set correctly. To help minimize the implications of the zoom bug a max distance for how much as player can pan away from the map has been set.
+
+	\item \textbf{Settings select figure:} The selection of the player avatar puts all avatar on the same spot and a user cant pick an avatar. The slider goes crazy if you try to slide to the side this bug only occurs if the screen resolution is very small.
+	
+\end{enumerate}
