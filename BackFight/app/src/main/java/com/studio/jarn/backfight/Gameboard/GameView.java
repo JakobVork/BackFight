@@ -477,11 +477,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             // Player is not selected
             HandleActionForNonSelectedPlayer(coordinate);
         }
-
-        mFirebaseHelper.setMonsterList(mMonsterList);
-        mFirebaseHelper.setPlayerList(mGamePlayerList);
-        mFirebaseHelper.setItemList(mGameItemList);
-
+        
         //Render map
         invalidate();
     }
@@ -496,9 +492,13 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         } else if (clickedOnItem(coordinate)) {
             // Clicked on item - Pick it up
             pickUpItem(getLocalPlayer(), coordinate);
+            mFirebaseHelper.setPlayerList(mGamePlayerList);
+            mFirebaseHelper.setItemList(mGameItemList);
         } else if (clickedOnMonster(coordinate)) {
             // Clicked on Monster - Attack it
             AttackMonster(getLocalPlayer(), getMonsterOnCoord(coordinate));
+            mFirebaseHelper.setPlayerList(mGamePlayerList);
+            mFirebaseHelper.setMonsterList(mMonsterList);
         } else if (tileNextToPlayer(getLocalPlayer(), coordinate.tileX, coordinate.tileY, 1)){ // 1 = distance
             // Ensure player has actions left
             if (!getLocalPlayer().canTakeAction())
@@ -509,7 +509,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
                 return;
 
             movePlayerToTile(getLocalPlayer(), coordinate.tileX, coordinate.tileY);
-            getLocalPlayer().takeAction(getContext(), this);
+            mFirebaseHelper.setPlayerList(mGamePlayerList);
         }
 
         // Player is now deselected, therefore also don't show the "select" image
@@ -830,6 +830,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         Coordinates coord = availableCoord(tileX, tileY);
         if (coord != null) {
             player.Coordinate = coord;
+            getLocalPlayer().takeAction(getContext(), this);
         }
     }
 
@@ -877,7 +878,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void spawnItems(int numberOfItems) {
         ItemFactory fac = new ItemFactory(getContext());
         int i = 0;
-        numberOfItems = numberOfItems * mGamePlayerList.size();
         // Continue until all items are spawned
         while (i < numberOfItems) {
 
@@ -928,30 +928,30 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     // method who spawns monster at start
-    public void spawnStartMonsters() {
+    public void spawnStartMonsters(int numOfPlayer) {
 
         if (mGridSize > 9) {
             //Spawn normal monsters
             // 1 player = 2 monsters, 2 player = 4 monsters, 3 player = 6 monsters, 4 player = 8 monsters
-            for (int i = 0; i < 2 + (2 * (mGamePlayerList.size() - 1)); i++) {
+            for (int i = 0; i < 2 + (2 * (numOfPlayer - 1)); i++) {
                 spawnMonster(0);
             }
 
             //Spawn epic monsters
             // 1 player = 1 monsters, 2 player = 2 monsters, 3 player = 3 monsters, 4 player = 4 monsters
-            for (int i = 0; i < mGamePlayerList.size(); i++) {
+            for (int i = 0; i < numOfPlayer; i++) {
                 spawnMonster(1);
             }
         } else {
             //Spawn normal monsters
             // 1 player = 2 monsters, 2 player = 3 monsters, 3 player = 4 monsters, 4 player = 5 monsters
-            for (int i = 0; i < 2 + ((mGamePlayerList.size() - 1)); i++) {
+            for (int i = 0; i < 2 + ((numOfPlayer - 1)); i++) {
                 spawnMonster(0);
             }
 
             //Spawn epic monsters
             // 1 player = 1 monsters, 2 player = 2 monsters, 3 player = 3 monsters, 4 player = 4 monsters
-            for (int i = 0; i < mGamePlayerList.size(); i++) {
+            for (int i = 0; i < numOfPlayer; i++) {
                 spawnMonster(1);
             }
         }
