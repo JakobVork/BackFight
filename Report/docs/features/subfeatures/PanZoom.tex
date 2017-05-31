@@ -1,7 +1,7 @@
 \section{PanZoomView}
 
-PanZoomView is the first level under the View class, its responsibility is to handle panning, zooming of the view and touch on the screen.
+PanZoomView extends the View class, its responsibility is to handle panning\footnote{https://en.wikipedia.org/wiki/Panning\_(camera)}, zooming of the view and touch on the screen.
 
-The onTouchEvent from the view class is overridden in the PanZoomView so that zooming can be supported through a ScaleGestureDetector. Every time the screen is touched onTouchEvent method is called to determine what kind of gesture is being made. Zoom happens through a listener that overrides the onScale function which changes the scaleFactor of the canvas and updates the map. When the map gets updated it is scaled after the scaleFactor. 
+The onTouchEvent from the view class is overridden in the PanZoomView so that zooming can be supported through a custom listener that is extended from the ScaleGestureDetector\footnote{https://developer.android.com/reference/android/view/ScaleGestureDetector.html}. Every time the screen is touched the onTouchEvent method is called to determine what kind of gesture is made. Zoom happens through a listener that overrides the onScale function which changes the scaleFactor of the canvas and updates the map. When the map gets updated it is scaled based on the scaleFactor. 
 
-Panning is needed when the map is moved and therefor in the onTouchEvent function, if a move gesture is made and scaling is not in the process panning will be handled by setting the position of screen to the current coordinates minus when the gesture was a touch down and the updating the map.
+Panning is needed for giving the movement of the map a nice flow instead of it jumping to fixed positions when the map is moved. Panning is relevant when a move gesture is made and scaling is not in process. Panning will be handled by setting the position of screen to new coordinates and updating the map multiple times when moved.
