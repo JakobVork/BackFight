@@ -21,13 +21,13 @@ import java.util.ArrayList;
 
 public class RulesActivity extends AppCompatActivity {
 
-    Button mBtnBack;
-    ListView mLwList;
-    RulesAdapter mAdapter;
-    EditText mSearch;
-    ArrayList<Rules> mRules;
-    TextView mTitle;
-    TextView mDetails;
+    private Button mBtnBack;
+    private ListView mLwList;
+    private RulesAdapter mAdapter;
+    private EditText mSearch;
+    private ArrayList<Rules> mRules;
+    private TextView mTitle;
+    private TextView mDetails;
 
 
     @Override
@@ -40,7 +40,7 @@ public class RulesActivity extends AppCompatActivity {
     }
 
     // Set the details for the rule selected
-    public void onRuleSelected(int position) {
+    private void onRuleSelected(int position) {
 
         Rules selectedRule = mAdapter.getItem(position);
         if (selectedRule != null) {
@@ -60,7 +60,7 @@ public class RulesActivity extends AppCompatActivity {
         setRulesInListView();
     }
 
-    // Inspration from http://www.androidhive.info/2012/09/android-adding-search-functionality-to-listview/
+    // Inspiration from http://www.androidhive.info/2012/09/android-adding-search-functionality-to-listview/
     private void setRulesInListView() {
         mAdapter = new RulesAdapter(this, mRules);
         mLwList.setAdapter(mAdapter);
@@ -93,7 +93,7 @@ public class RulesActivity extends AppCompatActivity {
     }
 
 
-    // Find the view items in the layoutfile and call to make details on them
+    // Find the view items in the layout file and call to make details on them
     private void initViewItems() {
         mBtnBack = (Button) findViewById(R.id.activity_rules_btn_back);
         mTitle = (TextView) findViewById(R.id.activity_rules_tv_title);

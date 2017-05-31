@@ -17,8 +17,6 @@ import com.studio.jarn.backfight.Items.ItemWeapon;
 import com.studio.jarn.backfight.Player.Player;
 import com.studio.jarn.backfight.R;
 
-import org.w3c.dom.Text;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -35,10 +33,6 @@ public class ItemsAndStatsFragment extends Fragment {
     private int mHp;
     private int mMinDmg;
     private int mMaxDmg;
-    private TextView mTvName;
-    private TextView mTvHp;
-    private ListView mItemListView;
-    private TextView mTvDmg;
 
     public ItemsAndStatsFragment() {
     }
@@ -83,7 +77,7 @@ public class ItemsAndStatsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_items_and_stats, container, false);
 
         final ItemAdaptor adapter = new ItemAdaptor(getActivity(), mItemList);
-        mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
+        ListView mItemListView = (ListView) view.findViewById(R.id.fragment_Item_List);
         mItemListView.setAdapter(adapter);
         mItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -92,14 +86,14 @@ public class ItemsAndStatsFragment extends Fragment {
             }
         });
 
-        mTvName = (TextView) view.findViewById(R.id.fragment_item_tv_name);
+        TextView mTvName = (TextView) view.findViewById(R.id.fragment_item_tv_name);
         mTvName.setText(mName);
 
-        mTvHp = (TextView) view.findViewById(R.id.fragment_item_tv_hp);
-        mTvHp.setText("HP: " + String.valueOf(mHp));
+        TextView mTvHp = (TextView) view.findViewById(R.id.fragment_item_tv_hp);
+        mTvHp.setText(getString(R.string.hp) + ": " + String.valueOf(mHp));
 
-        mTvDmg = (TextView) view.findViewById(R.id.fragment_item_tv_dmg);
-        mTvDmg.setText("Dmg: " + String.valueOf(mMinDmg) + " - " + String.valueOf(mMaxDmg));
+        TextView mTvDmg = (TextView) view.findViewById(R.id.fragment_item_tv_dmg);
+        mTvDmg.setText(getString(R.string.dmg) + ": " + String.valueOf(mMinDmg) + " - " + String.valueOf(mMaxDmg));
 
         return view;
     }

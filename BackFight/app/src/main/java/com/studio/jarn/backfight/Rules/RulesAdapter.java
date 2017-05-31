@@ -14,15 +14,14 @@ import java.util.ArrayList;
 
 // Inspired by FragmentsArnieMovies by Kasper
 class RulesAdapter extends BaseAdapter implements Filterable {
-    private Context mcontext;
-    private ArrayList<Rules> mRules;
+    private final Context mContext;
+    private final ArrayList<Rules> mRules;
     private ArrayList<Rules> mFilteredRules;
-    private Rules rules = null;
 
     RulesAdapter(Context c, ArrayList<Rules> rulesList) {
         mRules = rulesList;
         mFilteredRules = rulesList;
-        mcontext = c;
+        mContext = c;
 
     }
 
@@ -52,12 +51,12 @@ class RulesAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            LayoutInflater RulesInflator = (LayoutInflater) this.mcontext
+            LayoutInflater RulesInflator = (LayoutInflater) this.mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = RulesInflator.inflate(R.layout.list_item, null);
         }
 
-        rules = mFilteredRules.get(position);
+        Rules rules = mFilteredRules.get(position);
         if (rules != null) {
             TextView txtTitle = (TextView) convertView.findViewById(R.id.listItem_tv_type);
             txtTitle.setText(rules.mRulesName);
@@ -80,9 +79,9 @@ class RulesAdapter extends BaseAdapter implements Filterable {
                     ArrayList<Rules> filteredResultsData = new ArrayList<>();
 
                     for (Rules rule : mRules) {
-                        mRules.get(1).getmRulesName();
-                        rule.getmRulesName();
-                        if (rule.getmRulesName().toLowerCase().startsWith(constraint.toString())) {
+                        mRules.get(1).getRulesName();
+                        rule.getRulesName();
+                        if (rule.getRulesName().toLowerCase().startsWith(constraint.toString())) {
                             filteredResultsData.add(rule);
                         }
                     }
@@ -94,6 +93,7 @@ class RulesAdapter extends BaseAdapter implements Filterable {
                 return results;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 mFilteredRules = (ArrayList<Rules>) results.values;

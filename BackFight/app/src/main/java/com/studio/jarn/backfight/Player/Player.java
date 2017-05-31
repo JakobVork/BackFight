@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Player {
+    public final int LineOfSight = 1;
+    public final int mActionsPerTurn = 3; //Needed for Firebase
     public List<GameItem> PlayerItems;
     public String Name;
     public int Figure = 0;
@@ -20,11 +22,7 @@ public class Player {
     public int ActionsRemaining = 3;
     public String Id;
     public int Health = 20;
-    public int LineOfSight = 1;
     public Coordinates Coordinate;
-    public int mActionsPerTurn = 3; //Needed for Firebase
-    private final int mBaseMinDmg = 1;
-    private final int mBaseMaxDmg = 1;
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
         this(Figure, FigureSelected, name, uuid, null);
@@ -73,12 +71,12 @@ public class Player {
     }
 
     public int getMinDmg() {
-        int min = mBaseMinDmg;
+        int min = 1;
         if(PlayerItems != null) {
             for (GameItem item:PlayerItems) {
                 // Check if item is a weapon
                 if(item instanceof ItemWeapon) {
-                    min += ((ItemWeapon)item).getDmgMin();
+                    min += ((ItemWeapon) item).DmgMin;
                 }
             }
         }
@@ -86,12 +84,12 @@ public class Player {
     }
 
     public int getMaxDmg() {
-        int max = mBaseMaxDmg;
+        int max = 1;
         if(PlayerItems != null) {
             for (GameItem item:PlayerItems) {
                 // Check if item is a weapon
                 if(item instanceof ItemWeapon) {
-                    max += ((ItemWeapon)item).getDmgMax();
+                    max += ((ItemWeapon) item).DmgMax;
                 }
             }
         }

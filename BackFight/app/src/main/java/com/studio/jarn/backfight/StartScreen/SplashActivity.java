@@ -14,8 +14,6 @@ import com.studio.jarn.backfight.MainMenuActivity;
 import com.studio.jarn.backfight.R;
 
 public class SplashActivity extends AppCompatActivity {
-    // Welcome screen is there in 4000 milliseconds = 4 seconds
-    private static int sSplash_time_out = 6000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +36,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void makeDelayBeforeMainStarts() {
+        int sSplash_time_out = 6000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

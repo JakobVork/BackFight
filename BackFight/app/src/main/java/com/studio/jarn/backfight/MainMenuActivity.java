@@ -38,18 +38,18 @@ import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_S
 
 public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
+    public static final String PHONE_UUID_SP = "Phone UUID";
+    public static final Integer PHONE_TEXT_SIZE = 18;
+    public static final Integer TABLET_TEXT_SIZE = 30;
     private static final int NO_INTERNET_SETTINGS_INTENT = 42;
-    public static String PHONE_UUID_SP = "Phone UUID";
-    public static Integer PHONE_TEXT_SIZE = 18;
-    public static Integer TABLET_TEXT_SIZE = 30;
-    Button mBtnNewGame;
-    Button mBtnSpectateGame;
-    Button mBtnRules;
-    Button mBtnSettings;
-    Button mBtnExit;
-    String mDialogText;
-    FirebaseHelper mFirebaseHelper;
-    Button mDialogBtnSpectatePositive;
+    private Button mBtnNewGame;
+    private Button mBtnSpectateGame;
+    private Button mBtnRules;
+    private Button mBtnSettings;
+    private Button mBtnExit;
+    private String mDialogText;
+    private FirebaseHelper mFirebaseHelper;
+    private Button mDialogBtnSpectatePositive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +125,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
-        //checks for phone or tablet and set textsize
+        //checks for phone or tablet and set text size
         if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
                 | (getResources().getConfiguration().screenLayout &
@@ -161,13 +161,8 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         settingsSpEditor.apply();
     }
 
-    // make a unique key for each phone
-    private void makeUuid() {
 
-
-    }
-
-    // Find the buttons in the layoutfile and call to make OnClickListener on them
+    // Find the buttons in the layoutFile and call to make OnClickListener on them
     private void initButtons() {
         mBtnNewGame = (Button) findViewById(R.id.activity_mainMenu_btn_newGame);
         mBtnSpectateGame = (Button) findViewById(R.id.activity_mainMenu_btn_spectateGame);
@@ -262,7 +257,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
                 R.string.newGame_dialogHint);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
-        //checks for phone or tablet and set textsize
+        //checks for phone or tablet and set text size
         if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
                 | (getResources().getConfiguration().screenLayout &
@@ -336,7 +331,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     }
 
     // Hide the action bar
-    public void hideActionBar(){
+    private void hideActionBar() {
 
         ActionBar mActionBar = getSupportActionBar();
         if(mActionBar != null)
