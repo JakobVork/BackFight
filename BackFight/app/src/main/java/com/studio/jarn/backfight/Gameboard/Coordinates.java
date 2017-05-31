@@ -5,10 +5,10 @@ import java.util.Random;
 public class Coordinates {
     private final static Random rnd = new Random();
 
-    int tileX;
-    int tileY;
-    int placementOnTileX;
-    int placementOnTileY;
+    public int tileX;
+    public int tileY;
+    public int placementOnTileX;
+    public int placementOnTileY;
 
     public Coordinates() {
     }
