@@ -349,7 +349,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     private void LimitCameraDistanceToBoard(){
-        int margin = 600;
+        int margin = (int)mMaxCanvasHeight/12;
 
         if (mPosX > (-(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth / 2) * mScaleFactor)) mPosX = -(mMaxCanvasWidth / 2) + margin + (mMaxCanvasWidth / 2) * mScaleFactor;
         if (mPosY > (-(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight / 2) * mScaleFactor)) mPosY = -(mMaxCanvasHeight / 2) + margin + (mMaxCanvasHeight / 2) * mScaleFactor;
