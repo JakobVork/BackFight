@@ -260,62 +260,16 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     @Override
     public void onDrawPz(Canvas canvas) {
-
         canvas.save();
 
-        // Get the width and height of the view.
-        int viewH = getHeight(), viewW = getWidth();
+        // Set information about board
+        mSquareWidth = getHeight() / (float) mSquaresViewedAtStartup;
+        mSquareHeight = getHeight() / (float) mSquaresViewedAtStartup;
+        mMaxCanvasWidth  = mGridSize * mSquareWidth;
+        mMaxCanvasHeight = mGridSize * mSquareHeight;
 
-        boolean isLandscape = (viewW > viewH);
-        float shortestWidth = isLandscape ? viewH : viewW;
-
-        // Set width and height to be used for the squares.
-        mSquareWidth = shortestWidth / (float) mSquaresViewedAtStartup;
-        mSquareHeight = shortestWidth / (float) mSquaresViewedAtStartup;
-
-    float numSquaresAlongX = isLandscape ? (viewW / mSquareWidth) : mSquaresViewedAtStartup;
-    float numSquaresAlongY = isLandscape ? mSquaresViewedAtStartup : (viewH / mSquareHeight);
-
-    // We start out knowing how many squares will be displayed
-    // along a side and how many along the whole canvas.
-    // The canvas is centered in the view so half of what
-    // remains to be displayed can be used to calculate the
-    // origin offset values.
-    mMaxCanvasWidth  = mGridSize * mSquareWidth;
-    mMaxCanvasHeight = mGridSize * mSquareHeight;
-    mHalfMaxCanvasWidth  = mMaxCanvasWidth / 2.0f;
-    mHalfMaxCanvasHeight = mMaxCanvasHeight / 2.0f;
-
-        float totalOffscreenSquaresX = mGridSize - numSquaresAlongX;
-        if (totalOffscreenSquaresX < 0f) totalOffscreenSquaresX = 0f;
-        float totalOffscreenSquaresY = mGridSize - numSquaresAlongY;
-        if (totalOffscreenSquaresY < 0f) totalOffscreenSquaresY = 0f;
-        mOriginOffsetX = 0;//totalOffscreenSquaresX / 2.0f * mSquareWidth;
-        mOriginOffsetY = 0;//totalOffscreenSquaresY / 2.0f * mSquareHeight;
-
-        // The canvas is translated by the amount we have
-        // scrolled and the standard amount to move the origin
-        // of the canvas up and left so the region is centered
-        // in the view. (Note: mPosX and mPosY are defined in PanZoomView.)
-        float x, y;
-        mPosX0 = mOriginOffsetX;
-        mPosY0 = mOriginOffsetY;
-        mPosY0 = mOriginOffsetY;
-        x = mPosX - mPosX0;
-        y = mPosY - mPosY0;
-        canvas.translate(x, y);
-
-        // The focus point for zooming is the center of the
-        // displayable region. That point is defined by half
-        // the canvas width and height.
-
-        mFocusX = mHalfMaxCanvasWidth;
-        mFocusY = mHalfMaxCanvasHeight;
-
-        //TODO This has been commented out to move the focus to the top left corner, this is a temp hotfix for a better zoom experience.
-        //The out commented code is there for the person who needs to fix to know what was there before
-        canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
-
+        canvas.translate(mPosX, mPosY);
+        canvas.scale(mScaleFactor, mScaleFactor, mMaxCanvasWidth/2, mMaxCanvasHeight/2);
         LimitCameraDistanceToBoard();
 
         // Set up the grid  and grid selection variables.
@@ -345,7 +299,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         drawOnCanvas(canvas);
 
         canvas.restore();
-
     }
 
     private void LimitCameraDistanceToBoard(){
