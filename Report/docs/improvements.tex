@@ -28,8 +28,7 @@ The same problem is present for items, but here one can't even spawn class type,
 
 \section{Update fragment automatically}
 When a player losses health or gain a new item the fragment does not reflect this automatically. Currently, the player has to reopen the fragment in order to get that information. An obvious improvement would therefore to make this happen automatically.\\
-This could be done with a broadcaster, were a broadcast is made whenever a game state changes. The activity thereby find the object currently showing and calls an update method on the fragment.
-This will ensure that fragments are completely self-contained. \footnote{https://developer.android.com/training/basics/fragments/communicating.html}. %TODO: Bit unsure, if I just should move the broadcasting into the fragment, and let it live its own life.. why does the activity has to find the object, and maintain the fragment? <-- I think it would be cleaner in the fragment itself.
+This could be done in two ways. Either a similar approach as the item listener, were the activity has the responsibility to update the fragment, or by letting the fragment implement a local broadcast receiver and thereby moving the responsibility into the fragment itself. The last one is the preferred way, since it would make the activity responsible for knowing what to show, but let the fragment be responsible for keeping it up to date.
 
 \section{Different types to items}
 The current game only has weapons as items. However, more items will be included in the future. This is also the reason that ItemWeapon class inherit from GameItem class as shown in figure \ref{fig:itemsAndMonstersDiagram}. An example would be armour, that therefor also would inherit from GameItem class.
