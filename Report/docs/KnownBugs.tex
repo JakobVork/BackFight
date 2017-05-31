@@ -21,9 +21,7 @@
 		\item to remove keys, we save the entire array instead of using .remove()
 		\item we take extra care when referring to anything by array index (a mutable key)"
 	\end{itemize}
-	In Backfight the game state lists can be changed by multiple users at the same time. To solve this problem either the game could be changed to be round based so each the each user would have a turn. Another solution would be to make some server side logic that would take the changed elements and then handle the synchronization with the database.
-	
-	\item \textbf{Losing action:} If a player clicks a wall they will lose an action even tho they can't move there. This is because the method call takeAction is placed after the movePlayer instead of inside.
+	In Backfight the game state lists can be changed by multiple users at the same time. To solve this problem either the game could be changed to be round based so each user would have a turn. Another solution would be to make some server side logic that would take the changed elements and then handle the synchronization with the database.
 	
 	\item \textbf{Language error:} The language of the items and monsters will be decided by the language settings of the player hosting the game. This is because all the items/monsters are uploaded to the database as strings. This can be fixed by using id's for the items instead so it just pulls the strings from the local system.
 	
@@ -31,6 +29,6 @@
 	
 	\item \textbf{Zoom:} The zoom is buggy because it does not zoom but scales the map and then the center is not set correctly. To help minimize the implications of the zoom bug a max distance for how much as player can pan away from the map has been set.
 
-	\item \textbf{Settings select figure:} The selection of the player avatar puts all avatar on the same spot and a user cant pick an avatar. The slider goes crazy if you try to slide to the side this bug only occurs if the screen resolution is very small.
+	\item \textbf{Settings, select figure:} The selection of the player avatar puts all avatar on the same spot and the user can't pick an avatar. The slider goes crazy if you try to slide to the side this bug only occurs if the screen resolution is very small.
 	
 \end{enumerate}
