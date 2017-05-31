@@ -17,7 +17,6 @@ class RulesAdapter extends BaseAdapter implements Filterable {
     private Context mcontext;
     private ArrayList<Rules> mRules;
     private ArrayList<Rules> mFilteredRules;
-    private Rules rules = null;
 
     RulesAdapter(Context c, ArrayList<Rules> rulesList) {
         mRules = rulesList;
@@ -57,7 +56,7 @@ class RulesAdapter extends BaseAdapter implements Filterable {
             convertView = RulesInflator.inflate(R.layout.list_item, null);
         }
 
-        rules = mFilteredRules.get(position);
+        Rules rules = mFilteredRules.get(position);
         if (rules != null) {
             TextView txtTitle = (TextView) convertView.findViewById(R.id.listItem_tv_type);
             txtTitle.setText(rules.mRulesName);

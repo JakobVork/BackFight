@@ -36,22 +36,16 @@ import static com.studio.jarn.backfight.MainMenuActivity.PHONE_UUID_SP;
 
 public class GameView extends PanZoomView implements GameTouchListener, FirebaseGameViewListener, PlayerGameViewListener
 {
-    protected float mFocusX = 1000; //default value
-    protected float mFocusY = 1000; //default value
-    protected GameTouchListener mTouchListener;
-    int mObjectMarginValue;
-    int mObjectWidthValue;
-    int mObjectHeightValue;
-    List<SimpleCoordinates> mCoordinatesListTileShadowed = new ArrayList<>();
-    List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
+    private GameTouchListener mTouchListener;
+    private int mObjectMarginValue;
+    private int mObjectWidthValue;
+    private int mObjectHeightValue;
+    private List<SimpleCoordinates> mCoordinatesListTileShadowed = new ArrayList<>();
+    private List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 mGameObject 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
     private float mMaxCanvasHeight = 960;
-    private float mHalfMaxCanvasWidth = 480;
-    private float mHalfMaxCanvasHeight = 480;
-    private float mOriginOffsetX = 0;
-    private float mOriginOffsetY = 0;
     private float mSquareWidth = 64;         // use float for more accurate placement
     private float mSquareHeight = 64;
     private Rect mDestRect;
@@ -60,9 +54,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private List<Player> mGamePlayerList = new ArrayList<>();
     private List<GameItem> mGameItemList = new ArrayList<>();
     private List<Monster> mMonsterList = new ArrayList<>();
-    //private ArrayList<Tuple<Player, Coordinates>> mGamePlayerList = new ArrayList<>();
-    //private ArrayList<Tuple<GameItem, Coordinates>> mGameItemList = new ArrayList<>();
-    //private ArrayList<Tuple<Monster, Coordinates>> mMonsterList = new ArrayList<>();
     private int mGridSize;
     private int mSquaresViewedAtStartup;
     private FirebaseHelper mFirebaseHelper;
@@ -85,7 +76,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
      * @param brightness -255..255 0 is default
      * @return new bitmap
      */
-    public static Bitmap changeBitmapBrightness(Bitmap bmp, float brightness) {
+    private static Bitmap changeBitmapBrightness(Bitmap bmp, float brightness) {
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
                         1, 0, 0, 0, brightness,
@@ -456,8 +447,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     public void onTouchDown(float downX, float downY) {
-        mFocusX = downX;
-        mFocusY = downY;
         GameTouchListener listener = getTouchListener();
         if (listener == null) return;
         listener.onTouchDown();
@@ -782,7 +771,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     //TODO Should be moved to own class
     private Coordinates getTileFromPixelValue(float xCoord, float yCoord) {
+        float mOriginOffsetX = 0;
         float x = (mOriginOffsetX + xCoord - (mPosX - ((mMaxCanvasWidth / 2) * mScaleFactor - (mMaxCanvasWidth / 2)))) / mScaleFactor;
+        float mOriginOffsetY = 0;
         float y = (mOriginOffsetY + yCoord - (mPosY - ((mMaxCanvasHeight / 2) * mScaleFactor - (mMaxCanvasHeight / 2)))) / mScaleFactor;
 
         //Coordinates to tile

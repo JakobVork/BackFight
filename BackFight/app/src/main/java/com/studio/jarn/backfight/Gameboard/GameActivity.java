@@ -42,8 +42,8 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static final int sDefaultGridSize = 15;
     public static boolean isGameActivityVisible = false;
     private static int sGridSize = 16;
-    Fragment overviewFragment;
-    Fragment detailFragment;
+    private Fragment overviewFragment;
+    private Fragment detailFragment;
     private Tile[][] mGrid;
     private TextView btnActionCounter;
     private TextView btnRound;

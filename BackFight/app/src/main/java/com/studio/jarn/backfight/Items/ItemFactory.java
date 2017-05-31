@@ -5,10 +5,9 @@ import android.content.Context;
 
 public class ItemFactory {
     public Weapons Weapons;
-    private Context mContext; // Used for getting resources.
 
     public ItemFactory(Context context) {
-        mContext = context;
+        Context mContext = context;
         Weapons = new Weapons(mContext);
     }
 }

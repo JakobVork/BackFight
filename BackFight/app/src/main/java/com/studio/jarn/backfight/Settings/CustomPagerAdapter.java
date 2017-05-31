@@ -16,14 +16,12 @@ class CustomPagerAdapter extends PagerAdapter {
 
     private int[] mResources;
     private int[] mResourcesSelected;
-    private Context mContext;
     private LayoutInflater mLayoutInflater;
     private ImageView mImageView;
 
     CustomPagerAdapter(Context context) {
         getAvatars();
-        mContext = context;
-        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     private void getAvatars() {
