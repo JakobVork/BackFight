@@ -3,7 +3,7 @@ package com.studio.jarn.backfight.Gameboard;
 public class Tile {
     public int TileConnectivityCollectionNr;
     public boolean CanBePassed;
-    Types Type;
+    public Types Type;
 
 
     public Tile(Types type, int tileConnectivityCollectionNr) {
