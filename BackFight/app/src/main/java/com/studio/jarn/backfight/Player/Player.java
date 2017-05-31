@@ -76,7 +76,7 @@ public class Player {
             for (GameItem item:PlayerItems) {
                 // Check if item is a weapon
                 if(item instanceof ItemWeapon) {
-                    min += ((ItemWeapon)item).getDmgMin();
+                    min += ((ItemWeapon) item).DmgMin;
                 }
             }
         }
@@ -89,7 +89,7 @@ public class Player {
             for (GameItem item:PlayerItems) {
                 // Check if item is a weapon
                 if(item instanceof ItemWeapon) {
-                    max += ((ItemWeapon)item).getDmgMax();
+                    max += ((ItemWeapon) item).DmgMax;
                 }
             }
         }

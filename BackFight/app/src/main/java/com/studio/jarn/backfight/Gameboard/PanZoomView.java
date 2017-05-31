@@ -35,9 +35,6 @@ public class PanZoomView extends View {
     private ScaleGestureDetector mScaleDetector;
     private boolean mIsMove;
 
-    //Click handling
-    private boolean mSupportsOnTouchUp = true;
-
 public PanZoomView (Context context) {
     this(context, null, 0);
 }
@@ -50,7 +47,7 @@ public PanZoomView (Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     mContext = context;
     setupToDraw (context, attrs, defStyle);
-    setupScaleDetector (context, attrs, defStyle);
+    setupScaleDetector(context);
 }
 
 @Override
@@ -87,11 +84,9 @@ public boolean onTouchEvent (MotionEvent e) {
             mLastTouchY = y;
             mActivePointerId = e.getPointerId(0);
 
-            if (mSupportsOnTouchUp) {
-                mInitialTouchX = x;
-                mInitialTouchY = y;
-                mDoTouchUp = true;
-            }
+            mInitialTouchX = x;
+            mInitialTouchY = y;
+            mDoTouchUp = true;
             break;
         }
 
@@ -108,8 +103,7 @@ public boolean onTouchEvent (MotionEvent e) {
             // Only move if the view supports panning and
             // ScaleGestureDetector isn't processing a gesture.
             boolean scalingInProgress = mScaleDetector.isInProgress();
-            boolean mSupportsPan = true;
-            if (mSupportsPan && !scalingInProgress) {
+            if (!scalingInProgress) {
                 if (mIsMove) {
                     final float dx = x - mLastTouchX;
                     final float dy = y - mLastTouchY;
@@ -132,14 +126,10 @@ public boolean onTouchEvent (MotionEvent e) {
                 mDoTouchUp = false;
             } else {
                 mActivePointerId = INVALID_POINTER_ID;
-                if (mSupportsOnTouchUp && mDoTouchUp) {
+                if (mDoTouchUp) {
                     final float x = e.getX();
                     final float y = e.getY();
-                    try {
-                        onTouchUp(mInitialTouchX, mInitialTouchY, x, y);
-                    } finally {
-
-                    }
+                    onTouchUp(x, y);
                     mDoTouchUp = false;
                 }
             }
@@ -179,11 +169,11 @@ public boolean performClick() {
    return true;
 }
 
-    void onTouchUp(float downX, float downY, float upX, float upY) {
+    void onTouchUp(float upX, float upY) {
         //Gets overwrited by GameActivity which implements GameTouchListener interface.
     }
 
-    private void setupScaleDetector(Context context, AttributeSet attrs, int defStyle) {
+    private void setupScaleDetector(Context context) {
     // Create our ScaleGestureDetector
     mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 }
@@ -202,19 +192,12 @@ public boolean performClick() {
 private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        boolean mSupportsZoom = true;
-        if (!mSupportsZoom) return true;
         mScaleFactor *= detector.getScaleFactor();
 
         // Don't let the object get too small or too large.
         float mMinScaleFactor = 0.2f;
         float mMaxScaleFactor = 2.0f;
         mScaleFactor = Math.max(mMinScaleFactor, Math.min(mScaleFactor, mMaxScaleFactor));
-
-/*
-        mPosX = mPosX * (-3616*mScaleFactor+3616);
-        mPosY = mPosY * (-3616*mScaleFactor+3616);
-*/
 
         invalidate();
         return true;

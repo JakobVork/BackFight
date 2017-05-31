@@ -444,13 +444,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mFirebaseHelper.setGrid(list);
     }
 
-    public void onTouchDown(float downX, float downY) {
-        GameTouchListener listener = getTouchListener();
-        if (listener == null) return;
-        listener.onTouchDown();
-    }
-
-    public void onTouchUp(float downX, float downY, float upX, float upY) {
+    public void onTouchUp(float upX, float upY) {
         //Calculate the coordinates pressed on the map
         Coordinates map = getTileFromPixelValue(upX, upY);
 
@@ -727,7 +721,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         Random random = new Random();
         int move;
-        Coordinates movedTo = null;
         //50 % chance for moved 1 space forward or backwards
         if (random.nextBoolean())
             move = 1;

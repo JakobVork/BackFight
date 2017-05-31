@@ -66,9 +66,6 @@ class CustomPagerAdapter extends PagerAdapter {
         return view == object;
     }
 
-    public void ViewAvatar(int position) {
-        mImageView.setImageResource(mResources[position]);
-    }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
