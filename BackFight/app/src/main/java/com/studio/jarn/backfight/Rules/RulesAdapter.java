@@ -14,14 +14,14 @@ import java.util.ArrayList;
 
 // Inspired by FragmentsArnieMovies by Kasper
 class RulesAdapter extends BaseAdapter implements Filterable {
-    private final Context mcontext;
+    private final Context mContext;
     private final ArrayList<Rules> mRules;
     private ArrayList<Rules> mFilteredRules;
 
     RulesAdapter(Context c, ArrayList<Rules> rulesList) {
         mRules = rulesList;
         mFilteredRules = rulesList;
-        mcontext = c;
+        mContext = c;
 
     }
 
@@ -51,7 +51,7 @@ class RulesAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            LayoutInflater RulesInflator = (LayoutInflater) this.mcontext
+            LayoutInflater RulesInflator = (LayoutInflater) this.mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = RulesInflator.inflate(R.layout.list_item, null);
         }
@@ -93,6 +93,7 @@ class RulesAdapter extends BaseAdapter implements Filterable {
                 return results;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 mFilteredRules = (ArrayList<Rules>) results.values;

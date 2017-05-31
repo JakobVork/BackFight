@@ -881,7 +881,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     public void spawnItems(int numberOfItems) {
         ItemFactory fac = new ItemFactory(getContext());
         int i = 0;
-
+        numberOfItems = numberOfItems * mGamePlayerList.size();
         // Continue until all items are spawned
         while (i < numberOfItems) {
 

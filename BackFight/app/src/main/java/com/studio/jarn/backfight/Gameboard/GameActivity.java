@@ -53,7 +53,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_board_activity);
+        setContentView(R.layout.game_activity);
 
         setupItemFragment();
         setupDefaultText();
@@ -127,7 +127,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.initAddPlayers(playerList);
 
                 // Spawn items
-                gv.spawnItems(10);
+                gv.spawnItems(7);
 
                 // Spawn monsters
                 gv.spawnStartMonsters();
