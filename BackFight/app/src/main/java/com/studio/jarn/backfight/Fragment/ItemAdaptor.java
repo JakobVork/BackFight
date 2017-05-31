@@ -15,9 +15,8 @@ import java.util.ArrayList;
 
 class ItemAdaptor extends BaseAdapter {
 
-    private Context mContext;
-    private ArrayList<GameItem> mItems;
-    private GameItem mItem;
+    private final Context mContext;
+    private final ArrayList<GameItem> mItems;
 
     ItemAdaptor(Context c, ArrayList<GameItem> itemList) {
         this.mContext = c;
@@ -47,7 +46,7 @@ class ItemAdaptor extends BaseAdapter {
             convertView = itemInflator.inflate(R.layout.items_and_stats_list_item, null);
         }
 
-        mItem = mItems.get(position);
+        GameItem mItem = mItems.get(position);
         if (mItem != null) {
             TextView tvTitle = (TextView) convertView.findViewById(R.id.fragment_list_item_txt_title);
             tvTitle.setText(mItem.Title);

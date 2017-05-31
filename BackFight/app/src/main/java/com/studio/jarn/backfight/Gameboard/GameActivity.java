@@ -42,8 +42,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     private static final int sDefaultGridSize = 15;
     public static boolean isGameActivityVisible = false;
     private static int sGridSize = 16;
-    Fragment overviewFragment;
-    Fragment detailFragment;
+    private Fragment overviewFragment;
     private Tile[][] mGrid;
     private TextView btnActionCounter;
     private TextView btnRound;
@@ -54,7 +53,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_board_activity);
+        setContentView(R.layout.game_activity);
 
         setupItemFragment();
         setupDefaultText();
@@ -128,7 +127,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.initAddPlayers(playerList);
 
                 // Spawn items
-                gv.spawnItems(10);
+                gv.spawnItems(7);
 
                 // Spawn monsters
                 gv.spawnStartMonsters();
@@ -227,7 +226,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
         overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        detailFragment = fragment_item_details.newInstance((ItemWeapon) item);
+        Fragment detailFragment = fragment_item_details.newInstance((ItemWeapon) item);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.game_board_activity_items_and_stats_fragment, detailFragment);
         ft.addToBackStack(null);

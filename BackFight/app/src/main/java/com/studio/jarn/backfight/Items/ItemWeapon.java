@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class ItemWeapon extends GameItem {
 
-    private int DmgMin;
-    private int DmgMax;
+    public int DmgMin;
+    public int DmgMax;
 
     // Firebase require a default constructor
     public ItemWeapon() {
@@ -27,21 +27,5 @@ public class ItemWeapon extends GameItem {
         // securing MaxValue, and +MinRoll roll for securing min value
         DmgMin = rnd.nextInt(DmgMin_MaxRoll - DmgMin_MinRoll + 1) + DmgMin_MinRoll;
         DmgMax = rnd.nextInt(DmgMax_MaxRoll - DmgMax_MinRoll + 1) + DmgMax_MinRoll;
-    }
-
-    public int getDmgMin() {
-        return this.DmgMin;
-    }
-
-    public void setDmgMin(int dmgMin) {
-        this.DmgMin = dmgMin;
-    }
-
-    public int getDmgMax() {
-        return this.DmgMax;
-    }
-
-    public void setDmgMax(int dmgMax) {
-        this.DmgMax = dmgMax;
     }
 }

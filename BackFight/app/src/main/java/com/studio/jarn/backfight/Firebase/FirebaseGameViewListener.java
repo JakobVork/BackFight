@@ -1,6 +1,5 @@
 package com.studio.jarn.backfight.Firebase;
 
-import com.studio.jarn.backfight.Gameboard.Coordinates;
 import com.studio.jarn.backfight.Gameboard.SimpleCoordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Items.GameItem;
