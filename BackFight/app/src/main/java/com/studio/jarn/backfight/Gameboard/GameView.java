@@ -477,7 +477,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             // Player is not selected
             HandleActionForNonSelectedPlayer(coordinate);
         }
-        
+
         //Render map
         invalidate();
     }
@@ -485,6 +485,10 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     // Only called when local player is selected first
     private void HandleActionForSelectedPlayer(Coordinates coordinate) {
+        if (!getLocalPlayer().canTakeAction()) {
+            return;
+        }
+
         // Check what the player clicked on and do action accordingly
         if (clickedOnLocalPlayer(coordinate)) {
             // Clicked on local player - Deselect
@@ -648,25 +652,26 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private void MonsterTurn() {
         //Each monster take turn
+        int numOfPlayers = mGamePlayerList.size();
         int rounds = mFirebaseHelper.mRound;
         if (rounds > 19)
             rounds = 20;
         switch (rounds) {
             //spawn epic monster
             case 5:
-                spawnMonster(1);
+                spawnMonster(1, numOfPlayers);
                 break;
             case 10:
-                spawnMonster(2);
+                spawnMonster(2, numOfPlayers);
                 break;
             case 15:
-                spawnMonster(1);
+                spawnMonster(1, numOfPlayers);
                 break;
             case 20:
-                spawnMonster(0);
-                spawnMonster(0);
+                spawnMonster(0, numOfPlayers);
+                spawnMonster(0, numOfPlayers);
             default:
-                spawnMonster(0);
+                spawnMonster(0, numOfPlayers);
         }
         for (Monster monster : mMonsterList) {
             monster.resetActions();
@@ -691,6 +696,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         }
 
         mFirebaseHelper.setMonsterList(mMonsterList);
+        mFirebaseHelper.setPlayerList(mGamePlayerList);
 
         //Render map
         invalidate();
@@ -894,9 +900,9 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     }
 
     //Type is a integer for type of monster spawned, 0 is normal, 1 is Elite, 2 is boss
-    private void spawnMonster(int type) {
+    private void spawnMonster(int type, int numOfPlayers) {
         MonsterFactory fac = new MonsterFactory(getContext());
-        int numberOfPlayers = mGamePlayerList.size();
+        int numberOfPlayers = numOfPlayers;
         //find real rounds
         int rounds = mFirebaseHelper.mRound;
 
@@ -934,25 +940,25 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
             //Spawn normal monsters
             // 1 player = 2 monsters, 2 player = 4 monsters, 3 player = 6 monsters, 4 player = 8 monsters
             for (int i = 0; i < 2 + (2 * (numOfPlayer - 1)); i++) {
-                spawnMonster(0);
+                spawnMonster(0, numOfPlayer);
             }
 
             //Spawn epic monsters
             // 1 player = 1 monsters, 2 player = 2 monsters, 3 player = 3 monsters, 4 player = 4 monsters
             for (int i = 0; i < numOfPlayer; i++) {
-                spawnMonster(1);
+                spawnMonster(1, numOfPlayer);
             }
         } else {
             //Spawn normal monsters
             // 1 player = 2 monsters, 2 player = 3 monsters, 3 player = 4 monsters, 4 player = 5 monsters
             for (int i = 0; i < 2 + ((numOfPlayer - 1)); i++) {
-                spawnMonster(0);
+                spawnMonster(0, numOfPlayer);
             }
 
             //Spawn epic monsters
             // 1 player = 1 monsters, 2 player = 2 monsters, 3 player = 3 monsters, 4 player = 4 monsters
             for (int i = 0; i < numOfPlayer; i++) {
-                spawnMonster(1);
+                spawnMonster(1, numOfPlayer);
             }
         }
 
