@@ -7,8 +7,7 @@ public class ItemFactory {
     public Weapons Weapons;
 
     public ItemFactory(Context context) {
-        Context mContext = context;
-        Weapons = new Weapons(mContext);
+        Weapons = new Weapons(context);
     }
 }
 

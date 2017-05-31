@@ -16,7 +16,6 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.studio.jarn.backfight.Gameboard.Coordinates;
 import com.studio.jarn.backfight.Gameboard.SimpleCoordinates;
 import com.studio.jarn.backfight.Gameboard.Tile;
 import com.studio.jarn.backfight.Items.GameItem;
@@ -42,8 +41,8 @@ public class FirebaseHelper {
     private static final String sDatabasePostfixNumberPicker = "NumberPicker";
     private static final String sDatabasePostfixRoundCount = "RoundCount";
     private static final String getsDatabasePostfixShadowedList = "ShadowedList";
+    private final FirebaseDatabase mDatabase;
     public int mRound = 0;
-    private FirebaseDatabase mDatabase;
     private String mGameId;
     private String mGameIdRadio;
     private String mGameIdStartGame;

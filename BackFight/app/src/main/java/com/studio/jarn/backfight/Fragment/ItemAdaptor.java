@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 class ItemAdaptor extends BaseAdapter {
 
-    private Context mContext;
-    private ArrayList<GameItem> mItems;
+    private final Context mContext;
+    private final ArrayList<GameItem> mItems;
 
     ItemAdaptor(Context c, ArrayList<GameItem> itemList) {
         this.mContext = c;

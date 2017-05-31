@@ -7,7 +7,7 @@ import com.studio.jarn.backfight.R;
 import java.util.Random;
 
 public class Weapons {
-    private Context mContext;
+    private final Context mContext;
 
     Weapons(Context context) {
         mContext = context;

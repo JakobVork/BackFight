@@ -40,6 +40,7 @@ import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_S
 
 public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyListener {
 
+    private final List<Player> mListOfPlayersCurrentlyInGame = new ArrayList<>();
     private Button mBtnBack;
     private Button mBtnStart;
     private TextView mTvId;
@@ -48,7 +49,6 @@ public class LobbyActivity extends AppCompatActivity implements FirebaseLobbyLis
     private RadioButton mRbMaze;
     private NumberPicker mNpGridSize;
     private PlayerAdapter mPlayerAdapter;
-    private List<Player> mListOfPlayersCurrentlyInGame = new ArrayList<>();
     private String mGameId;
     private RadioGroup mRg;
     private FirebaseHelper mFirebaseHelper;

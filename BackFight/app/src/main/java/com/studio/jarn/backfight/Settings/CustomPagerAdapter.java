@@ -14,9 +14,9 @@ import com.studio.jarn.backfight.R;
 class CustomPagerAdapter extends PagerAdapter {
 
 
+    private final LayoutInflater mLayoutInflater;
     private int[] mResources;
     private int[] mResourcesSelected;
-    private LayoutInflater mLayoutInflater;
     private ImageView mImageView;
 
     CustomPagerAdapter(Context context) {

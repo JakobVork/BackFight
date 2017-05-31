@@ -3,8 +3,8 @@ package com.studio.jarn.backfight.Rules;
 import java.util.ArrayList;
 
 class Rules {
-    String mRulesName;
-    ArrayList<String> mRulesDescription;
+    final String mRulesName;
+    final ArrayList<String> mRulesDescription;
 
     Rules(String rulesName, ArrayList<String> description) {
         this.mRulesName = rulesName;

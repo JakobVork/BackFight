@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 // Inspired by FragmentsArnieMovies by Kasper
 class RulesAdapter extends BaseAdapter implements Filterable {
-    private Context mcontext;
-    private ArrayList<Rules> mRules;
+    private final Context mcontext;
+    private final ArrayList<Rules> mRules;
     private ArrayList<Rules> mFilteredRules;
 
     RulesAdapter(Context c, ArrayList<Rules> rulesList) {

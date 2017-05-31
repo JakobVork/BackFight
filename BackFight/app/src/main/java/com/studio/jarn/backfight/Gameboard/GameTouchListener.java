@@ -49,6 +49,4 @@ interface GameTouchListener {
      * @param upY   int - mCoordinates value of the up action square
      */
 
-    void onLongTouchUp(int downX, int downY, int upX, int upY);
-
 }

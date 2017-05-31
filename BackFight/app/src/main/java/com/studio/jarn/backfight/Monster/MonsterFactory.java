@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class MonsterFactory {
 
-    private Context mContext;
+    private final Context mContext;
 
     public MonsterFactory(Context context) {
         mContext = context;

@@ -21,13 +21,13 @@ import java.util.ArrayList;
 
 public class RulesActivity extends AppCompatActivity {
 
-    Button mBtnBack;
-    ListView mLwList;
-    RulesAdapter mAdapter;
-    EditText mSearch;
-    ArrayList<Rules> mRules;
-    TextView mTitle;
-    TextView mDetails;
+    private Button mBtnBack;
+    private ListView mLwList;
+    private RulesAdapter mAdapter;
+    private EditText mSearch;
+    private ArrayList<Rules> mRules;
+    private TextView mTitle;
+    private TextView mDetails;
 
 
     @Override
@@ -40,7 +40,7 @@ public class RulesActivity extends AppCompatActivity {
     }
 
     // Set the details for the rule selected
-    public void onRuleSelected(int position) {
+    private void onRuleSelected(int position) {
 
         Rules selectedRule = mAdapter.getItem(position);
         if (selectedRule != null) {

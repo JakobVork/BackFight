@@ -43,7 +43,6 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     public static boolean isGameActivityVisible = false;
     private static int sGridSize = 16;
     private Fragment overviewFragment;
-    private Fragment detailFragment;
     private Tile[][] mGrid;
     private TextView btnActionCounter;
     private TextView btnRound;
@@ -227,7 +226,7 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
     public void onItemSelected(GameItem item) {
         Log.d("Item", "onItemSelected: Clicked!");
         overviewFragment = getSupportFragmentManager().findFragmentById(R.id.game_board_activity_items_and_stats_fragment);
-        detailFragment = fragment_item_details.newInstance((ItemWeapon) item);
+        Fragment detailFragment = fragment_item_details.newInstance((ItemWeapon) item);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.game_board_activity_items_and_stats_fragment, detailFragment);
         ft.addToBackStack(null);

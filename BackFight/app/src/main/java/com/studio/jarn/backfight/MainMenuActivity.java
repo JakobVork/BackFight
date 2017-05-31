@@ -38,10 +38,10 @@ import static com.studio.jarn.backfight.Settings.SettingsActivity.PROFILE_NAME_S
 
 public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGameListener {
 
+    public static final String PHONE_UUID_SP = "Phone UUID";
+    public static final Integer PHONE_TEXT_SIZE = 18;
+    public static final Integer TABLET_TEXT_SIZE = 30;
     private static final int NO_INTERNET_SETTINGS_INTENT = 42;
-    public static String PHONE_UUID_SP = "Phone UUID";
-    public static Integer PHONE_TEXT_SIZE = 18;
-    public static Integer TABLET_TEXT_SIZE = 30;
     private Button mBtnNewGame;
     private Button mBtnSpectateGame;
     private Button mBtnRules;
@@ -161,11 +161,6 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         settingsSpEditor.apply();
     }
 
-    // make a unique key for each phone
-    private void makeUuid() {
-
-
-    }
 
     // Find the buttons in the layoutfile and call to make OnClickListener on them
     private void initButtons() {

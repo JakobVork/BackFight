@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Player {
+    public final int LineOfSight = 1;
+    public final int mActionsPerTurn = 3; //Needed for Firebase
     public List<GameItem> PlayerItems;
     public String Name;
     public int Figure = 0;
@@ -20,9 +22,7 @@ public class Player {
     public int ActionsRemaining = 3;
     public String Id;
     public int Health = 20;
-    public int LineOfSight = 1;
     public Coordinates Coordinate;
-    public int mActionsPerTurn = 3; //Needed for Firebase
 
     public Player(int Figure, int FigureSelected, String name, String uuid) {
         this(Figure, FigureSelected, name, uuid, null);

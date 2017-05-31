@@ -14,8 +14,8 @@ import java.util.Locale;
 
 class LoadRules {
 
-    private ArrayList<Rules> mRules = new ArrayList<>();
-    private Activity activity;
+    private final ArrayList<Rules> mRules = new ArrayList<>();
+    private final Activity activity;
 
     LoadRules(Activity a) {
         activity = a;

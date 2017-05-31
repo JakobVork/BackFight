@@ -21,7 +21,7 @@ public class PanZoomView extends View {
 
     private static final int INVALID_POINTER_ID = -1;
     static private final float SCROLL_THRESHOLD = 20; // Used to define if a touch is scroll or click
-    Context mContext;
+    final Context mContext;
     float mPosX;
     float mPosY;
     float mScaleFactor = 1.f;
@@ -33,10 +33,6 @@ public class PanZoomView extends View {
     // The ‘active pointer’ is the one currently moving our object.
     private int mActivePointerId = INVALID_POINTER_ID;
     private ScaleGestureDetector mScaleDetector;
-    private float mMinScaleFactor = 0.2f;
-    private float mMaxScaleFactor = 2.0f;
-    private boolean mSupportsPan = true;
-    private boolean mSupportsZoom = true;
     private boolean mIsMove;
 
     //Click handling
@@ -112,6 +108,7 @@ public boolean onTouchEvent (MotionEvent e) {
             // Only move if the view supports panning and
             // ScaleGestureDetector isn't processing a gesture.
             boolean scalingInProgress = mScaleDetector.isInProgress();
+            boolean mSupportsPan = true;
             if (mSupportsPan && !scalingInProgress) {
                 if (mIsMove) {
                     final float dx = x - mLastTouchX;
@@ -205,10 +202,13 @@ public boolean performClick() {
 private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
+        boolean mSupportsZoom = true;
         if (!mSupportsZoom) return true;
         mScaleFactor *= detector.getScaleFactor();
 
         // Don't let the object get too small or too large.
+        float mMinScaleFactor = 0.2f;
+        float mMaxScaleFactor = 2.0f;
         mScaleFactor = Math.max(mMinScaleFactor, Math.min(mScaleFactor, mMaxScaleFactor));
 
 /*

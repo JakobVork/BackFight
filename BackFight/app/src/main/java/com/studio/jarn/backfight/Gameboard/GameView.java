@@ -36,12 +36,14 @@ import static com.studio.jarn.backfight.MainMenuActivity.PHONE_UUID_SP;
 
 public class GameView extends PanZoomView implements GameTouchListener, FirebaseGameViewListener, PlayerGameViewListener
 {
+    private final List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
+    private final int mTileDivision = 4;
+    private final String mPlayerId;
     private GameTouchListener mTouchListener;
     private int mObjectMarginValue;
     private int mObjectWidthValue;
     private int mObjectHeightValue;
     private List<SimpleCoordinates> mCoordinatesListTileShadowed = new ArrayList<>();
-    private List<SimpleCoordinates> mCoordinatesListTileVisible = new ArrayList<>();
     // Variables that control placement and translation of the canvas.
     // Initial values are for debugging on 480 mGameObject 320 screen. They are reset in onDrawPz.
     private float mMaxCanvasWidth = 960;
@@ -58,9 +60,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private int mSquaresViewedAtStartup;
     private FirebaseHelper mFirebaseHelper;
     private Player mSelectedPlayer;
-    private int mTileDivision = 4;
     private boolean mScalingValuesCalculated = false;
-    private String mPlayerId;
     private Monster mBoss;
 
     public GameView(Context context, AttributeSet attrs) {
@@ -139,8 +139,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mFirebaseHelper.setStandardKey(uuid, getContext());
     }
 
-    //Todo: remove hardcoded Players
-    public void drawOnCanvas(Canvas canvas) {
+    private void drawOnCanvas(Canvas canvas) {
 
         Paint paint = new Paint();
 
@@ -463,11 +462,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     @Override
     public void onTouchDown() {
-
-    }
-
-    @Override
-    public void onLongTouchUp(int downX, int downY, int upX, int upY) {
 
     }
 
