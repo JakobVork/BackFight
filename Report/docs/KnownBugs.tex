@@ -5,7 +5,7 @@
 \section{Bug List}
 
 \begin{enumerate}
-	\item \textbf{Monster spawn:} There is a change that monsters spawn on the same tile as the players when the game starts.
+	\item \textbf{Monster spawn:} There is a chance that monsters spawn on the same tile as the players when the game starts.
 	
 	\item \textbf{Kill monster:} When a monster is killed by a player on a tile and another player decides to move to that tile the two players will end up on the same place on that tile. This is because the tile holds one player and the tile doesn't know that the player is placed on space 2 and not space 1.
 		
@@ -29,5 +29,7 @@
 	\item \textbf{Boss Monsters:} The Boss Monster will only show on the board of the last player who takes a turn in round 10. This is because only the last player will have the object and thereby have the coordinates. This can be fixed by adding a field to the Monster class describing the class of the monster. It would then be possible to just look in the monster list for a monster with the class of Boss and then show this.%TODO add ref to future improvments
 	
 	\item \textbf{Zoom:} The zoom is buggy because it does not zoom but scales the map and then the center is not set correctly. To help minimize the implications of the zoom bug a max distance for how much as player can pan away from the map has been set.
+
+	\item \textbf{Settings select figure:} The selection of the player figure puts all figure on the same spot and a user cant pick an avatar. The avatar slider going panic if you try to slide to the side but this bug only occurres if the screen resolution is very small.
 	
 \end{enumerate}
