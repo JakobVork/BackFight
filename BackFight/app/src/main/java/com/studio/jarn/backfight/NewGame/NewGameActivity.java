@@ -45,7 +45,7 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         mFirebaseHelper = new FirebaseHelper(this);
     }
 
-    // Find the buttons in the layoutfile and call to make OnClickListener on them
+    // Find the buttons in the layout file and call to make OnClickListener on them
     private void initButtons() {
         mBtnBack = (Button) findViewById(R.id.activity_newGame_btn_back);
         mBtnCreate = (Button) findViewById(R.id.activity_newGame_btn_create);
@@ -91,7 +91,7 @@ public class NewGameActivity extends AppCompatActivity implements FirebaseNewGam
         input.setHint(
                 R.string.newGame_dialogHint);
 
-        //checks for phone or tablet and set textsize
+        //checks for phone or tablet and set text size
         if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
                 | (getResources().getConfiguration().screenLayout &

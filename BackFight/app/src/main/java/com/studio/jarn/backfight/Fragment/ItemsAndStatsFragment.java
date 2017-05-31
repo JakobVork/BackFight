@@ -90,10 +90,10 @@ public class ItemsAndStatsFragment extends Fragment {
         mTvName.setText(mName);
 
         TextView mTvHp = (TextView) view.findViewById(R.id.fragment_item_tv_hp);
-        mTvHp.setText("HP: " + String.valueOf(mHp));
+        mTvHp.setText(getString(R.string.hp) + ": " + String.valueOf(mHp));
 
         TextView mTvDmg = (TextView) view.findViewById(R.id.fragment_item_tv_dmg);
-        mTvDmg.setText("Dmg: " + String.valueOf(mMinDmg) + " - " + String.valueOf(mMaxDmg));
+        mTvDmg.setText(getString(R.string.dmg) + ": " + String.valueOf(mMinDmg) + " - " + String.valueOf(mMaxDmg));
 
         return view;
     }

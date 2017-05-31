@@ -170,7 +170,7 @@ public boolean performClick() {
 }
 
     void onTouchUp(float upX, float upY) {
-        //Gets overwrited by GameActivity which implements GameTouchListener interface.
+        //Gets overwritten by GameActivity which implements GameTouchListener interface.
     }
 
     private void setupScaleDetector(Context context) {

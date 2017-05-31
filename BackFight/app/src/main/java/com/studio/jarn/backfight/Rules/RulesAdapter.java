@@ -79,9 +79,9 @@ class RulesAdapter extends BaseAdapter implements Filterable {
                     ArrayList<Rules> filteredResultsData = new ArrayList<>();
 
                     for (Rules rule : mRules) {
-                        mRules.get(1).getmRulesName();
-                        rule.getmRulesName();
-                        if (rule.getmRulesName().toLowerCase().startsWith(constraint.toString())) {
+                        mRules.get(1).getRulesName();
+                        rule.getRulesName();
+                        if (rule.getRulesName().toLowerCase().startsWith(constraint.toString())) {
                             filteredResultsData.add(rule);
                         }
                     }

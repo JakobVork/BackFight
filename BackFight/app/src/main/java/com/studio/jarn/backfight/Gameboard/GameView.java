@@ -491,12 +491,12 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     // Only called when local player is selected first
     private void HandleActionForSelectedPlayer(Coordinates coordinate) {
-        // Check what the player clicked on and do action accordenly
+        // Check what the player clicked on and do action accordingly
         if (clickedOnLocalPlayer(coordinate)) {
             // Clicked on local player - Deselect
             mSelectedPlayer = null;
         } else if (clickedOnItem(coordinate)) {
-            // Cliked on item - Pick it up
+            // Clicked on item - Pick it up
             pickUpItem(getLocalPlayer(), coordinate);
         } else if (clickedOnMonster(coordinate)) {
             // Clicked on Monster - Attack it
@@ -522,7 +522,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     // Only called whe local player is not selected
     private void HandleActionForNonSelectedPlayer(Coordinates coordinate) {
-        // Check what the player clicked on and do action accordenly
+        // Check what the player clicked on and do action accordingly
         if (clickedOnLocalPlayer(coordinate)) {
             // Clicked on local player - Select
             mSelectedPlayer = getLocalPlayer();
@@ -584,7 +584,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         mGameItemList.remove(item);
         item.Coordinate = null; // It does not appear on map anymore, therefore no coordinates needed.
 
-        // Add item to players itemlist
+        // Add item to players itemList
         // List might be null due to firebase
         if (player.PlayerItems == null)
             player.PlayerItems = new ArrayList<>();
@@ -739,7 +739,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
     private boolean tileNextToPlayer(Player player, int tileX, int tileY, int distance) {
 
-        // Can't do this in one if-statment, since that would allow the player to move diagonal
+        // Can't do this in one if-statement, since that would allow the player to move diagonal
         if (player.Coordinate.tileX <= tileX + distance && player.Coordinate.tileX >= tileX - distance) {
             if (player.Coordinate.tileY <= tileY && player.Coordinate.tileY >= tileY) {
                 return true;
@@ -882,7 +882,7 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
         ItemFactory fac = new ItemFactory(getContext());
         int i = 0;
 
-        // Continue untill all items are spawned
+        // Continue until all items are spawned
         while (i < numberOfItems) {
 
             Coordinates coordinates = Coordinates.getRandom(mGridSize);

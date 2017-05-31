@@ -125,7 +125,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
         input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
-        //checks for phone or tablet and set textsize
+        //checks for phone or tablet and set text size
         if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
                 | (getResources().getConfiguration().screenLayout &
@@ -162,7 +162,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
     }
 
 
-    // Find the buttons in the layoutfile and call to make OnClickListener on them
+    // Find the buttons in the layoutFile and call to make OnClickListener on them
     private void initButtons() {
         mBtnNewGame = (Button) findViewById(R.id.activity_mainMenu_btn_newGame);
         mBtnSpectateGame = (Button) findViewById(R.id.activity_mainMenu_btn_spectateGame);
@@ -257,7 +257,7 @@ public class MainMenuActivity extends AppCompatActivity implements FirebaseNewGa
                 R.string.newGame_dialogHint);
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
-        //checks for phone or tablet and set textsize
+        //checks for phone or tablet and set text size
         if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE
                 | (getResources().getConfiguration().screenLayout &

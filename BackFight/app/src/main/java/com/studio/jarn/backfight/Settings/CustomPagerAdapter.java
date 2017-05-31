@@ -17,7 +17,6 @@ class CustomPagerAdapter extends PagerAdapter {
     private final LayoutInflater mLayoutInflater;
     private int[] mResources;
     private int[] mResourcesSelected;
-    private ImageView mImageView;
 
     CustomPagerAdapter(Context context) {
         getAvatars();
@@ -71,7 +70,7 @@ class CustomPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
 
-        mImageView = (ImageView) itemView.findViewById(R.id.pager_item_iw_image);
+        ImageView mImageView = (ImageView) itemView.findViewById(R.id.pager_item_iw_image);
         mImageView.setImageResource(mResources[position]);
 
         container.addView(itemView);

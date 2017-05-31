@@ -461,10 +461,10 @@ public class FirebaseHelper {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<List<SimpleCoordinates>> genericTypeIndicator = new GenericTypeIndicator<List<SimpleCoordinates>>() {
                 };
-                List<SimpleCoordinates> simpleCoordiantes = dataSnapshot.getValue(genericTypeIndicator);
-                if (simpleCoordiantes == null)
-                    simpleCoordiantes = new ArrayList<>();
-                mFirebaseGameViewListener.setTileShadowedList(simpleCoordiantes);
+                List<SimpleCoordinates> simpleCoordinates = dataSnapshot.getValue(genericTypeIndicator);
+                if (simpleCoordinates == null)
+                    simpleCoordinates = new ArrayList<>();
+                mFirebaseGameViewListener.setTileShadowedList(simpleCoordinates);
             }
 
             @Override

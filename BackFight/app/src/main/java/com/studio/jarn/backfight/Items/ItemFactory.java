@@ -12,5 +12,5 @@ public class ItemFactory {
 }
 
 class Armor {
-    // TODO: Add diffrent kind of armor.
+    // TODO: Add different kind of armor.
 }

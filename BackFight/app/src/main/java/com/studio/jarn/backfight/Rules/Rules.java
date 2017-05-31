@@ -11,7 +11,7 @@ class Rules {
         this.mRulesDescription = description;
     }
 
-    String getmRulesName() {
+    String getRulesName() {
         return mRulesName;
     }
 }
