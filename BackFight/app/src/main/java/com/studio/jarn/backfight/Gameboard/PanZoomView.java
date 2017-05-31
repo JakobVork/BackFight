@@ -2,7 +2,6 @@ package com.studio.jarn.backfight.Gameboard;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -20,37 +19,21 @@ import android.view.View;
 public class PanZoomView extends View {
 
 
-    protected static final int INVALID_POINTER_ID = -1;
+    private static final int INVALID_POINTER_ID = -1;
     static private final float SCROLL_THRESHOLD = 20; // Used to define if a touch is scroll or click
-    protected Drawable mSampleImage;
-    protected Context mContext;
-    protected float mPosX;
-    protected float mPosY;
-    protected float mPosX0 = 0;     // initial displacement values
-    protected float mPosY0 = 0;
-    protected float mLastTouchX;
-    protected float mLastTouchY;
-    protected float mInitialTouchX;
-    protected float mInitialTouchY;
-    protected boolean mDoTouchUp = false;
-    protected boolean mHandlingTouchUp = false;
-
+    final Context mContext;
+    float mPosX;
+    float mPosY;
+    float mScaleFactor = 1.f;
+    private float mLastTouchX;
+    private float mLastTouchY;
+    private float mInitialTouchX;
+    private float mInitialTouchY;
+    private boolean mDoTouchUp = false;
     // The ‘active pointer’ is the one currently moving our object.
-    protected int mActivePointerId = INVALID_POINTER_ID;
-    protected ScaleGestureDetector mScaleDetector;
-    protected float mScaleFactor = 1.f;
-    protected float mMinScaleFactor = 0.2f;
-    protected float mMaxScaleFactor = 2.0f;
-    protected boolean mSupportsPan = true;
-    protected boolean mSupportsZoom = true;
-    protected boolean mIsMove;
-
-    //Click handling
-    protected boolean mSupportsOnTouchDown = true;
-    protected boolean mSupportsOnTouchUp = true;
-
-    //Long press detection
-    protected long mDownTime;
+    private int mActivePointerId = INVALID_POINTER_ID;
+    private ScaleGestureDetector mScaleDetector;
+    private boolean mIsMove;
 
 public PanZoomView (Context context) {
     this(context, null, 0);
@@ -64,11 +47,7 @@ public PanZoomView (Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     mContext = context;
     setupToDraw (context, attrs, defStyle);
-    setupScaleDetector (context, attrs, defStyle);
-}
-
-public void drawOnCanvas (Canvas canvas) {
-    mSampleImage.draw(canvas);
+    setupScaleDetector(context);
 }
 
 @Override
@@ -78,7 +57,7 @@ public void onDraw(Canvas canvas) {
     onDrawPz (canvas);
 }
 
-protected void onDrawPz (Canvas canvas) {
+    void onDrawPz(Canvas canvas) {
 
 }
 
@@ -104,14 +83,10 @@ public boolean onTouchEvent (MotionEvent e) {
             mLastTouchX = x;
             mLastTouchY = y;
             mActivePointerId = e.getPointerId(0);
-            if (mSupportsOnTouchDown) {
-                onTouchDown(x, y);
-            }
-            if (mSupportsOnTouchUp) {
-                mInitialTouchX = x;
-                mInitialTouchY = y;
-                mDoTouchUp = true;
-            }
+
+            mInitialTouchX = x;
+            mInitialTouchY = y;
+            mDoTouchUp = true;
             break;
         }
 
@@ -128,7 +103,7 @@ public boolean onTouchEvent (MotionEvent e) {
             // Only move if the view supports panning and
             // ScaleGestureDetector isn't processing a gesture.
             boolean scalingInProgress = mScaleDetector.isInProgress();
-            if (mSupportsPan && !scalingInProgress) {
+            if (!scalingInProgress) {
                 if (mIsMove) {
                     final float dx = x - mLastTouchX;
                     final float dy = y - mLastTouchY;
@@ -148,19 +123,13 @@ public boolean onTouchEvent (MotionEvent e) {
 
         case MotionEvent.ACTION_UP: {
             if (mIsMove) {
-                mHandlingTouchUp = false;
                 mDoTouchUp = false;
             } else {
                 mActivePointerId = INVALID_POINTER_ID;
-                if (mSupportsOnTouchUp && mDoTouchUp) {
+                if (mDoTouchUp) {
                     final float x = e.getX();
                     final float y = e.getY();
-                    try {
-                        mHandlingTouchUp = true;
-                        onTouchUp(mInitialTouchX, mInitialTouchY, x, y);
-                    } finally {
-                        mHandlingTouchUp = false;
-                    }
+                    onTouchUp(x, y);
                     mDoTouchUp = false;
                 }
             }
@@ -200,33 +169,18 @@ public boolean performClick() {
    return true;
 }
 
-    public void onTouchDown(float x, float y) {
-        mDownTime = System.nanoTime();
+    void onTouchUp(float upX, float upY) {
+        //Gets overwritten by GameActivity which implements GameTouchListener interface.
     }
 
-    public void onTouchUp(float downX, float downY, float upX, float upY) {
-        //Gets overwrited by GameActivity which implements GameTouchListener interface.
-    }
-
-protected void setupScaleDetector (Context context, AttributeSet attrs, int defStyle) {
+    private void setupScaleDetector(Context context) {
     // Create our ScaleGestureDetector
     mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 }
 
 
-protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
+    void setupToDraw(Context context, AttributeSet attrs, int defStyle) {
     mIsMove = false;
-
-    mSupportsPan = supportsPan ();
-    mSupportsZoom = supportsZoom ();
-}
-
-
-public boolean supportsPan () {
-    return true;
-}
-public boolean supportsZoom () {
-    return true;
 }
 
 
@@ -238,16 +192,12 @@ public boolean supportsZoom () {
 private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        if (!mSupportsZoom) return true;
         mScaleFactor *= detector.getScaleFactor();
 
         // Don't let the object get too small or too large.
+        float mMinScaleFactor = 0.2f;
+        float mMaxScaleFactor = 2.0f;
         mScaleFactor = Math.max(mMinScaleFactor, Math.min(mScaleFactor, mMaxScaleFactor));
-
-/*
-        mPosX = mPosX * (-3616*mScaleFactor+3616);
-        mPosY = mPosY * (-3616*mScaleFactor+3616);
-*/
 
         invalidate();
         return true;

@@ -16,15 +16,15 @@ import com.studio.jarn.backfight.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static String PROFILE_NAME_SP = "Profile Name";
-    public static String AVATAR_IMAGE_SP = "Avatar Image";
-    public static String AVATAR_IMAGE_SELECTED_SP = "Avatar Image Selected";
-    public static String AVATAR_IMAGE_NUMBER_SP = "Avatar Image Number";
-    Button mBtnBack;
-    Button mBtnSave;
-    EditText mProfileName;
-    CustomPagerAdapter mCustomPagerAdapter;
-    ViewPager mViewPager;
+    public static final String PROFILE_NAME_SP = "Profile Name";
+    public static final String AVATAR_IMAGE_SP = "Avatar Image";
+    public static final String AVATAR_IMAGE_SELECTED_SP = "Avatar Image Selected";
+    public static final String AVATAR_IMAGE_NUMBER_SP = "Avatar Image Number";
+    private Button mBtnBack;
+    private Button mBtnSave;
+    private EditText mProfileName;
+    private CustomPagerAdapter mCustomPagerAdapter;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

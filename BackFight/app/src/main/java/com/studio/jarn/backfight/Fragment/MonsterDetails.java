@@ -17,10 +17,6 @@ public class MonsterDetails extends Fragment {
     private static final String mMonsterString = "mMonsterString";
 
     private Monster mMonster;
-    private TextView mTvName;
-    private TextView mTvHp;
-    private TextView mTvDmg;
-    private ImageView mIvImage;
 
 
     public MonsterDetails() {
@@ -50,10 +46,10 @@ public class MonsterDetails extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_monster_details, container, false);
 
-        mIvImage = (ImageView) view.findViewById(R.id.fragment_monster_iv_image);
-        mTvName = (TextView) view.findViewById(R.id.fragment_monster_tv_name);
-        mTvHp = (TextView) view.findViewById(R.id.fragment_monster_tv_hp);
-        mTvDmg = (TextView) view.findViewById(R.id.fragment_monster_tv_dmg);
+        ImageView mIvImage = (ImageView) view.findViewById(R.id.fragment_monster_iv_image);
+        TextView mTvName = (TextView) view.findViewById(R.id.fragment_monster_tv_name);
+        TextView mTvHp = (TextView) view.findViewById(R.id.fragment_monster_tv_hp);
+        TextView mTvDmg = (TextView) view.findViewById(R.id.fragment_monster_tv_dmg);
 
         mIvImage.setImageResource(mMonster.Figure);
         mTvName.setText(mMonster.Name);

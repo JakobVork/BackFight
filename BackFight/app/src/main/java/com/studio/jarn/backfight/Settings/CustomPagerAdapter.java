@@ -14,16 +14,13 @@ import com.studio.jarn.backfight.R;
 class CustomPagerAdapter extends PagerAdapter {
 
 
+    private final LayoutInflater mLayoutInflater;
     private int[] mResources;
     private int[] mResourcesSelected;
-    private Context mContext;
-    private LayoutInflater mLayoutInflater;
-    private ImageView mImageView;
 
     CustomPagerAdapter(Context context) {
         getAvatars();
-        mContext = context;
-        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     private void getAvatars() {
@@ -68,15 +65,12 @@ class CustomPagerAdapter extends PagerAdapter {
         return view == object;
     }
 
-    public void ViewAvatar(int position) {
-        mImageView.setImageResource(mResources[position]);
-    }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
 
-        mImageView = (ImageView) itemView.findViewById(R.id.pager_item_iw_image);
+        ImageView mImageView = (ImageView) itemView.findViewById(R.id.pager_item_iw_image);
         mImageView.setImageResource(mResources[position]);
 
         container.addView(itemView);
