@@ -14,7 +14,6 @@ public class MonsterFactory {
         mContext = context;
     }
 
-    // TODO give them stats
     public Monster getRandomNormalMonster(int numberOfPlayers, int numberOfRounds) {
         switch (new Random().nextInt(5)) {
             case 0:

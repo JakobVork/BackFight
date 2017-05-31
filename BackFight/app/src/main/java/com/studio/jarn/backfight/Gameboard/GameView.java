@@ -405,8 +405,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
     private void startMonsterTurn() {
         MonsterTurn();
 
-        //TODO!!
-
         GameActivity gameActivity = (GameActivity) getContext();
         gameActivity.showMonsterDialog();
 
@@ -516,8 +514,6 @@ public class GameView extends PanZoomView implements GameTouchListener, Firebase
 
         // Player is now deselected, therefore also don't show the "select" image
         mSelectedPlayer = null;
-
-        // TODO: Do something, if another player is clicked?
     }
 
     // Only called whe local player is not selected
