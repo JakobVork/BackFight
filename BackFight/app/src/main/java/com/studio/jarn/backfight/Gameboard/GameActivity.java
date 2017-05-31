@@ -127,10 +127,10 @@ public class GameActivity extends FragmentActivity implements ItemsAndStatsFragm
                 gv.initAddPlayers(playerList);
 
                 // Spawn items
-                gv.spawnItems(7);
+                gv.spawnItems(7 * playerList.size());
 
                 // Spawn monsters
-                gv.spawnStartMonsters();
+                gv.spawnStartMonsters(playerList.size());
 
             } else {
                 gv.setGridSize(sGridSize);
